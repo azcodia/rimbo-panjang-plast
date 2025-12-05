@@ -1,4 +1,6 @@
 import React from "react";
+import clsx from "clsx";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface ButtonProps {
   text: string;
@@ -17,42 +19,28 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const isDisabled = loading;
 
+  const defaultClasses = "bg-primary-light hover:bg-primary text-white";
+
+  const finalClassName = clsx(
+    "w-full py-3 rounded-md font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2",
+    isDisabled && "opacity-50 cursor-not-allowed",
+    className.includes("bg-") ||
+      className.includes("text-") ||
+      className.includes("hover:")
+      ? className
+      : clsx(defaultClasses, className)
+  );
+
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={isDisabled}
-      className={`
-        w-full py-3 rounded-md text-white font-semibold bg-success-light shadow-md
-        hover:bg-success hover:shadow-lg
-        transition-all duration-200 flex items-center justify-center gap-2
-        ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}
-        ${className}
-      `}
+      className={finalClassName}
     >
-      {loading && (
-        <svg
-          className="animate-spin h-5 w-5 text-white"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          ></path>
-        </svg>
-      )}
-      <span>{text}</span>
+      <span className="flex flex-row gap-1.5 items-center justify-center text-sm">
+        {loading && <LoadingSpinner />} {text}
+      </span>
     </button>
   );
 };
