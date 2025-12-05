@@ -4,13 +4,22 @@ import dynamic from "next/dynamic";
 
 export default function GroupingPage() {
   const ColorContent = dynamic(() =>
-    import("@/components/tabs/content/color").then((mod) => mod.ColorContent)
+    import("@/components/tabs/content/color/color").then(
+      (mod) => mod.ColorContent
+    )
   );
+  // const SizeContent = dynamic(() =>
+  //   import("@/components/tabs/content/size/size").then((mod) => mod.SizeContent)
+  // );
+
   const SizeContent = dynamic(() =>
-    import("@/components/tabs/content/size").then((mod) => mod.SizeContent)
+    import("@/components/tabs/content/size/size").then((mod) => mod.SizeContent)
   );
+
   const HeavyContent = dynamic(() =>
-    import("@/components/tabs/content/heavy").then((mod) => mod.HeavyContent)
+    import("@/components/tabs/content/heavy/heavy").then(
+      (mod) => mod.HeavyContent
+    )
   );
 
   const tabs: TabItem[] = [

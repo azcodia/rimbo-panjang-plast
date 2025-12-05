@@ -1,64 +1,90 @@
 "use client";
 
+import { useState } from "react";
 import TableWithControls from "@/components/table/TableWithControls";
-import { useSizeContext } from "@/context/SizeContext";
-import AddSizeModal from "./AddSizeModal";
+import { useColorContext } from "@/context/ColorContext";
 import EditSizeModal from "./EditSizeModal";
+import AddSizeModal from "./AddSizeModal";
+import { useSizeContext } from "@/context/SizeContext";
 
-export const SizeContent = () => {
+export function SizeContent() {
   const {
-    data,
-    page,
-    columns,
-    totalPages,
-    total,
+    tableData,
     loading,
-    filterValue,
-    isModalOpen,
-    editingRow,
-    isEditModalOpen,
-    setIsEditModalOpen,
+    page,
+    pageSize,
+    total,
     setPage,
-    handleFilter,
-    handleActionClick,
-    setIsModalOpen,
+    searchValue,
+    setSearchValue,
+    handleAction,
     fetchData,
   } = useSizeContext();
+  const { selectOptions, selectedColor, setSelectedColor } = useColorContext();
+
+  const [editingRow, setEditingRow] = useState<any>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   return (
-    <>
+    <div className="">
       <TableWithControls
-        columns={columns as any}
-        data={data}
+        columns={[
+          { key: "color_name", label: "Color" },
+          { key: "size", label: "Size" },
+        ]}
+        selectOptions={selectOptions}
+        selectedValue={selectedColor ?? undefined}
+        onSelectChange={(val) => {
+          setSelectedColor(String(val));
+          fetchData("", 1, String(val));
+          setPage(page);
+        }}
+        data={tableData}
         total={total}
         page={page}
-        totalPages={totalPages}
+        totalPages={Math.ceil(total / pageSize)}
         loading={loading}
-        filterValue={filterValue}
-        onFilterChange={handleFilter}
-        onPageChange={setPage}
-        onActionClick={handleActionClick}
+        filterValue={searchValue}
+        showSearch={false}
+        onFilterChange={(value) => {
+          setSearchValue(value);
+          fetchData(value, 1);
+          setPage(1);
+        }}
+        onPageChange={(newPage) => {
+          setPage(newPage);
+          fetchData(searchValue, newPage);
+        }}
+        onActionClick={async (row, action) => {
+          if (action === "edit") setEditingRow(row);
+          else await handleAction(row, action);
+        }}
+        buttons={[
+          {
+            text: "Add Size",
+            onClick: () => setIsAddModalOpen(true),
+          },
+        ]}
         visibleActions={["edit", "delete"]}
-        buttons={[{ text: "Tambah Size", onClick: () => setIsModalOpen(true) }]}
       />
 
       <AddSizeModal
-        isOpen={isModalOpen}
+        isOpen={isAddModalOpen}
         size="sm"
-        onClose={() => setIsModalOpen(false)}
-        onSaved={() => fetchData(filterValue, page)}
+        onClose={() => setIsAddModalOpen(false)}
+        onSaved={() => fetchData(searchValue, page)}
       />
 
       {editingRow && (
         <EditSizeModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSaved={() => fetchData()}
+          isOpen={!!editingRow}
+          onClose={() => setEditingRow(null)}
           id={editingRow.id}
           defaultSize={editingRow.size}
           defaultColorId={editingRow.color_id}
+          onSaved={() => fetchData(searchValue, page)}
         />
       )}
-    </>
+    </div>
   );
-};
+}
