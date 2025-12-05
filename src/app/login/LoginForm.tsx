@@ -3,8 +3,8 @@ import React from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { LoginSchema } from "@/lib/schemas/loginSchema";
 import { useLogin } from "@/hooks/useLogin";
+import { LoginSchema } from "@/lib/schemas/LoginSchema";
 
 interface LoginValues {
   email: string;
@@ -54,6 +54,7 @@ const LoginForm: React.FC = () => {
             type="submit"
             text={loading ? "Logging in..." : "Login"}
             loading={loading}
+            className=""
           />
         </Form>
       )}
