@@ -39,7 +39,9 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTabId }) => {
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
-              ref={(el) => (tabsRef.current[index] = el)}
+              ref={(el) => {
+                tabsRef.current[index] = el;
+              }}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center space-x-2 px-4 py-2 whitespace-nowrap text-sm font-medium transition-colors duration-200
     ${
