@@ -5,6 +5,10 @@ import { Provider } from "react-redux";
 import { SnackbarProvider } from "notistack";
 import { store } from "../store";
 import "../styles/globals.css";
+import { ColorProvider } from "@/context/ColorContext";
+import { SizeContent } from "@/components/tabs/content/size/size";
+import { SizeProvider } from "@/context/SizeContext";
+import { SizeProviderNew } from "@/context/SizeContextNew";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -15,7 +19,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           autoHideDuration={3000}
         >
-          <Provider store={store}>{children}</Provider>
+          <SizeProviderNew>
+            <SizeProvider>
+              <ColorProvider>
+                <Provider store={store}>{children}</Provider>
+              </ColorProvider>
+            </SizeProvider>
+          </SizeProviderNew>
         </SnackbarProvider>
       </body>
     </html>
