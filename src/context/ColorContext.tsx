@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
+import { useSnackbar } from "notistack";
 
 export interface ColorData {
   id: string;
@@ -51,6 +52,8 @@ interface ColorContextType {
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
 
 export const ColorProvider = ({ children }: { children: ReactNode }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [data, setData] = useState<TableRow<ColorData>[]>([]);
   const [allData, setAllData] = useState<ColorData[]>([]);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -142,9 +145,14 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add color");
       await fetchData();
+      enqueueSnackbar(`Added color ${color} g successfully`, {
+        variant: "success",
+      });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
@@ -156,9 +164,12 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to delete color");
       await fetchData();
+      enqueueSnackbar("Deleted color successfully", { variant: "success" });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
@@ -172,9 +183,12 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to update color");
       await fetchData();
+      enqueueSnackbar(`Updated color to ${color} g`, { variant: "success" });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
