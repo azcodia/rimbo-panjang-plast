@@ -19,6 +19,7 @@ export function SizeContent() {
     setSearchValue,
     handleAction,
     fetchData,
+    columns,
   } = useSizeContext();
   const { selectOptions, selectedColor, setSelectedColor } = useColorContext();
 
@@ -28,10 +29,7 @@ export function SizeContent() {
   return (
     <div className="">
       <TableWithControls
-        columns={[
-          { key: "color_name", label: "Color" },
-          { key: "size", label: "Size" },
-        ]}
+        columns={columns}
         selectOptions={selectOptions}
         selectedValue={selectedColor ?? undefined}
         onSelectChange={(val) => {
