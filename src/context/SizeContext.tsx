@@ -10,6 +10,7 @@ import {
   useMemo,
 } from "react";
 import { TableRow, TableAction } from "@/components/table/Table";
+import { useSnackbar } from "notistack";
 
 export interface SizeData {
   id: string;
@@ -32,6 +33,7 @@ interface SizeContextType {
   pageSize: number;
   total: number;
   searchValue: string;
+  columns: { key: string; label: string }[];
   fetchData: (
     filter?: string,
     pageNum?: number,
@@ -49,6 +51,8 @@ interface SizeContextType {
 const SizeContext = createContext<SizeContextType | undefined>(undefined);
 
 export const SizeProvider = ({ children }: { children: ReactNode }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [allData, setAllData] = useState<SizeData[]>([]);
   const [groupedData, setGroupedData] = useState<GroupedSize[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +61,18 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [searchValue, setSearchValue] = useState("");
+
+  const columns = [
+    {
+      key: "color_name",
+      label: "Color",
+    },
+    {
+      key: "size",
+      label: "Size",
+      render: (_value: any, row: { size: number }) => `${row.size} cm`,
+    },
+  ];
 
   const groupSizes = (data: SizeData[]) => {
     const grouped: Record<string, SizeData[]> = {};
@@ -101,11 +117,12 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (err) {
         console.error("Failed to fetch sizes:", err);
+        enqueueSnackbar("Failed to fetch sizes", { variant: "error" });
       } finally {
         setLoading(false);
       }
     },
-    [page, pageSize, searchValue]
+    [page, pageSize, searchValue, enqueueSnackbar]
   );
 
   const tableData = useMemo(() => {
@@ -135,11 +152,17 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add size");
+
       await fetchData("", 1);
       setPage(1);
+      enqueueSnackbar(`Added size ${size} successfully`, {
+        variant: "success",
+      });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
@@ -152,10 +175,14 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to update size");
+
       await fetchData("", page);
+      enqueueSnackbar(`Updated size to ${size}`, { variant: "success" });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
@@ -164,10 +191,14 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch(`/api/sizes/size?id=${id}`, { method: "DELETE" });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to delete size");
+
       await fetchData("", page);
+      enqueueSnackbar("Deleted size successfully", { variant: "success" });
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Something went wrong");
+      enqueueSnackbar(err.message || "Something went wrong", {
+        variant: "error",
+      });
     }
   };
 
@@ -190,6 +221,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <SizeContext.Provider
       value={{
+        columns,
         allData,
         groupedData,
         tableData,
@@ -216,6 +248,6 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
 export const useSizeContext = () => {
   const context = useContext(SizeContext);
   if (!context)
-    throw new Error("useSizeContext must be used within a SizeProviderNew");
+    throw new Error("useSizeContext must be used within a SizeProvider");
   return context;
 };
