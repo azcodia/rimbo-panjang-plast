@@ -8,9 +8,6 @@ export default function GroupingPage() {
       (mod) => mod.ColorContent
     )
   );
-  // const SizeContent = dynamic(() =>
-  //   import("@/components/tabs/content/size/size").then((mod) => mod.SizeContent)
-  // );
 
   const SizeContent = dynamic(() =>
     import("@/components/tabs/content/size/size").then((mod) => mod.SizeContent)
