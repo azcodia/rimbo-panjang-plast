@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,8 +29,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    const token = "loggedin";
-    return NextResponse.json({ message: "Login successful", token });
+    // generate JWT token
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    return NextResponse.json({
+      message: "Login successful",
+      token,
+      userId: user._id,
+    });
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Server error" },
