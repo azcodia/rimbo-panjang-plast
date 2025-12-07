@@ -8,6 +8,22 @@ import mongoose from "mongoose";
 export async function GET(req: NextRequest) {
   await dbConnect();
   try {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return NextResponse.json(
+        { success: false, message: "Authorization header missing" },
+        { status: 401 }
+      );
+    }
+    try {
+      verifyToken(authHeader.replace("Bearer ", ""));
+    } catch (err: any) {
+      return NextResponse.json(
+        { success: false, message: err.message },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const typeFilter = searchParams.get("type") || "";
     const noteFilter = searchParams.get("note") || "";
@@ -201,22 +217,42 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   await dbConnect();
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-    if (!id) {
+    // 🔒 verifikasi token
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
       return NextResponse.json(
-        { success: false, message: "ID is required" },
+        { success: false, message: "Authorization header missing" },
+        { status: 401 }
+      );
+    }
+    try {
+      verifyToken(authHeader.replace("Bearer ", ""));
+    } catch (err: any) {
+      return NextResponse.json(
+        { success: false, message: err.message },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    const stock_id = body.stock_id;
+    if (!stock_id) {
+      return NextResponse.json(
+        { success: false, message: "stock_id is required" },
         { status: 400 }
       );
     }
 
-    const deleted = await HistoryTransactionModel.findByIdAndUpdate(
-      id,
-      { deleted: true },
-      { new: true }
+    const result = await HistoryTransactionModel.updateMany(
+      { stock_id },
+      { $set: { deleted: true } }
     );
 
-    return NextResponse.json({ success: true, data: deleted });
+    return NextResponse.json({
+      success: true,
+      message: "Soft delete success",
+      data: result,
+    });
   } catch (err) {
     console.error(err);
     return NextResponse.json(

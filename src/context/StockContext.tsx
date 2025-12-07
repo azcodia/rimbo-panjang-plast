@@ -210,7 +210,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       if (!token) throw new Error("User not authenticated");
 
       await fetch("/api/history-transactions/history-transaction", {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -283,7 +283,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // ✅ groupeddataStock versi fix per color
   const groupeddataStock: TableRow<StockData>[] = useMemo(() => {
     const map = new Map<string, StockData[]>();
     allData.forEach((item) => {
@@ -299,7 +298,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           data: {
             id: item.id,
             color_id: item.color_id,
-            color: index === 0 ? item.color : "", // hanya row pertama muncul color
+            color: index === 0 ? item.color : "",
             size_id: item.size_id,
             size: item.size,
             heavy_id: item.heavy_id,
