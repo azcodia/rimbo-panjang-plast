@@ -46,6 +46,8 @@ interface SizeContextType {
   addSize: (color_id: string, size: number) => Promise<void>;
   updateSize: (id: string, size: number, color_id: string) => Promise<void>;
   deleteSize: (id: string) => Promise<void>;
+  fetchSizesByColor: (colorId: string) => Promise<void>;
+  filteredSizes: SizeData[];
 }
 
 const SizeContext = createContext<SizeContextType | undefined>(undefined);
@@ -56,6 +58,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   const [allData, setAllData] = useState<SizeData[]>([]);
   const [groupedData, setGroupedData] = useState<GroupedSize[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filteredSizes, setFilteredSizes] = useState<SizeData[]>([]);
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -63,10 +66,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   const [searchValue, setSearchValue] = useState("");
 
   const columns = [
-    {
-      key: "color_name",
-      label: "Color",
-    },
+    { key: "color_name", label: "Color" },
     {
       key: "size",
       label: "Size",
@@ -106,14 +106,19 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
         if (json.success) {
           const mapped: SizeData[] = json.data.map((d: any) => ({
             id: d._id,
-            color_id: d.color_id._id,
-            color_name: d.color_id.color,
+            color_id: d.color_id?._id?.toString() || "",
+            color_name: d.color_id?.color || "",
             size: d.size,
           }));
 
           setAllData(mapped);
           setGroupedData(groupSizes(mapped));
           setTotal(json.total);
+
+          // Jika filter berdasarkan color, set filteredSizes otomatis
+          if (color_id) {
+            setFilteredSizes(mapped.filter((s) => s.color_id === color_id));
+          }
         }
       } catch (err) {
         console.error("Failed to fetch sizes:", err);
@@ -124,6 +129,14 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
     },
     [page, pageSize, searchValue, enqueueSnackbar]
   );
+
+  const fetchSizesByColor = async (colorId: string) => {
+    try {
+      await fetchData("", 1, colorId);
+    } catch (err) {
+      console.error("Failed to fetch sizes by color:", err);
+    }
+  };
 
   const tableData = useMemo(() => {
     const rows: TableRow<any>[] = [];
@@ -238,6 +251,8 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
         addSize,
         updateSize,
         deleteSize,
+        fetchSizesByColor,
+        filteredSizes,
       }}
     >
       {children}
