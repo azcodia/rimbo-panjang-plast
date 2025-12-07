@@ -7,6 +7,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useMemo,
 } from "react";
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
@@ -15,15 +16,18 @@ import { useSnackbar } from "notistack";
 export interface StockData {
   id: string;
   color_id: string;
+  color?: string;
   size_id: string;
+  size?: string;
   heavy_id: string;
+  heavy?: string;
   quantity: number;
 }
 
 interface StockContextType {
   data: TableRow<StockData>[];
   allData: StockData[];
-  selectOptions: SelectOption<string>[];
+  groupeddataStock: TableRow<StockData>[];
   page: number;
   setPage: (page: number) => void;
   columns: { key: string; label: string }[];
@@ -62,7 +66,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<TableRow<StockData>[]>([]);
   const [allData, setAllData] = useState<StockData[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(2);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -71,13 +75,12 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const columns = [
-    { key: "color_id", label: "Color" },
-    { key: "size_id", label: "Size" },
-    { key: "heavy_id", label: "Heavy" },
-    { key: "quantity", label: "Quantity" },
+    { key: "color", label: "Color" },
+    { key: "size", label: "Size" },
+    { key: "heavy", label: "Heavy" },
+    { key: "quantity", label: "Stock" },
   ];
 
-  // helper ambil token JWT dari cookie
   const getToken = () =>
     document.cookie
       .split("; ")
@@ -98,10 +101,13 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
 
         if (json.success) {
           const mappedData: StockData[] = json.data.map((d: any) => ({
-            id: d._id,
-            color_id: d.color_id?._id || d.color_id,
-            size_id: d.size_id?._id || d.size_id,
-            heavy_id: d.heavy_id?._id || d.heavy_id,
+            id: d.id,
+            color_id: d.color_id,
+            color: d.color,
+            size_id: d.size_id,
+            size: d.size,
+            heavy_id: d.heavy_id,
+            heavy: d.heavy,
             quantity: d.quantity,
           }));
           setAllData(mappedData);
@@ -141,7 +147,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       setIsEditModalOpen(true);
     } else if (action === "show") {
       alert(
-        `Stock details:\nColor: ${row.color_id}\nSize: ${row.size_id}\nHeavy: ${row.heavy_id}\nQuantity: ${row.quantity}`
+        `Stock details:\nColor: ${row.color}\nSize: ${row.size}\nHeavy: ${row.heavy}\nQuantity: ${row.quantity}`
       );
     }
   };
@@ -203,7 +209,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
 
-      // kirim ke history transaction
       await fetch("/api/history-transactions/history-transaction", {
         method: "POST",
         headers: {
@@ -278,6 +283,37 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // ✅ groupeddataStock versi fix per color
+  const groupeddataStock: TableRow<StockData>[] = useMemo(() => {
+    const map = new Map<string, StockData[]>();
+    allData.forEach((item) => {
+      if (!map.has(item.color_id)) map.set(item.color_id, []);
+      map.get(item.color_id)?.push({ ...item });
+    });
+
+    const grouped: TableRow<StockData>[] = [];
+
+    map.forEach((items, color_id) => {
+      items.forEach((item, index) => {
+        grouped.push({
+          data: {
+            id: item.id,
+            color_id: item.color_id,
+            color: index === 0 ? item.color : "", // hanya row pertama muncul color
+            size_id: item.size_id,
+            size: item.size,
+            heavy_id: item.heavy_id,
+            heavy: item.heavy,
+            quantity: item.quantity,
+          },
+          actions: ["edit", "delete", "show"],
+        });
+      });
+    });
+
+    return grouped;
+  }, [allData]);
+
   useEffect(() => {
     fetchData(filterValue, page);
   }, [fetchData, page, pageSize, filterValue]);
@@ -295,7 +331,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       value={{
         data,
         allData,
-        selectOptions,
+        groupeddataStock,
         page,
         setPage,
         columns,
