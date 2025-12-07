@@ -11,11 +11,11 @@ export default function ProtectedLayout({
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-white relative transition-colors duration-200">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
-        <header className="mt-4 mr-4 rounded-lg bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+      <div className="flex-col flex-1 w-[10px] ml-[315px] bg-white rounded-md">
+        <header className="mt-4 mr-4 py-4 px-6 flex justify-between items-center bg-grayd shadow-md rounded-md mb-3">
           <h1 className="text-xl font-semibold">
             {(pathname.split("/").pop() || "dashboard")
               .charAt(0)
@@ -24,7 +24,7 @@ export default function ProtectedLayout({
           </h1>
         </header>
 
-        <main className="flex-1 py-3 mr-4 bg-gray-100">{children}</main>
+        <main className="flex-1 py-2 mr-4 bg-grayd rounded-md">{children}</main>
       </div>
     </div>
   );

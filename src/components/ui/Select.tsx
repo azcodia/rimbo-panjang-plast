@@ -28,7 +28,7 @@ const Select: React.FC<SelectProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`
-          w-full p-3 rounded-sm bg-gray-50 border
+          w-full p-3 rounded-md bg-gray-50 border
           ${error ? "border-danger" : "border-gray-100"}
           focus:border-primary focus:ring-1 focus:ring-primary
           focus:outline-none transition-all duration-200 shadow-sm

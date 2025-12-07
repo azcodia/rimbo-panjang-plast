@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { logout as logoutAction } from "../../store/slice/authSlice";
 import SidebarGroup from "./SidebarGroup";
 import { MenuItem, menuItems } from "./menuItems";
+import Button from "../ui/Button";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -28,10 +29,10 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="w-64 bg-white shadow-md rounded-lg m-4 flex flex-col">
-      <div className="flex justify-center items-center pb-6 pt-4">
+    <aside className="bg-grayd rounded-md m-4 flex-col hidden xl:block w-[280px] fixed left-18 top-0 bottom-0">
+      <div className="flex  pb-6 pt-4">
         <div className="border-b p-2.5">
-          <Image src="/images/logo.png" width={200} height={125} alt="Logo" />
+          <Image src="/images/logo.png" width={180} height={125} alt="Logo" />
         </div>
       </div>
 
@@ -46,13 +47,13 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="px-4 py-4">
-        <button
+      <div className="px-4 py-4 absolute bottom-4 left-0 w-full">
+        <Button
+          type="button"
+          text="Cancel"
           onClick={handleLogout}
-          className="w-full py-3 bg-danger-light text-white rounded hover:bg-danger"
-        >
-          Keluar
-        </button>
+          className="w-full py-3 bg-danger text-white rounded-md hover:bg-danger-light"
+        />
       </div>
     </aside>
   );

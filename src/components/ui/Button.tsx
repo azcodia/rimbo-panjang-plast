@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const isDisabled = loading;
 
-  const defaultClasses = "bg-primary-light hover:bg-primary text-white";
+  const defaultClasses = "bg-success hover:bg-success-light text-white";
 
   const finalClassName = clsx(
     "w-full py-3 rounded-md font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2",

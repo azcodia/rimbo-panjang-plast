@@ -52,7 +52,7 @@ export default function BaseModal({
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel
-              className={`relative inline-block w-full ${sizeClasses[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg`}
+              className={`relative inline-block w-full ${sizeClasses[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-md`}
             >
               {/* <button
                 type="button"

@@ -14,22 +14,22 @@ export const menuItems: MenuItem[] = [
     label: "Dashboard",
     path: "/dashboard",
     group: "Menu",
-    icon: <LayoutDashboard size={18} strokeWidth={2} />,
+    icon: <LayoutDashboard size={22.5} strokeWidth={2.2} />,
   },
   {
     label: "Pengaturan Barang",
     group: "Stok & Atribut",
-    icon: <Boxes size={18} strokeWidth={2} />,
+    icon: <Boxes size={22.5} strokeWidth={2.2} />,
     children: [
       {
         label: "Spesifikasi",
-        path: "/item-arrangement/grouping",
-        icon: <Cog size={18} strokeWidth={2} />,
+        path: "/item-arrangement/atribut",
+        icon: <Cog size={22.5} strokeWidth={2.2} />,
       },
       {
         label: "Stok",
-        path: "/profile",
-        icon: <PackageSearch size={18} strokeWidth={2} />,
+        path: "/item-arrangement/stock",
+        icon: <PackageSearch size={22.5} strokeWidth={2.2} />,
       },
     ],
   },

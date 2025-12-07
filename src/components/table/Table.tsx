@@ -80,7 +80,7 @@ export default function Table<T extends Record<string, any>>({
     return data.map((row, rowIndex) => (
       <tr
         key={rowIndex}
-        className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default"
+        className="odd:bg-white even:bg-grayd border-b border-default"
       >
         {columns.map((col) => (
           <td
@@ -138,10 +138,10 @@ export default function Table<T extends Record<string, any>>({
   };
 
   return (
-    <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+    <div className="relative overflow-x-auto bg-white shadow-xs rounded-md border border-default">
       <table className="w-full text-sm text-left rtl:text-right text-body">
         <thead>
-          <tr className="bg-gray-100 text-gray-700">
+          <tr className="bg-grayd text-gray-700">
             {columns.map((col) => (
               <th
                 key={col.key}
@@ -161,21 +161,21 @@ export default function Table<T extends Record<string, any>>({
       </table>
 
       <div className="flex justify-between items-center px-6 py-3 font-medium border-t border-gray-200">
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-gray-400">
           Page {page} of {totalPages} / All data: {totalDataCount}
         </span>
         <div className="flex space-x-2">
           <button
             onClick={handlePrev}
             disabled={page === 1 || loading}
-            className="px-3 py-1 rounded bg-gray-100 text-gray-700 disabled:text-gray-300 disabled:bg-gray-50 transition-colors"
+            className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors"
           >
             Previous
           </button>
           <button
             onClick={handleNext}
             disabled={page === totalPages || loading}
-            className="px-3 py-1 rounded bg-gray-100 text-gray-700 disabled:text-gray-300 disabled:bg-gray-50 transition-colors"
+            className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors"
           >
             Next
           </button>

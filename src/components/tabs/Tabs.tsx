@@ -33,7 +33,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTabId }) => {
   }, [activeTab, tabs]);
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white rounded-md">
       <div className="relative border-b-[0.5px] border-gray-300">
         <div className="flex overflow-x-auto">
           {tabs.map((tab, index) => (
@@ -43,10 +43,10 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTabId }) => {
                 tabsRef.current[index] = el;
               }}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-2 px-4 py-2 whitespace-nowrap text-sm font-medium transition-colors duration-200
+              className={`flex items-center space-x-2 py-4 px-6 whitespace-nowrap text-sm font-medium transition-colors duration-200
     ${
       activeTab === tab.id
-        ? "text-success font-semibold"
+        ? "text-success font-bold"
         : "text-gray-400 hover:text-gray-500"
     }`}
             >

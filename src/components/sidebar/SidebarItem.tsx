@@ -24,15 +24,23 @@ export default function SidebarItem({ item, pathname }: SidebarItemProps) {
       <li className="relative">
         <button
           onClick={toggleMenu}
-          className="w-full text-left py-1.5 px-3 flex items-center justify-between hover:bg-gray-50 rounded relative"
+          className="w-full text-left py-1.5 px-3 flex items-center justify-between rounded-md relative group"
         >
           <div className="flex items-center gap-3 ml-2">
-            <span className={`${isActive ? "text-success" : "text-gray-400"}`}>
+            <span
+              className={`${
+                isActive
+                  ? "text-success group-hover:text-success-light"
+                  : "text-gray-400 group-hover:text-gray-500"
+              }`}
+            >
               {item.icon}
             </span>
             <span
-              className={`text-xs font-semibold ${
-                isActive ? "text-success" : "text-gray-400"
+              className={`hover:text-gray-500 text-xs font-semibold ${
+                isActive
+                  ? "text-success group-hover:text-success-light"
+                  : "text-gray-400 group-hover:text-gray-500"
               }`}
             >
               {item.label}
@@ -40,12 +48,12 @@ export default function SidebarItem({ item, pathname }: SidebarItemProps) {
           </div>
           <ChevronDown
             size={15}
-            className={`transition-transform duration-200 text-gray-400 ${
+            className={`transition-transform duration-200 text-gray-400 group-hover:text-gray-500 ${
               open ? "rotate-0" : "rotate-180"
             }`}
           />
           {isActive && (
-            <span className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2.5 h-9 bg-success rounded-3xl transition-all duration-300"></span>
+            <span className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2.5 h-9 bg-success text-success-light rounded-md transition-all duration-300"></span>
           )}
         </button>
 
@@ -54,21 +62,25 @@ export default function SidebarItem({ item, pathname }: SidebarItemProps) {
             {item.children.map((child) => {
               const childActive = pathname === child.path;
               return (
-                <li key={child.label} className="relative">
+                <li key={child.label} className="relative group">
                   <Link
                     href={child.path}
-                    className="flex items-center gap-3 py-1 px-3 my-2 hover:bg-gray-50 relative"
+                    className="flex items-center gap-3 py-1 px-3 my-2 group-hover:text-gray-500 relative"
                   >
                     <span
-                      className={`${
-                        childActive ? "text-success" : "text-gray-400"
+                      className={`hover:text-gray-500 ${
+                        childActive
+                          ? "text-success group-hover:text-success-light"
+                          : "text-gray-400 group-hover:text-gray-500"
                       } ml-2`}
                     >
                       {child.icon}
                     </span>
                     <span
                       className={`text-xs font-semibold ${
-                        childActive ? "text-success" : "text-gray-400"
+                        childActive
+                          ? "text-success group-hover:text-success-light"
+                          : "text-gray-400 group-hover:text-gray-500"
                       }`}
                     >
                       {child.label}
@@ -87,20 +99,28 @@ export default function SidebarItem({ item, pathname }: SidebarItemProps) {
     <li className="relative">
       <Link
         href={item.path!}
-        className="flex items-center gap-3 py-1.5 px-3 hover:bg-gray-50 relative"
+        className="flex items-center gap-3 py-1.5 px-3 relative group"
       >
-        <span className={`${isActive ? "text-success" : "text-gray-400"} ml-2`}>
+        <span
+          className={`hover:text-gray-500 ${
+            isActive
+              ? "text-success-light"
+              : "text-gray-400 group-hover:text-gray-500"
+          } ml-2`}
+        >
           {item.icon}
         </span>
         <span
-          className={`text-xs font-semibold ${
-            isActive ? "text-success" : "text-gray-400"
+          className={`hover:text-gray-500 text-xs font-semibold ${
+            isActive
+              ? "text-success-light"
+              : "text-gray-400 group-hover:text-gray-500"
           }`}
         >
           {item.label}
         </span>
         {isActive && (
-          <span className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2.5 h-9 bg-success rounded-3xl transition-all duration-300"></span>
+          <span className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2.5 h-9 bg-gradient-to-r from-success to-success-light rounded-md transition-all duration-300"></span>
         )}
       </Link>
     </li>

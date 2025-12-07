@@ -16,7 +16,7 @@ export default function SidebarGroup({
 }: SidebarGroupProps) {
   return (
     <div className="mb-3">
-      <h3 className="text-gray-400 uppercase text-xs font-semibold px-5 mb-2">
+      <h3 className="text-gray-400 uppercase text-sm font-semibold px-5 mb-2">
         {groupName}
       </h3>
       <ul className="space-y-1">

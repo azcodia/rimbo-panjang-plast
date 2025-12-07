@@ -27,9 +27,9 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`
-          w-full p-3 rounded-sm bg-gray-50 border
+          w-full p-2.5 rounded-md bg-grayd text-[#1f1f1f] border
           ${error ? "border-danger" : "border-gray-100"}
-          focus:border-primary focus:ring-1 focus:ring-primary
+          focus:border-success-light focus:ring-1 focus:ring-success
           focus:outline-none transition-all duration-200 shadow-sm
         `}
       />

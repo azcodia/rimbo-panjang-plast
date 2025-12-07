@@ -60,7 +60,7 @@ export default function TableWithControls<T extends Record<string, any>>({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-        <div className="sm:w-64 w-full flex gap-2">
+        <div className="sm:w-60 w-full flex gap-2">
           {showSearch && (
             <Input
               value={filterValue}
@@ -73,7 +73,7 @@ export default function TableWithControls<T extends Record<string, any>>({
             <div className="flex items-center gap-2">
               <span className="text-sm">Filter</span>
               <select
-                className="border px-2 py-1 rounded w-full sm:w-auto"
+                className="border px-2 py-1 rounded-md w-full sm:w-auto"
                 value={selectedValue ?? ""}
                 onChange={(e) =>
                   onSelectChange && onSelectChange(e.target.value)

@@ -69,7 +69,7 @@ export default function AddColorModal({
                 type="button"
                 text="Cancel"
                 onClick={onClose}
-                className="bg-gray-300 text-black hover:bg-gray-400"
+                className="bg-gray-200 text-black hover:bg-gray-300"
               />
             </div>
           </Form>
