@@ -1,9 +1,16 @@
-"use client";
-import React from "react";
 import Image from "next/image";
 import LoginForm from "./LoginForm";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-const LoginPage: React.FC = () => {
+export default async function LoginPage() {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
+
+  if (token) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-screen flex relative">
       <div className="flex-[3] relative flex items-center justify-center">
@@ -30,6 +37,4 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}
