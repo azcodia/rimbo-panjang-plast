@@ -11,6 +11,7 @@ interface SelectProps {
   label?: string;
   error?: string;
   options: SelectOption[];
+  disabled?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -19,6 +20,7 @@ const Select: React.FC<SelectProps> = ({
   label,
   error,
   options,
+  disabled = false,
 }) => {
   return (
     <div className="flex flex-col w-full">
@@ -28,11 +30,17 @@ const Select: React.FC<SelectProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`
-          w-full p-3 rounded-md bg-gray-50 border
-          ${error ? "border-danger" : "border-gray-100"}
-          focus:border-primary focus:ring-1 focus:ring-primary
-          focus:outline-none transition-all duration-200 shadow-sm
-        `}
+    w-full p-3 rounded-md border
+    ${error ? "border-danger" : "border-gray-300"}
+    focus:border-primary focus:ring-1 focus:ring-primary
+    focus:outline-none transition-all duration-200 shadow-sm
+    ${
+      disabled
+        ? "cursor-not-allowed bg-gray-100 text-gray-700"
+        : "bg-white cursor-pointer"
+    }
+  `}
+        disabled={disabled}
       >
         <option value="" disabled>
           Select {label || ""}

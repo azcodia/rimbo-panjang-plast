@@ -37,7 +37,7 @@ export const useLogin = () => {
           variant: "error",
         });
       } else {
-        enqueueSnackbar("Login berhasil!", { variant: "success" });
+        enqueueSnackbar("Login Success!", { variant: "success" });
         document.cookie = `token=${data.token}; path=/; max-age=3600`;
         dispatch(loginAction());
         router.push("/dashboard");
