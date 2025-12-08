@@ -6,7 +6,7 @@ import {
   deleteHeavy,
   getHeavies,
   updateHeavy,
-} from "./heavy.controller";
+} from "./heavy.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();

@@ -6,7 +6,7 @@ import {
   deleteColor,
   getColors,
   updateColor,
-} from "./color.controller";
+} from "./color.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();

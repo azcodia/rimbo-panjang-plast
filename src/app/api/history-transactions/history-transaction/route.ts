@@ -6,7 +6,7 @@ import {
   getHistoryTransactions,
   softDeleteHistoryTransaction,
   updateHistoryTransaction,
-} from "./history.controller";
+} from "./history.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();

@@ -6,7 +6,7 @@ import {
   deleteStock as deleteStockController,
   getStocks,
   updateStock as updateStockController,
-} from "./stock.controller";
+} from "./stock.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();

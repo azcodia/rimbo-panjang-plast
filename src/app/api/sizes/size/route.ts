@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import { getUserIdFromReq } from "@/lib/auth";
-import {
-  createSize,
-  deleteSize,
-  getSizes,
-  updateSize,
-} from "./size.controller";
+import { createSize, deleteSize, getSizes, updateSize } from "./size.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
