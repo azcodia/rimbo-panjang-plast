@@ -8,16 +8,20 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#018ebf", // warna utama biru
-          light: "#02b3e9",
+          DEFAULT: "#1a648a",
+          light: "#2098d5",
         },
         success: {
-          DEFAULT: "#509f08", // warna utama hijau
-          light: "#81bd29",
+          DEFAULT: "#7bb927",
+          light: "#519d05",
         },
         danger: {
-          DEFAULT: "#cf120e", // warna utama merah
-          light: "#e71715",
+          DEFAULT: "#cd0f09",
+          light: "#e81417",
+        },
+        grayd: {
+          DEFAULT: "#F0F0F0",
+          light: "#fafafa",
         },
       },
     },
