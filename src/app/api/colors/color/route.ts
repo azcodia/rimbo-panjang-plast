@@ -1,37 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import ColorModel from "@/models/Color";
 import dbConnect from "@/lib/mongodb";
+import { getUserIdFromReq } from "@/lib/auth";
+import {
+  createColor,
+  deleteColor,
+  getColors,
+  updateColor,
+} from "./color.controller";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
-
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const filter = searchParams.get("filter") || "";
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
-
     const skip = (page - 1) * pageSize;
 
     const query: any = {};
     if (filter) query.color = { $regex: filter, $options: "i" };
 
-    const total = await ColorModel.countDocuments(query);
-    const colors = await ColorModel.find(query)
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ created_at: -1 });
-
-    return NextResponse.json({
-      success: true,
-      total,
-      data: colors,
-    });
-  } catch (err) {
-    console.error(err);
+    const result = await getColors(query, skip, pageSize);
+    return NextResponse.json({ success: true, ...result });
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      { status: err.message.includes("Authorization") ? 401 : 500 }
     );
   }
 }
@@ -39,31 +35,49 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await dbConnect();
   try {
+    getUserIdFromReq(req);
+
     const { color } = await req.json();
+    if (!color) throw new Error("Color is required");
 
-    if (!color) {
-      return NextResponse.json(
-        { success: false, message: "Color is required" },
-        { status: 400 }
-      );
-    }
-
-    const exists = await ColorModel.findOne({ color });
-    if (exists) {
-      return NextResponse.json(
-        { success: false, message: "Color already exists" },
-        { status: 400 }
-      );
-    }
-
-    const newColor = await ColorModel.create({ color });
-
+    const newColor = await createColor(color);
     return NextResponse.json({ success: true, data: newColor });
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  await dbConnect();
+  try {
+    getUserIdFromReq(req);
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    const { color } = await req.json();
+    if (!id || !color) throw new Error("ID and color are required");
+
+    const updated = await updateColor(id, color);
+    return NextResponse.json({ success: true, data: updated });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }
@@ -71,63 +85,24 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   await dbConnect();
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    if (!id) throw new Error("ID is required");
 
-    if (!id) {
-      return NextResponse.json(
-        { success: false, message: "ID is required" },
-        { status: 400 }
-      );
-    }
-
-    await ColorModel.findByIdAndDelete(id);
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error(err);
+    const deleted = await deleteColor(id);
+    return NextResponse.json({ success: true, data: deleted });
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(req: NextRequest) {
-  await dbConnect();
-
-  try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-    const { color } = await req.json();
-
-    if (!id || !color) {
-      return NextResponse.json(
-        { success: false, message: "ID and color are required" },
-        { status: 400 }
-      );
-    }
-
-    const exists = await ColorModel.findOne({ color, _id: { $ne: id } });
-    if (exists) {
-      return NextResponse.json(
-        { success: false, message: "Color already exists" },
-        { status: 400 }
-      );
-    }
-
-    const updated = await ColorModel.findByIdAndUpdate(
-      id,
-      { color },
-      { new: true }
-    );
-
-    return NextResponse.json({ success: true, data: updated });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }

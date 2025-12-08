@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import SizeModel from "@/models/Size";
 import dbConnect from "@/lib/mongodb";
+import { getUserIdFromReq } from "@/lib/auth";
+import {
+  createSize,
+  deleteSize,
+  getSizes,
+  updateSize,
+} from "./size.controller";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
-
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const filter = searchParams.get("filter") || "";
     const color_id = searchParams.get("color_id");
@@ -17,19 +24,18 @@ export async function GET(req: NextRequest) {
     if (filter) query.size = { $regex: filter, $options: "i" };
     if (color_id) query.color_id = color_id;
 
-    const total = await SizeModel.countDocuments(query);
-    const sizes = await SizeModel.find(query)
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ created_at: -1 })
-      .populate("color_id", "color");
-
-    return NextResponse.json({ success: true, total, data: sizes });
-  } catch (err) {
-    console.error(err);
+    const result = await getSizes(query, skip, pageSize);
+    return NextResponse.json({ success: true, ...result });
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 500,
+      }
     );
   }
 }
@@ -37,74 +43,49 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await dbConnect();
   try {
+    getUserIdFromReq(req);
+
     const { color_id, size } = await req.json();
+    if (!color_id || size == null)
+      throw new Error("Color and size are required");
 
-    if (!color_id || !size) {
-      return NextResponse.json(
-        { success: false, message: "Color and size are required" },
-        { status: 400 }
-      );
-    }
-
-    const exists = await SizeModel.findOne({ color_id, size });
-    if (exists) {
-      return NextResponse.json(
-        { success: false, message: "Size already exists for this color" },
-        { status: 400 }
-      );
-    }
-
-    const newSize = await SizeModel.create({ color_id, size });
+    const newSize = await createSize(color_id, Number(size));
     return NextResponse.json({ success: true, data: newSize });
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }
 
 export async function PUT(req: NextRequest) {
   await dbConnect();
-
   try {
-    const { id, size, color_id } = await req.json();
+    getUserIdFromReq(req);
 
-    if (!id || !size || !color_id) {
-      return NextResponse.json(
-        { success: false, message: "ID, size, and color_id are required" },
-        { status: 400 }
-      );
-    }
+    const { id, color_id, size } = await req.json();
+    if (!id || !color_id || size == null)
+      throw new Error("ID, color, and size are required");
 
-    const sizeNum = Number(size);
-    if (isNaN(sizeNum) || sizeNum <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Size must be a positive number" },
-        { status: 400 }
-      );
-    }
-
-    const updated = await SizeModel.findByIdAndUpdate(
-      id,
-      { size: sizeNum, color_id, updated_at: new Date() },
-      { new: true }
-    );
-
-    if (!updated) {
-      return NextResponse.json(
-        { success: false, message: "Size not found" },
-        { status: 404 }
-      );
-    }
-
+    const updated = await updateSize(id, color_id, Number(size));
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
-    console.error(err);
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }
@@ -112,22 +93,24 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   await dbConnect();
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    if (!id) {
-      return NextResponse.json(
-        { success: false, message: "ID is required" },
-        { status: 400 }
-      );
-    }
+    if (!id) throw new Error("ID is required");
 
-    await SizeModel.findByIdAndDelete(id);
-    return NextResponse.json({ success: true, message: "Size deleted" });
-  } catch (err) {
-    console.error(err);
+    const deleted = await deleteSize(id);
+    return NextResponse.json({ success: true, data: deleted });
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }

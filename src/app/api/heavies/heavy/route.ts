@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import HeavyModel from "@/models/Heavy";
 import dbConnect from "@/lib/mongodb";
+import { getUserIdFromReq } from "@/lib/auth";
+import {
+  createHeavy,
+  deleteHeavy,
+  getHeavies,
+  updateHeavy,
+} from "./heavy.controller";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
-
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const filter = searchParams.get("filter") || "";
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
@@ -16,7 +23,6 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * pageSize;
 
     const query: any = {};
-
     if (filter) {
       query.$expr = {
         $regexMatch: {
@@ -27,120 +33,96 @@ export async function GET(req: NextRequest) {
       };
     }
 
-    const total = await HeavyModel.countDocuments(query);
-    const heavies = await HeavyModel.find(query)
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ created_at: -1 });
-
-    return NextResponse.json({
-      success: true,
-      total,
-      data: heavies,
-    });
-  } catch (err) {
-    console.error("GET /api/heavies/heavy error:", err);
+    const result = await getHeavies(query, skip, pageSize);
+    return NextResponse.json({ success: true, ...result });
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 500,
+      }
     );
   }
 }
 
 export async function POST(req: NextRequest) {
   await dbConnect();
-
   try {
+    getUserIdFromReq(req);
+
     const { weight } = await req.json();
+    if (weight === undefined || weight === null)
+      throw new Error("Weight is required");
 
-    if (weight === undefined || weight === null) {
-      return NextResponse.json(
-        { success: false, message: "Weight is required" },
-        { status: 400 }
-      );
-    }
-
-    const exists = await HeavyModel.findOne({ weight });
-    if (exists) {
-      return NextResponse.json(
-        { success: false, message: "Weight already exists" },
-        { status: 400 }
-      );
-    }
-
-    const newHeavy = await HeavyModel.create({ weight });
-
+    const newHeavy = await createHeavy(Number(weight));
     return NextResponse.json({ success: true, data: newHeavy });
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  await dbConnect();
-
-  try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, message: "ID is required" },
-        { status: 400 }
-      );
-    }
-
-    await HeavyModel.findByIdAndDelete(id);
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }
 
 export async function PUT(req: NextRequest) {
   await dbConnect();
-
   try {
+    getUserIdFromReq(req);
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     const { weight } = await req.json();
 
-    if (!id || weight === undefined || weight === null) {
-      return NextResponse.json(
-        { success: false, message: "ID and weight are required" },
-        { status: 400 }
-      );
-    }
+    if (!id || weight === undefined || weight === null)
+      throw new Error("ID and weight are required");
 
-    const exists = await HeavyModel.findOne({ weight, _id: { $ne: id } });
-    if (exists) {
-      return NextResponse.json(
-        { success: false, message: "Weight already exists" },
-        { status: 400 }
-      );
-    }
-
-    const updated = await HeavyModel.findByIdAndUpdate(
-      id,
-      { weight, updated_at: new Date() },
-      { new: true }
-    );
-
+    const updated = await updateHeavy(id, Number(weight));
     return NextResponse.json({ success: true, data: updated });
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  await dbConnect();
+  try {
+    getUserIdFromReq(req);
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id) throw new Error("ID is required");
+
+    const deleted = await deleteHeavy(id);
+    return NextResponse.json({ success: true, data: deleted });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
     );
   }
 }
