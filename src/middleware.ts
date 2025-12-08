@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  const token = (await req.cookies.get("token"))?.value;
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token")?.value;
 
-  if (pathname.startsWith("/dashboard")) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-  }
+  const protectedRoutes = [
+    "/dashboard",
+    "/item-arrangement",
+    "/item-arrangement/atribut",
+    "/item-arrangement/stock",
+  ];
 
-  if (pathname === "/login" && token) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+  const pathname = request.nextUrl.pathname;
+
+  if (protectedRoutes.some((route) => pathname.startsWith(route)) && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: ["/dashboard/:path*", "/item-arrangement/:path*"],
 };
