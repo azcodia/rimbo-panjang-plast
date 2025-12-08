@@ -115,7 +115,6 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
           setGroupedData(groupSizes(mapped));
           setTotal(json.total);
 
-          // Jika filter berdasarkan color, set filteredSizes otomatis
           if (color_id) {
             setFilteredSizes(mapped.filter((s) => s.color_id === color_id));
           }

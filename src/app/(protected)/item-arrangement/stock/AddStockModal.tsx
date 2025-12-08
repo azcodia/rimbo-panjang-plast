@@ -22,7 +22,7 @@ interface StockFormValues {
   colorId: string;
   sizeId: string;
   heavyId: string;
-  quantity: string; // simpan sebagai string di formik
+  quantity: string;
 }
 
 const initialValues: StockFormValues = {

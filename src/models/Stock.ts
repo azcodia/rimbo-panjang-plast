@@ -18,7 +18,6 @@ const StockSchema: Schema = new Schema<IStock>({
   updated_at: { type: Date, default: Date.now },
 });
 
-// Unique kombinasi color + size + heavy
 StockSchema.index({ color_id: 1, size_id: 1, heavy_id: 1 }, { unique: true });
 
 export default mongoose.models.Stock ||
