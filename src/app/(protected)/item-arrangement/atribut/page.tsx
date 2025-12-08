@@ -41,10 +41,8 @@ export default function GroupingPage() {
   ];
 
   return (
-    <div>
-      <div className="py-4 px-6 bg-white rounded-lg">
-        <Tabs tabs={tabs} defaultTabId="home" />
-      </div>
+    <div className="bg-grayd m-4">
+      <Tabs tabs={tabs} defaultTabId="color" />
     </div>
   );
 }
