@@ -66,7 +66,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<TableRow<StockData>[]>([]);
   const [allData, setAllData] = useState<StockData[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -76,8 +76,17 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
 
   const columns = [
     { key: "color", label: "Color" },
-    { key: "size", label: "Size" },
-    { key: "heavy", label: "Heavy" },
+    {
+      key: "size",
+      label: "Size",
+      render: (_value: any, row: { size: number }) => `${row.size} cm`,
+    },
+    // { key: "heavy", label: "Heavy" },
+    {
+      key: "heavy",
+      label: "heavy",
+      render: (_value: any, row: { heavy: any }) => `${row.heavy} gram`,
+    },
     { key: "quantity", label: "Stock" },
   ];
 
@@ -98,7 +107,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
 
         const res = await fetch(`/api/stocks/stock?${params.toString()}`);
         const json = await res.json();
-
         if (json.success) {
           const mappedData: StockData[] = json.data.map((d: any) => ({
             id: d.id,
