@@ -2,12 +2,12 @@
 
 import TableWithControls from "@/components/table/TableWithControls";
 import { useStockContext } from "@/context/StockContext";
-import { useEffect } from "react";
 import AddStockModal from "./AddStockModal";
+import EditStockModal from "./EditStockModal";
 
 export default function StockPage() {
   const {
-    data,
+    groupeddataStock,
     page,
     columns,
     totalPages,
@@ -25,15 +25,11 @@ export default function StockPage() {
     fetchData,
   } = useStockContext();
 
-  useEffect(() => {
-    console.log("STOCK", data);
-  }, [data]);
-
   return (
     <div className="bg-white m-4 p-4">
       <TableWithControls
         columns={columns as any}
-        data={data}
+        data={groupeddataStock}
         total={total}
         page={page}
         totalPages={totalPages}
@@ -49,7 +45,14 @@ export default function StockPage() {
         isOpen={isModalOpen}
         size="sm"
         onClose={() => setIsModalOpen(false)}
-        // onSaved={() => fetchData(searchValue, page)}
+        onSaved={() => fetchData()}
+      />
+      <EditStockModal
+        isOpen={isEditModalOpen}
+        stock={editingRow}
+        size="sm"
+        onClose={() => setIsEditModalOpen(false)}
+        onSaved={() => fetchData()}
       />
     </div>
   );
