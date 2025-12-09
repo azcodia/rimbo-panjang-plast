@@ -11,6 +11,7 @@ import { HeavyProvider } from "@/context/HeavyContext";
 
 import { styled } from "@mui/material/styles";
 import { StockProvider } from "@/context/StockContext";
+import { ReStockProvider } from "@/context/RestockContext";
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
   "&.notistack-MuiContent-success": {
     backgroundColor: "#7bb927",
@@ -33,15 +34,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             error: StyledMaterialDesignContent,
           }}
         >
-          <StockProvider>
-            <HeavyProvider>
-              <SizeProvider>
-                <ColorProvider>
-                  <Provider store={store}>{children}</Provider>
-                </ColorProvider>
-              </SizeProvider>
-            </HeavyProvider>
-          </StockProvider>
+          <ReStockProvider>
+            <StockProvider>
+              <HeavyProvider>
+                <SizeProvider>
+                  <ColorProvider>
+                    <Provider store={store}>{children}</Provider>
+                  </ColorProvider>
+                </SizeProvider>
+              </HeavyProvider>
+            </StockProvider>
+          </ReStockProvider>
         </SnackbarProvider>
       </body>
     </html>
