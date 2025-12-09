@@ -11,7 +11,7 @@ export default function ProtectedLayout({
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen bg-white relative transition-colors duration-200">
+    <div className="flex h-screen bg-white relative transition-colors duration-200 overflow-y-auto scrollbar-auto-hide">
       <Sidebar />
 
       <div className="flex-col flex-1 w-[10px] ml-[315px] bg-white rounded-md">

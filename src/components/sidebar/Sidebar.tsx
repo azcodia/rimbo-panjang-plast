@@ -29,14 +29,14 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="bg-grayd rounded-md m-4 flex-col hidden xl:block w-[280px] fixed left-18 top-0 bottom-0">
+    <aside className="bg-grayd rounded-md m-4 flex-col hidden xl:block w-[280px] fixed left-18 top-0 bottom-0 overflow-y-auto scrollbar-auto-hide-permanent">
       <div className="flex  pb-6 pt-4">
         <div className="border-b p-2.5">
           <Image src="/images/logo.png" width={180} height={125} alt="Logo" />
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto">
+      <nav className="flex-1 mb-24">
         {Object.entries(groupedMenu).map(([groupName, items]) => (
           <SidebarGroup
             key={groupName}
@@ -47,7 +47,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="px-4 py-4 absolute bottom-4 left-0 w-full">
+      <div className="px-4 py-4 fixed bottom-4 left-6 w-64">
         <Button
           type="button"
           text="Logout"

@@ -29,7 +29,7 @@ export default function BaseModal({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-50 overflow-y-auto"
+        className="fixed inset-0 z-50 overflow-y-auto scrollbar-auto-hide"
         onClose={onClose}
       >
         <div className="min-h-screen px-4 text-center">
