@@ -22,6 +22,7 @@ export interface StockData {
   heavy_id: string;
   heavy?: string;
   quantity: number;
+  input_date?: string;
 }
 
 interface StockContextType {
@@ -30,7 +31,11 @@ interface StockContextType {
   groupeddataStock: TableRow<StockData>[];
   page: number;
   setPage: (page: number) => void;
-  columns: { key: string; label: string }[];
+  columns: {
+    key: string;
+    label: string;
+    render?: (value: any, row: any) => string;
+  }[];
   pageSize: number;
   setPageSize: (size: number) => void;
   totalPages: number;
@@ -81,13 +86,18 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       label: "Size",
       render: (_value: any, row: { size: number }) => `${row.size} cm`,
     },
-    // { key: "heavy", label: "Heavy" },
     {
       key: "heavy",
       label: "heavy",
       render: (_value: any, row: { heavy: any }) => `${row.heavy} gram`,
     },
     { key: "quantity", label: "Stock" },
+    {
+      key: "input_date",
+      label: "Input Date",
+      render: (_value: any, row: { input_date?: string }) =>
+        row.input_date ? new Date(row.input_date).toLocaleDateString() : "-",
+    },
   ];
 
   const getToken = () =>
@@ -117,6 +127,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
             heavy_id: d.heavy_id,
             heavy: d.heavy,
             quantity: d.quantity,
+            input_date: d.input_date, // ⬅️ baru
           }));
           setAllData(mappedData);
           setData(
@@ -155,7 +166,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       setIsEditModalOpen(true);
     } else if (action === "show") {
       alert(
-        `Stock details:\nColor: ${row.color}\nSize: ${row.size}\nHeavy: ${row.heavy}\nQuantity: ${row.quantity}`
+        `Stock details:\nColor: ${row.color}\nSize: ${row.size}\nHeavy: ${row.heavy}\nQuantity: ${row.quantity}\nInput Date: ${row.input_date}`
       );
     }
   };
@@ -168,7 +179,10 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch("/api/stocks/stock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(stock),
+        body: JSON.stringify({
+          ...stock,
+          input_date: stock.input_date ? new Date(stock.input_date) : undefined,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add stock");
@@ -192,6 +206,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           type: "in",
           quantity: stock.quantity,
           note,
+          input_date: stock.input_date ? new Date(stock.input_date) : undefined,
         }),
       });
 
@@ -250,7 +265,10 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch(`/api/stocks/stock?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(stock),
+        body: JSON.stringify({
+          ...stock,
+          input_date: stock.input_date ? new Date(stock.input_date) : undefined,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to update stock");
@@ -277,6 +295,9 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
               type: diff > 0 ? "in" : "out",
               quantity: Math.abs(diff),
               note,
+              input_date: stock.input_date
+                ? new Date(stock.input_date)
+                : undefined,
             }),
           });
         }
@@ -312,6 +333,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
             heavy_id: item.heavy_id,
             heavy: item.heavy,
             quantity: item.quantity,
+            input_date: item.input_date, // ⬅️ baru
           },
           actions: ["edit", "delete", "show"],
         });

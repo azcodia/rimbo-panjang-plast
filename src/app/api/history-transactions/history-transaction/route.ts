@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
     const transaction = await createHistoryTransaction({
       ...body,
       user_id: userId,
+      input_date: body.input_date ? new Date(body.input_date) : new Date(),
     });
     return NextResponse.json({ success: true, data: transaction });
   } catch (err) {
@@ -145,6 +146,7 @@ export async function PUT(req: NextRequest) {
     const updated = await updateHistoryTransaction(id, {
       ...body,
       user_id: userId,
+      input_date: body.input_date ? new Date(body.input_date) : undefined,
     });
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {

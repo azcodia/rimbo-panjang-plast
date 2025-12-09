@@ -38,12 +38,20 @@ export async function POST(req: NextRequest) {
   await dbConnect();
   try {
     getUserIdFromReq(req); // 🔒login required
-    const { color_id, size_id, heavy_id, quantity } = await req.json();
+    const { color_id, size_id, heavy_id, quantity, input_date } =
+      await req.json();
 
     if (!color_id || !size_id || !heavy_id || quantity == null)
       throw new Error("All fields are required");
 
-    const newStock = await createStock(color_id, size_id, heavy_id, quantity);
+    const newStock = await createStock(
+      color_id,
+      size_id,
+      heavy_id,
+      quantity,
+      input_date ? new Date(input_date) : undefined
+    );
+
     return NextResponse.json({ success: true, data: newStock });
   } catch (err: any) {
     return NextResponse.json(
@@ -65,7 +73,8 @@ export async function PUT(req: NextRequest) {
     getUserIdFromReq(req); // login required
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { color_id, size_id, heavy_id, quantity } = await req.json();
+    const { color_id, size_id, heavy_id, quantity, input_date } =
+      await req.json();
 
     if (!id || !color_id || !size_id || !heavy_id || quantity == null)
       throw new Error("All fields are required");
@@ -75,8 +84,10 @@ export async function PUT(req: NextRequest) {
       color_id,
       size_id,
       heavy_id,
-      quantity
+      quantity,
+      input_date ? new Date(input_date) : undefined
     );
+
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json(

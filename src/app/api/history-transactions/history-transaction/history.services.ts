@@ -11,6 +11,7 @@ export const createHistoryTransaction = async (data: {
   note: string;
   description?: string;
   user_id: string;
+  input_date?: Date;
 }) => {
   return HistoryTransactionModel.create({
     stock_id: toObjectId(data.stock_id),
@@ -22,6 +23,7 @@ export const createHistoryTransaction = async (data: {
     note: data.note,
     description: data.description,
     user_id: toObjectId(data.user_id),
+    input_date: data.input_date ? new Date(data.input_date) : new Date(),
   });
 };
 
@@ -37,6 +39,7 @@ export const updateHistoryTransaction = async (
     note: string;
     description?: string;
     user_id: string;
+    input_date?: Date;
   }>
 ) => {
   const updateData: any = { ...data };
@@ -45,6 +48,7 @@ export const updateHistoryTransaction = async (
   if (data.size_id) updateData.size_id = toObjectId(data.size_id);
   if (data.heavy_id) updateData.heavy_id = toObjectId(data.heavy_id);
   if (data.user_id) updateData.user_id = toObjectId(data.user_id);
+  if (data.input_date) updateData.input_date = new Date(data.input_date);
   updateData.created_at = new Date();
 
   return HistoryTransactionModel.findByIdAndUpdate(id, updateData, {

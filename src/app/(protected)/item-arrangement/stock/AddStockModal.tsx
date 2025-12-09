@@ -1,15 +1,16 @@
 "use client";
 
 import { Formik, Form, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import BaseModal from "@/components/ui/modals/modal";
 import Select from "@/components/ui/Select";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import DatePicker from "@/components/ui/Date";
 import { useColorContext } from "@/context/ColorContext";
 import { useSizeContext } from "@/context/SizeContext";
 import { useStockContext } from "@/context/StockContext";
 import { useHeavyContext } from "@/context/HeavyContext";
+import { StockSchema } from "@/lib/schemas/StockSchema";
 
 interface AddStockModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ interface StockFormValues {
   sizeId: string;
   heavyId: string;
   quantity: string;
+  inputDate: string;
 }
 
 const initialValues: StockFormValues = {
@@ -30,18 +32,8 @@ const initialValues: StockFormValues = {
   sizeId: "",
   heavyId: "",
   quantity: "",
+  inputDate: new Date().toISOString().split("T")[0], // default hari ini
 };
-
-const StockSchema = Yup.object().shape({
-  colorId: Yup.string().required("Color is required"),
-  sizeId: Yup.string().required("Size is required"),
-  heavyId: Yup.string().required("Heavy is required"),
-  quantity: Yup.number()
-    .typeError("Quantity must be a number")
-    .required("Quantity is required")
-    .positive("Quantity must be positive")
-    .integer("Quantity must be an integer"),
-});
 
 export default function AddStockModal({
   isOpen,
@@ -64,6 +56,7 @@ export default function AddStockModal({
         size_id: values.sizeId,
         heavy_id: values.heavyId,
         quantity: Number(values.quantity),
+        input_date: values.inputDate,
       });
 
       resetForm();
@@ -116,6 +109,13 @@ export default function AddStockModal({
               onChange={(val) => setFieldValue("heavyId", val)}
               options={heavies.filter((h) => h.value !== "")}
               error={touched.heavyId ? errors.heavyId : undefined}
+            />
+
+            <DatePicker
+              label="Input Date"
+              value={values.inputDate}
+              onChange={(val) => setFieldValue("inputDate", val)}
+              error={touched.inputDate ? errors.inputDate : undefined}
             />
 
             <Input

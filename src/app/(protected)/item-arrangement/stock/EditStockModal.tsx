@@ -1,7 +1,6 @@
 "use client";
 
 import { Formik, Form, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import BaseModal from "@/components/ui/modals/modal";
 import Select from "@/components/ui/Select";
 import Input from "@/components/ui/Input";
@@ -11,6 +10,8 @@ import { useSizeContext } from "@/context/SizeContext";
 import { useStockContext, StockData } from "@/context/StockContext";
 import { useHeavyContext } from "@/context/HeavyContext";
 import { useEffect } from "react";
+import DatePicker from "@/components/ui/Date";
+import { StockSchema } from "@/lib/schemas/StockSchema";
 
 interface EditStockModalProps {
   isOpen: boolean;
@@ -25,18 +26,8 @@ interface StockFormValues {
   sizeId: string;
   heavyId: string;
   quantity: string;
+  inputDate: Date | null;
 }
-
-const StockSchema = Yup.object().shape({
-  colorId: Yup.string().required("Color is required"),
-  sizeId: Yup.string().required("Size is required"),
-  heavyId: Yup.string().required("Heavy is required"),
-  quantity: Yup.number()
-    .typeError("Quantity must be a number")
-    .required("Quantity is required")
-    .positive("Quantity must be positive")
-    .integer("Quantity must be an integer"),
-});
 
 export default function EditStockModal({
   isOpen,
@@ -55,6 +46,7 @@ export default function EditStockModal({
     sizeId: stock?.size_id || "",
     heavyId: stock?.heavy_id || "",
     quantity: stock?.quantity.toString() || "",
+    inputDate: stock?.input_date ? new Date(stock.input_date) : new Date(),
   };
 
   const handleSubmit = async (
@@ -68,6 +60,10 @@ export default function EditStockModal({
         size_id: values.sizeId,
         heavy_id: values.heavyId,
         quantity: Number(values.quantity),
+        input_date:
+          values.inputDate instanceof Date
+            ? values.inputDate.toISOString()
+            : undefined,
       });
       onSaved?.();
       onClose();
@@ -132,6 +128,20 @@ export default function EditStockModal({
               disabled={true}
               options={heavies.filter((h) => h.value !== "")}
               error={touched.heavyId ? errors.heavyId : undefined}
+            />
+
+            <DatePicker
+              label="Input Date"
+              value={
+                values.inputDate
+                  ? values.inputDate.toISOString().split("T")[0]
+                  : ""
+              }
+              onChange={(val) => {
+                const dateVal = typeof val === "string" ? new Date(val) : val;
+                setFieldValue("inputDate", dateVal);
+              }}
+              error={touched.inputDate ? errors.inputDate : undefined}
             />
 
             <Input

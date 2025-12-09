@@ -7,6 +7,7 @@ export interface IStock extends Document {
   quantity: number;
   created_at: Date;
   updated_at: Date;
+  input_date: Date; // ⬅️ field baru untuk tanggal input
 }
 
 const StockSchema: Schema = new Schema<IStock>({
@@ -16,6 +17,7 @@ const StockSchema: Schema = new Schema<IStock>({
   quantity: { type: Number, required: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  input_date: { type: Date, default: Date.now }, // ⬅️ default sekarang
 });
 
 StockSchema.index({ color_id: 1, size_id: 1, heavy_id: 1 }, { unique: true });

@@ -24,6 +24,7 @@ export const getStocks = async (query: any, skip: number, limit: number) => {
     heavy_id: s.heavy_id?._id ?? null,
     heavy: s.heavy_id?.weight ?? "",
     quantity: s.quantity,
+    input_date: s.input_date,
     created_at: s.created_at,
   }));
 
@@ -34,11 +35,12 @@ export const createStock = async (
   color_id: string,
   size_id: string,
   heavy_id: string,
-  quantity: number
+  quantity: number,
+  input_date?: Date
 ) => {
   const exists = await Stock.findOne({ color_id, size_id, heavy_id });
   if (exists) throw new Error("Stock already exists");
-  return Stock.create({ color_id, size_id, heavy_id, quantity });
+  return Stock.create({ color_id, size_id, heavy_id, quantity, input_date });
 };
 
 export const updateStock = async (
@@ -46,7 +48,8 @@ export const updateStock = async (
   color_id: string,
   size_id: string,
   heavy_id: string,
-  quantity: number
+  quantity: number,
+  input_date?: Date
 ) => {
   const exists = await Stock.findOne({
     color_id,
@@ -57,7 +60,14 @@ export const updateStock = async (
   if (exists) throw new Error("Stock combination already exists");
   return Stock.findByIdAndUpdate(
     id,
-    { color_id, size_id, heavy_id, quantity, updated_at: new Date() },
+    {
+      color_id,
+      size_id,
+      heavy_id,
+      quantity,
+      input_date,
+      updated_at: new Date(),
+    },
     { new: true }
   )
     .populate("color_id")
