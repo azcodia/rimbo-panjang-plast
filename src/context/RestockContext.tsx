@@ -22,10 +22,10 @@ export interface ReStockItem {
 export interface ReStockData {
   id: string;
   code: string;
-  user_id: string;
   note?: string;
   description?: string;
   created_at: string;
+  input_date: string;
   items: ReStockItem[];
 }
 
@@ -157,6 +157,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   const addReStock = async (
     restock: Omit<ReStockData, "id" | "created_at">
   ) => {
+    console.log("RE-STOCK", restock);
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
@@ -172,8 +173,20 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add re-stock");
 
-      // juga bikin history transaction untuk tiap item
       for (const item of restock.items) {
+        // 2️⃣ Update stock quantity langsung (menggunakan API baru)
+        await fetch(`/api/stocks/stock`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            stock_id: item.stock_id,
+            quantityChange: item.quantity, // positif untuk re-stock
+          }),
+        });
+        // history transaction untuk tiap item
         await fetch("/api/history-transactions/history-transaction", {
           method: "POST",
           headers: {
