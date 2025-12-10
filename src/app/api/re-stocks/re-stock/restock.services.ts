@@ -1,18 +1,21 @@
 import { toObjectId } from "@/lib/mongo";
 import ReStock from "@/models/Re-Stock";
 
+interface ReStockItemInput {
+  stock_id: string;
+  color_id: string;
+  size_id: string;
+  heavy_id: string;
+  quantity: number;
+  tokenHistory?: string;
+}
+
 interface ReStockInput {
   code: string;
   user_id: string;
   note?: string;
   description?: string;
-  items: {
-    stock_id: string;
-    color_id: string;
-    size_id: string;
-    heavy_id: string;
-    quantity: number;
-  }[];
+  items: ReStockItemInput[];
 }
 
 export const getReStocks = async (query: any, skip: number, limit: number) => {
@@ -41,6 +44,7 @@ export const createReStock = async (data: ReStockInput) => {
     size_id: toObjectId(i.size_id),
     heavy_id: toObjectId(i.heavy_id),
     quantity: i.quantity,
+    tokenHistory: i.tokenHistory || "",
   }));
 
   return ReStock.create({
@@ -59,6 +63,7 @@ export const updateReStock = async (id: string, data: ReStockInput) => {
     size_id: toObjectId(i.size_id),
     heavy_id: toObjectId(i.heavy_id),
     quantity: i.quantity,
+    tokenHistory: i.tokenHistory || "",
   }));
 
   return ReStock.findByIdAndUpdate(
