@@ -25,6 +25,7 @@ export const getStocks = async (query: any, skip: number, limit: number) => {
     heavy: s.heavy_id?.weight ?? "",
     quantity: s.quantity,
     input_date: s.input_date,
+    tokenHistory: s.tokenHistory, // ⬅️ baru
     created_at: s.created_at,
   }));
 
@@ -36,11 +37,20 @@ export const createStock = async (
   size_id: string,
   heavy_id: string,
   quantity: number,
-  input_date?: Date
+  input_date?: Date,
+  tokenHistory?: string
 ) => {
   const exists = await Stock.findOne({ color_id, size_id, heavy_id });
   if (exists) throw new Error("Stock already exists");
-  return Stock.create({ color_id, size_id, heavy_id, quantity, input_date });
+
+  return Stock.create({
+    color_id,
+    size_id,
+    heavy_id,
+    quantity,
+    input_date,
+    tokenHistory, // ⬅️ simpan tokenHistory
+  });
 };
 
 export const updateStock = async (
@@ -49,7 +59,8 @@ export const updateStock = async (
   size_id: string,
   heavy_id: string,
   quantity: number,
-  input_date?: Date
+  input_date?: Date,
+  tokenHistory?: string
 ) => {
   const exists = await Stock.findOne({
     color_id,
@@ -58,6 +69,7 @@ export const updateStock = async (
     _id: { $ne: id },
   });
   if (exists) throw new Error("Stock combination already exists");
+
   return Stock.findByIdAndUpdate(
     id,
     {
@@ -66,6 +78,7 @@ export const updateStock = async (
       heavy_id,
       quantity,
       input_date,
+      tokenHistory, // ⬅️ update tokenHistory
       updated_at: new Date(),
     },
     { new: true }
@@ -77,4 +90,19 @@ export const updateStock = async (
 
 export const deleteStock = async (id: string) => {
   return Stock.findByIdAndDelete(id);
+};
+
+export const updateStockQuantity = async (
+  stockId: string,
+  quantityChange: number
+) => {
+  const stock = await Stock.findById(stockId);
+  if (!stock) throw new Error("Stock not found");
+
+  stock.quantity += quantityChange;
+  if (stock.quantity < 0) stock.quantity = 0;
+  stock.updated_at = new Date();
+
+  await stock.save();
+  return stock;
 };

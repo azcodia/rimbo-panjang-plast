@@ -11,7 +11,9 @@ export interface IHistoryTransaction extends Document {
   description?: string;
   user_id: mongoose.Types.ObjectId;
   created_at: Date;
+  input_date?: Date;
   deleted?: boolean; // soft delete
+  tokenHistory: string;
 }
 
 const HistoryTransactionSchema = new Schema<IHistoryTransaction>({
@@ -25,7 +27,9 @@ const HistoryTransactionSchema = new Schema<IHistoryTransaction>({
   description: { type: String },
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
   created_at: { type: Date, default: Date.now },
+  input_date: { type: Date, default: Date.now },
   deleted: { type: Boolean, default: false },
+  tokenHistory: { type: String, required: true },
 });
 
 export default mongoose.models.HistoryTransaction ||
