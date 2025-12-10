@@ -7,6 +7,7 @@ interface InputProps {
   placeholder?: string;
   label?: string;
   error?: string;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -16,6 +17,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   label,
   error,
+  disabled = false,
 }) => {
   return (
     <div className="flex flex-col w-full">
@@ -32,6 +34,7 @@ const Input: React.FC<InputProps> = ({
           focus:border-success-light focus:ring-1 focus:ring-success
           focus:outline-none transition-all duration-200 shadow-sm
         `}
+        disabled={disabled}
       />
 
       {error && <p className="text-danger text-sm mt-1">{error}</p>}
