@@ -12,6 +12,7 @@ export const createHistoryTransaction = async (data: {
   description?: string;
   user_id: string;
   input_date?: Date;
+  tokenHistory: string;
 }) => {
   return HistoryTransactionModel.create({
     stock_id: toObjectId(data.stock_id),
@@ -24,11 +25,12 @@ export const createHistoryTransaction = async (data: {
     description: data.description,
     user_id: toObjectId(data.user_id),
     input_date: data.input_date ? new Date(data.input_date) : new Date(),
+    tokenHistory: data.tokenHistory,
   });
 };
 
-export const updateHistoryTransaction = async (
-  id: string,
+export const updateHistoryTransactionByToken = async (
+  tokenHistory: string,
   data: Partial<{
     stock_id: string;
     color_id: string;
@@ -51,20 +53,41 @@ export const updateHistoryTransaction = async (
   if (data.input_date) updateData.input_date = new Date(data.input_date);
   updateData.created_at = new Date();
 
-  return HistoryTransactionModel.findByIdAndUpdate(id, updateData, {
-    new: true,
-  })
+  return HistoryTransactionModel.findOneAndUpdate(
+    { tokenHistory },
+    updateData,
+    { new: true }
+  )
     .populate("color_id")
     .populate("size_id")
     .populate("heavy_id")
     .populate("user_id");
 };
 
-export const softDeleteHistoryTransaction = async (stock_id: string) => {
-  return HistoryTransactionModel.updateMany(
-    { stock_id },
-    { $set: { deleted: true } }
-  );
+export const softDeleteHistoryTransaction = async (
+  tokenHistory: string,
+  note?: string
+) => {
+  note = note || "(Stock deleted by user)";
+
+  const docs = await HistoryTransactionModel.find({ tokenHistory });
+
+  const bulkOps = docs.map((doc) => {
+    const oldNote = typeof doc.note === "string" ? doc.note : "";
+    const newNote = oldNote ? `${oldNote}; ${note}` : note;
+
+    return {
+      updateOne: {
+        filter: { _id: doc._id },
+        update: { $set: { deleted: true, note: newNote } },
+      },
+    };
+  });
+
+  if (bulkOps.length === 0) return { modifiedCount: 0 };
+
+  const result = await HistoryTransactionModel.bulkWrite(bulkOps);
+  return result;
 };
 
 export const getHistoryTransactions = async (

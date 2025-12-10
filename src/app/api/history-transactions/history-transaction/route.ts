@@ -5,8 +5,8 @@ import {
   createHistoryTransaction,
   getHistoryTransactions,
   softDeleteHistoryTransaction,
-  updateHistoryTransaction,
-} from "./history.services";
+  updateHistoryTransactionByToken,
+} from "@/app/api/history-transactions/history-transaction/history.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
@@ -143,7 +143,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const updated = await updateHistoryTransaction(id, {
+    const updated = await updateHistoryTransactionByToken(id, {
       ...body,
       user_id: userId,
       input_date: body.input_date ? new Date(body.input_date) : undefined,
@@ -178,14 +178,15 @@ export async function DELETE(req: NextRequest) {
     }
 
     const body = await req.json();
-    const stock_id = body.stock_id;
-    if (!stock_id)
+    const tokenHistory = body.tokenHistory;
+    const note = body.note;
+    if (!tokenHistory)
       return NextResponse.json(
-        { success: false, message: "stock_id is required" },
+        { success: false, message: "tokenHistory is required" },
         { status: 400 }
       );
 
-    const result = await softDeleteHistoryTransaction(stock_id);
+    const result = await softDeleteHistoryTransaction(tokenHistory, note);
     return NextResponse.json({
       success: true,
       message: "Soft delete success",
