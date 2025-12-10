@@ -74,7 +74,7 @@ export const softDeleteHistoryTransaction = async (
 
   const bulkOps = docs.map((doc) => {
     const oldNote = typeof doc.note === "string" ? doc.note : "";
-    const newNote = oldNote ? `${oldNote}; ${note}` : note;
+    const newNote = oldNote ? `${oldNote}: ${note}` : note;
 
     return {
       updateOne: {
