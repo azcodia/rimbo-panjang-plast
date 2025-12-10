@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await dbConnect();
   try {
-    const user_id = getUserIdFromReq(req); // login required
+    const user_id = getUserIdFromReq(req);
     const { code, note, description, items } = await req.json();
 
     if (!code || !items || !Array.isArray(items) || items.length === 0)
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   await dbConnect();
   try {
-    const user_id = getUserIdFromReq(req); // login required
+    const user_id = getUserIdFromReq(req);
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     const { code, note, description, items } = await req.json();
@@ -95,7 +95,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   await dbConnect();
   try {
-    getUserIdFromReq(req); // login required
+    getUserIdFromReq(req);
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) throw new Error("ID is required");
