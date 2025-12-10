@@ -58,10 +58,11 @@ export default function AddReStockModal({
     { setSubmitting, resetForm }: FormikHelpers<ReStockFormValues>
   ) => {
     try {
-      await addReStock({
+      const payload = {
         code: values.code,
         note: values.note,
         description: values.description,
+        input_date: values.inputDate || new Date().toISOString(), // default sekarang
         items: values.items.map((i) => {
           const stock = stocks.find(
             (s) =>
@@ -78,8 +79,9 @@ export default function AddReStockModal({
             quantity: Number(i.quantity),
           };
         }),
-        input_date: values.inputDate,
-      });
+      };
+
+      await addReStock(payload);
 
       resetForm();
       onClose();
