@@ -8,7 +8,7 @@ export interface IStock extends Document {
   created_at: Date;
   updated_at: Date;
   input_date: Date;
-  tokenHistory: string; // ⬅️ UUID string
+  tokenHistory: string;
 }
 
 const StockSchema: Schema = new Schema<IStock>({
@@ -19,10 +19,9 @@ const StockSchema: Schema = new Schema<IStock>({
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   input_date: { type: Date, default: Date.now },
-  tokenHistory: { type: String, required: true }, // ⬅️ disini
+  tokenHistory: { type: String, required: true },
 });
 
-// unik kombinasi color-size-heavy
 StockSchema.index({ color_id: 1, size_id: 1, heavy_id: 1 }, { unique: true });
 
 export default mongoose.models.Stock ||

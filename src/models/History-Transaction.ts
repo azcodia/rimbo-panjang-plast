@@ -12,7 +12,7 @@ export interface IHistoryTransaction extends Document {
   user_id: mongoose.Types.ObjectId;
   created_at: Date;
   input_date?: Date;
-  deleted?: boolean; // soft delete
+  deleted?: boolean;
   tokenHistory: string;
 }
 
