@@ -6,6 +6,7 @@ import {
   deleteStock as deleteStockController,
   getStocks,
   updateStock as updateStockController,
+  updateStockQuantity,
 } from "./stock.services";
 
 export async function GET(req: NextRequest) {
@@ -123,6 +124,31 @@ export async function DELETE(req: NextRequest) {
 
     const deleted = await deleteStockController(id);
     return NextResponse.json({ success: true, data: deleted });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err.message || "Server error" },
+      {
+        status: ["Authorization header missing", "Invalid token"].includes(
+          err.message
+        )
+          ? 401
+          : 400,
+      }
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  await dbConnect();
+  try {
+    getUserIdFromReq(req); // login required
+    const { stock_id, quantityChange } = await req.json();
+    if (!stock_id || typeof quantityChange !== "number")
+      throw new Error("stock_id and quantityChange are required");
+
+    const updatedStock = await updateStockQuantity(stock_id, quantityChange);
+
+    return NextResponse.json({ success: true, data: updatedStock });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
