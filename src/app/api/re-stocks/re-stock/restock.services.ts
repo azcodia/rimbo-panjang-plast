@@ -15,6 +15,7 @@ interface ReStockInput {
   user_id: string;
   note?: string;
   description?: string;
+  input_date?: Date; // ← opsional
   items: ReStockItemInput[];
 }
 
@@ -52,6 +53,7 @@ export const createReStock = async (data: ReStockInput) => {
     user_id: toObjectId(data.user_id),
     note: data.note,
     description: data.description,
+    input_date: data.input_date ? new Date(data.input_date) : new Date(), // ← pakai sekarang kalau tidak ada
     items,
   });
 };
