@@ -37,11 +37,12 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await dbConnect();
   try {
-    getUserIdFromReq(req); // 🔒login required
-    const { color_id, size_id, heavy_id, quantity, input_date } =
+    getUserIdFromReq(req); // login required
+
+    const { color_id, size_id, heavy_id, quantity, input_date, tokenHistory } =
       await req.json();
 
-    if (!color_id || !size_id || !heavy_id || quantity == null)
+    if (!color_id || !size_id || !heavy_id || quantity == null || !tokenHistory)
       throw new Error("All fields are required");
 
     const newStock = await createStock(
@@ -49,7 +50,8 @@ export async function POST(req: NextRequest) {
       size_id,
       heavy_id,
       quantity,
-      input_date ? new Date(input_date) : undefined
+      input_date ? new Date(input_date) : undefined,
+      tokenHistory
     );
 
     return NextResponse.json({ success: true, data: newStock });
@@ -73,10 +75,17 @@ export async function PUT(req: NextRequest) {
     getUserIdFromReq(req); // login required
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { color_id, size_id, heavy_id, quantity, input_date } =
+    const { color_id, size_id, heavy_id, quantity, input_date, tokenHistory } =
       await req.json();
 
-    if (!id || !color_id || !size_id || !heavy_id || quantity == null)
+    if (
+      !id ||
+      !color_id ||
+      !size_id ||
+      !heavy_id ||
+      quantity == null ||
+      !tokenHistory
+    )
       throw new Error("All fields are required");
 
     const updated = await updateStockController(
@@ -85,7 +94,8 @@ export async function PUT(req: NextRequest) {
       size_id,
       heavy_id,
       quantity,
-      input_date ? new Date(input_date) : undefined
+      input_date ? new Date(input_date) : undefined,
+      tokenHistory
     );
 
     return NextResponse.json({ success: true, data: updated });
@@ -106,7 +116,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   await dbConnect();
   try {
-    getUserIdFromReq(req); // 🔒 login required
+    getUserIdFromReq(req); // login required
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) throw new Error("ID is required");
