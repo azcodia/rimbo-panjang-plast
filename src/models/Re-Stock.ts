@@ -15,6 +15,7 @@ export interface IReStock extends Document {
   note?: string;
   description?: string;
   created_at: Date;
+  input_date: Date;
   items: IReStockItem[];
 }
 
@@ -25,6 +26,7 @@ const ReStockSchema = new Schema<IReStock>(
     note: { type: String },
     description: { type: String },
     created_at: { type: Date, default: Date.now },
+    input_date: { type: Date, required: true },
     items: [
       {
         stock_id: { type: Schema.Types.ObjectId, ref: "Stock", required: true },
