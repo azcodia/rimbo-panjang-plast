@@ -12,7 +12,7 @@ import React, {
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
-import { createTokenHistory } from "@/lib/createTokenHistory"; // tokenHistory lib
+import { createTokenHistory } from "@/lib/createTokenHistory";
 
 export interface StockData {
   id: string;
@@ -24,7 +24,7 @@ export interface StockData {
   heavy?: string;
   quantity: number;
   input_date?: string;
-  tokenHistory?: string; // ⬅️ ditambah
+  tokenHistory?: string;
 }
 
 interface StockContextType {
@@ -77,7 +77,6 @@ const StockContext = createContext<StockContextType | undefined>(undefined);
 export const StockProvider = ({ children }: { children: ReactNode }) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  // ======== STATE ========
   const [data, setData] = useState<TableRow<StockData>[]>([]);
   const [allData, setAllData] = useState<StockData[]>([]);
   const [page, setPage] = useState(1);
@@ -116,7 +115,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       .find((row) => row.startsWith("token="))
       ?.split("=")[1];
 
-  // ======== FETCH DATA ========
   const fetchData = useCallback(
     async (filter: string = filterValue, pageNum: number = page) => {
       setLoading(true);
@@ -165,7 +163,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     fetchData(val, 1);
   };
 
-  // ======== ACTIONS ========
   const handleActionClick = (
     row: StockData,
     action: "edit" | "delete" | "show"
@@ -176,7 +173,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           console.error("No tokenHistory for this stock!");
           return;
         }
-        deleteStock(row.id, row.tokenHistory);
+        deleteStock(row.id, row.tokenHistory, "( Stock deleted by user )");
       }
     } else if (action === "edit") {
       setEditingRow(row);
@@ -188,7 +185,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // ======== CRUD ========
   const addStock = async (
     stock: Omit<StockData, "id" | "tokenHistory">,
     note: string = "Product baru"
@@ -201,7 +197,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({
           ...stock,
           input_date: stock.input_date ? new Date(stock.input_date) : undefined,
-          tokenHistory, // ⬅️ ambil dari context
+          tokenHistory,
         }),
       });
       const json = await res.json();
@@ -246,17 +242,14 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     note: string = "( Stock deleted by user )"
   ) => {
     try {
-      // 1. Delete stock
       const res = await fetch(`/api/stocks/stock?id=${id}`, {
         method: "DELETE",
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to delete stock");
 
-      // 2. Refresh stock data
       await fetchData();
 
-      // 3. Soft delete history
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
 
@@ -343,7 +336,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // ======== GROUPED DATA ========
   const groupeddataStock: TableRow<StockData>[] = useMemo(() => {
     const map = new Map<string, StockData[]>();
     allData.forEach((item) => {
