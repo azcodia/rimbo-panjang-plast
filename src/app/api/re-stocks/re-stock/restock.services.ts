@@ -75,6 +75,7 @@ export const updateReStock = async (id: string, data: ReStockInput) => {
       user_id: toObjectId(data.user_id),
       note: data.note,
       description: data.description,
+      input_date: data.input_date ? new Date(data.input_date) : new Date(),
       items,
     },
     { new: true }
