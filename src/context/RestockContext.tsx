@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   createContext,
   useContext,
   ReactNode,
@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { TableRow } from "@/components/table/Table";
 import { useSnackbar } from "notistack";
+import { createTokenHistory } from "@/lib/createTokenHistory";
 
 export interface ReStockItem {
   stock_id: string;
@@ -17,6 +18,7 @@ export interface ReStockItem {
   size_id: string;
   heavy_id: string;
   quantity: number;
+  tokenHistory?: string;
 }
 
 export interface ReStockData {
@@ -56,7 +58,7 @@ interface ReStockContextType {
   addReStock: (
     restock: Omit<ReStockData, "id" | "created_at">
   ) => Promise<void>;
-  deleteReStock: (id: string) => Promise<void>;
+  deleteReStock: (id: string, code: string) => Promise<void>;
   updateReStock: (
     id: string,
     restock: Omit<ReStockData, "id" | "created_at">
@@ -110,9 +112,17 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
         const res = await fetch(`/api/re-stocks/re-stock?${params.toString()}`);
         const json = await res.json();
         if (json.success) {
-          setAllData(json.data);
+          const processedData: ReStockData[] = json.data.map((item: any) => ({
+            ...item,
+            items: item.items.map((i: any) => ({
+              ...i,
+              tokenHistory: i.tokenHistory || "",
+            })),
+          }));
+
+          setAllData(processedData);
           setData(
-            json.data.map((item: ReStockData) => ({
+            processedData.map((item: ReStockData) => ({
               data: item,
               actions: ["edit", "delete", "show"],
             }))
@@ -140,7 +150,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete this re-stock?`)) {
-        deleteReStock(row.id);
+        deleteReStock(row._id, row.code);
       }
     } else if (action === "edit") {
       setEditingRow(row);
@@ -157,10 +167,14 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   const addReStock = async (
     restock: Omit<ReStockData, "id" | "created_at">
   ) => {
-    console.log("RE-STOCK", restock);
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
+
+      const itemsWithToken = restock.items.map((item) => ({
+        ...item,
+        tokenHistory: createTokenHistory(),
+      }));
 
       const res = await fetch("/api/re-stocks/re-stock", {
         method: "POST",
@@ -168,13 +182,15 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(restock),
+        body: JSON.stringify({
+          ...restock,
+          items: itemsWithToken,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add re-stock");
 
-      for (const item of restock.items) {
-        // 2️⃣ Update stock quantity langsung (menggunakan API baru)
+      for (const item of itemsWithToken) {
         await fetch(`/api/stocks/stock`, {
           method: "PATCH",
           headers: {
@@ -183,10 +199,10 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
           },
           body: JSON.stringify({
             stock_id: item.stock_id,
-            quantityChange: item.quantity, // positif untuk re-stock
+            quantityChange: item.quantity,
           }),
         });
-        // history transaction untuk tiap item
+
         await fetch("/api/history-transactions/history-transaction", {
           method: "POST",
           headers: {
@@ -200,7 +216,8 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
             heavy_id: item.heavy_id,
             type: "in",
             quantity: item.quantity,
-            note: restock.note || "Re-stock added",
+            note: "Re-stock added",
+            tokenHistory: item.tokenHistory,
           }),
         });
       }
@@ -215,17 +232,66 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const deleteReStock = async (id: string) => {
+  const deleteReStock = async (restockId: string, code: string) => {
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
 
-      const res = await fetch(`/api/re-stocks/re-stock?id=${id}`, {
+      const resFetch = await fetch(`/api/re-stocks/re-stock?id=${restockId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const jsonFetch = await resFetch.json();
+      if (!resFetch.ok)
+        throw new Error(jsonFetch.message || "Failed to fetch re-stock");
+
+      const restockArray = jsonFetch.data;
+      if (!Array.isArray(restockArray) || restockArray.length === 0) {
+        throw new Error("Re-stock not found");
+      }
+
+      const restock = restockArray[0];
+      if (
+        !restock.items ||
+        !Array.isArray(restock.items) ||
+        restock.items.length === 0
+      ) {
+        throw new Error("Re-stock items not found or invalid");
+      }
+      console.log("items re stock", restock.items);
+      console.log("Code Re Stock", code);
+      for (const item of restock.items) {
+        await fetch(`/api/stocks/stock`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            stock_id: item.stock_id._id,
+            quantityChange: -item.quantity,
+          }),
+        });
+
+        await fetch("/api/history-transactions/history-transaction", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            tokenHistory: item.tokenHistory,
+            note: `( Re stock "${code}" deleted by user )`,
+          }),
+        });
+      }
+
+      const resDelete = await fetch(`/api/re-stocks/re-stock?id=${restockId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to delete re-stock");
+      const jsonDelete = await resDelete.json();
+      if (!resDelete.ok)
+        throw new Error(jsonDelete.message || "Failed to delete re-stock");
 
       await fetchData();
       enqueueSnackbar("ReStock deleted successfully", { variant: "success" });
@@ -241,9 +307,15 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
     id: string,
     restock: Omit<ReStockData, "id" | "created_at">
   ) => {
+    const tokenHistory = createTokenHistory();
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
+
+      const itemsWithToken = restock.items.map((item) => ({
+        ...item,
+        tokenHistory,
+      }));
 
       const res = await fetch(`/api/re-stocks/re-stock?id=${id}`, {
         method: "PUT",
@@ -251,13 +323,15 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(restock),
+        body: JSON.stringify({
+          ...restock,
+          items: itemsWithToken,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to update re-stock");
 
-      // buat history transaction per item
-      for (const item of restock.items) {
+      for (const item of itemsWithToken) {
         await fetch("/api/history-transactions/history-transaction", {
           method: "POST",
           headers: {
@@ -272,6 +346,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
             type: "in",
             quantity: item.quantity,
             note: restock.note || "Re-stock updated",
+            tokenHistory: item.tokenHistory,
           }),
         });
       }
