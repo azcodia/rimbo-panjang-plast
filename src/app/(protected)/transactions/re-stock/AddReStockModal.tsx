@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/Date";
 import { useReStockContext } from "@/context/RestockContext";
-import { useStockContext } from "@/context/StockContext"; // tambahkan ini
+import { useStockContext } from "@/context/StockContext";
 import StockCascadingDropdown from "@/components/stock/StockCascadingDropdown";
 
 interface AddReStockModalProps {
@@ -51,7 +51,7 @@ export default function AddReStockModal({
   size = "lg",
 }: AddReStockModalProps) {
   const { addReStock } = useReStockContext();
-  const { allData: stocks } = useStockContext(); // ambil semua stock
+  const { allData: stocks } = useStockContext();
 
   const handleSubmit = async (
     values: ReStockFormValues,

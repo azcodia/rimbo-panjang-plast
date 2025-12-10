@@ -32,7 +32,7 @@ const initialValues: StockFormValues = {
   sizeId: "",
   heavyId: "",
   quantity: "",
-  inputDate: new Date().toISOString().split("T")[0], // default hari ini
+  inputDate: new Date().toISOString().split("T")[0],
 };
 
 export default function AddStockModal({

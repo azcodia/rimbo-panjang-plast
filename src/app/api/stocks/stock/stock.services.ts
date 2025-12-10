@@ -25,7 +25,7 @@ export const getStocks = async (query: any, skip: number, limit: number) => {
     heavy: s.heavy_id?.weight ?? "",
     quantity: s.quantity,
     input_date: s.input_date,
-    tokenHistory: s.tokenHistory, // ⬅️ baru
+    tokenHistory: s.tokenHistory,
     created_at: s.created_at,
   }));
 
@@ -49,7 +49,7 @@ export const createStock = async (
     heavy_id,
     quantity,
     input_date,
-    tokenHistory, // ⬅️ simpan tokenHistory
+    tokenHistory,
   });
 };
 
@@ -78,7 +78,7 @@ export const updateStock = async (
       heavy_id,
       quantity,
       input_date,
-      tokenHistory, // ⬅️ update tokenHistory
+      tokenHistory,
       updated_at: new Date(),
     },
     { new: true }
