@@ -17,8 +17,8 @@ export const menuItems: MenuItem[] = [
     icon: <LayoutDashboard size={22.5} strokeWidth={2.2} />,
   },
   {
-    label: "Pengaturan Barang",
-    group: "Stok & Atribut",
+    label: "Item Arrangement",
+    group: "Stock & Atribut",
     icon: <Boxes size={22.5} strokeWidth={2.2} />,
     children: [
       {
@@ -27,8 +27,25 @@ export const menuItems: MenuItem[] = [
         icon: <Cog size={22.5} strokeWidth={2.2} />,
       },
       {
-        label: "Stok",
+        label: "Stock",
         path: "/item-arrangement/stock",
+        icon: <PackageSearch size={22.5} strokeWidth={2.2} />,
+      },
+    ],
+  },
+  {
+    label: "Transaction",
+    group: "Transaction",
+    icon: <Boxes size={22.5} strokeWidth={2.2} />,
+    children: [
+      {
+        label: "Re Stock",
+        path: "/transactions/re-stock",
+        icon: <Cog size={22.5} strokeWidth={2.2} />,
+      },
+      {
+        label: "Delivery",
+        path: "/transactions/delivery",
         icon: <PackageSearch size={22.5} strokeWidth={2.2} />,
       },
     ],
