@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
   try {
     const user_id = getUserIdFromReq(req);
-    const { code, note, description, items } = await req.json();
+    const { code, note, description, items, input_date } = await req.json();
 
     if (!code || !items || !Array.isArray(items) || items.length === 0)
       throw new Error("Code and items are required");
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
       note,
       description,
       items,
+      input_date: input_date ? new Date(input_date) : new Date(),
     });
 
     return NextResponse.json({ success: true, data: newReStock });
