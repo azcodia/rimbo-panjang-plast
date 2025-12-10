@@ -40,7 +40,8 @@ export const useLogin = () => {
         enqueueSnackbar("Login Success!", { variant: "success" });
         document.cookie = `token=${data.token}; path=/; max-age=3600`;
         dispatch(loginAction());
-        router.push("/dashboard");
+        // router.push("/dashboard");
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       enqueueSnackbar("Server error", {
