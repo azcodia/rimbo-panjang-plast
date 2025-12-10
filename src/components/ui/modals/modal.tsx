@@ -9,7 +9,7 @@ interface BaseModalProps {
   onClose: () => void;
   children: ReactNode;
   title: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 export default function BaseModal({
@@ -20,9 +20,11 @@ export default function BaseModal({
   size = "md",
 }: BaseModalProps) {
   const sizeClasses = {
-    sm: "max-w-sm",
-    md: "max-w-md",
-    lg: "max-w-lg",
+    sm: "w-96",
+    md: "w-[32rem]",
+    lg: "w-[46rem]",
+    xl: "w-[56rem]",
+    xxl: "w-[72rem]",
   };
 
   return (
@@ -52,7 +54,7 @@ export default function BaseModal({
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel
-              className={`relative inline-block w-full ${sizeClasses[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-md`}
+              className={`relative inline-block ${sizeClasses[size]} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-md`}
             >
               {/* <button
                 type="button"
