@@ -16,7 +16,11 @@ export async function GET(req: NextRequest) {
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const skip = (page - 1) * pageSize;
 
-    const result = await getReStocks({}, skip, pageSize);
+    const code = searchParams.get("code");
+    const query: any = {};
+    if (code) query.code = { $regex: code, $options: "i" }; // ← filter hanya code, case-insensitive
+
+    const result = await getReStocks(query, skip, pageSize);
     return NextResponse.json({ success: true, ...result });
   } catch (err: any) {
     return NextResponse.json(
