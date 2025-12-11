@@ -65,7 +65,7 @@ export async function PUT(req: NextRequest) {
     const user_id = getUserIdFromReq(req);
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { code, note, description, items } = await req.json();
+    const { code, note, description, items, input_date } = await req.json();
 
     if (!id || !code || !items || !Array.isArray(items) || items.length === 0)
       throw new Error("All fields are required");
@@ -75,6 +75,7 @@ export async function PUT(req: NextRequest) {
       user_id,
       note,
       description,
+      input_date: input_date ? new Date(input_date) : new Date(),
       items,
     });
 
