@@ -22,7 +22,7 @@ export interface ReStockItem {
 }
 
 export interface ReStockData {
-  id: string;
+  _id: string;
   code: string;
   note?: string;
   description?: string;
@@ -45,10 +45,6 @@ interface ReStockContextType {
   filterValue: string;
   isModalOpen: boolean;
   setIsModalOpen: (val: boolean) => void;
-  editingRow: ReStockData | null;
-  setEditingRow: (row: ReStockData | null) => void;
-  isEditModalOpen: boolean;
-  setIsEditModalOpen: (val: boolean) => void;
   handleFilter: (val: string) => void;
   handleActionClick: (
     row: ReStockData,
@@ -59,10 +55,6 @@ interface ReStockContextType {
     restock: Omit<ReStockData, "id" | "created_at">
   ) => Promise<void>;
   deleteReStock: (id: string, code: string) => Promise<void>;
-  updateReStock: (
-    id: string,
-    restock: Omit<ReStockData, "id" | "created_at">
-  ) => Promise<void>;
 }
 
 const ReStockContext = createContext<ReStockContextType | undefined>(undefined);
@@ -77,9 +69,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
-  const [editingRow, setEditingRow] = useState<ReStockData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const columns = [
     { key: "code", label: "Code" },
@@ -152,9 +142,6 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
       if (confirm(`Are you sure you want to delete this re-stock?`)) {
         deleteReStock(row._id, row.code);
       }
-    } else if (action === "edit") {
-      setEditingRow(row);
-      setIsEditModalOpen(true);
     } else if (action === "show") {
       alert(
         `ReStock details:\nCode: ${row.code}\nNote: ${row.note}\nDescription: ${
@@ -165,11 +152,12 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addReStock = async (
-    restock: Omit<ReStockData, "id" | "created_at">
+    restock: Omit<ReStockData, "_id" | "created_at">
   ) => {
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
+      const inputDate = restock.input_date || new Date().toISOString();
 
       const itemsWithToken = restock.items.map((item) => ({
         ...item,
@@ -185,6 +173,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({
           ...restock,
           items: itemsWithToken,
+          input_date: inputDate,
         }),
       });
       const json = await res.json();
@@ -218,6 +207,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
             quantity: item.quantity,
             note: "Re-stock added",
             tokenHistory: item.tokenHistory,
+            input_date: inputDate, // ← sertakan juga di history
           }),
         });
       }
@@ -303,64 +293,6 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateReStock = async (
-    id: string,
-    restock: Omit<ReStockData, "id" | "created_at">
-  ) => {
-    const tokenHistory = createTokenHistory();
-    try {
-      const token = getToken();
-      if (!token) throw new Error("User not authenticated");
-
-      const itemsWithToken = restock.items.map((item) => ({
-        ...item,
-        tokenHistory,
-      }));
-
-      const res = await fetch(`/api/re-stocks/re-stock?id=${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...restock,
-          items: itemsWithToken,
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to update re-stock");
-
-      for (const item of itemsWithToken) {
-        await fetch("/api/history-transactions/history-transaction", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            stock_id: item.stock_id,
-            color_id: item.color_id,
-            size_id: item.size_id,
-            heavy_id: item.heavy_id,
-            type: "in",
-            quantity: item.quantity,
-            note: restock.note || "Re-stock updated",
-            tokenHistory: item.tokenHistory,
-          }),
-        });
-      }
-
-      await fetchData();
-      enqueueSnackbar("ReStock updated successfully", { variant: "success" });
-    } catch (err: any) {
-      console.error(err);
-      enqueueSnackbar(err.message || "Something went wrong", {
-        variant: "error",
-      });
-    }
-  };
-
   useEffect(() => {
     fetchData(filterValue, page);
   }, [fetchData, page, pageSize, filterValue]);
@@ -381,16 +313,11 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
         filterValue,
         isModalOpen,
         setIsModalOpen,
-        editingRow,
-        setEditingRow,
-        isEditModalOpen,
-        setIsEditModalOpen,
         handleFilter,
         handleActionClick,
         fetchData,
         addReStock,
         deleteReStock,
-        updateReStock,
       }}
     >
       {children}
