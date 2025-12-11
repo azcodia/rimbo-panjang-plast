@@ -13,6 +13,7 @@ import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
+import { formatDate } from "@/lib/formatDate";
 
 export interface StockData {
   id: string;
@@ -105,7 +106,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       key: "input_date",
       label: "Input Date",
       render: (_value: any, row: { input_date?: string }) =>
-        row.input_date ? new Date(row.input_date).toLocaleDateString() : "-",
+        formatDate(row.input_date),
     },
   ];
 

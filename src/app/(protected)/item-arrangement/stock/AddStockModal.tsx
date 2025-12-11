@@ -98,7 +98,7 @@ export default function AddStockModal({
               onChange={(val) => setFieldValue("sizeId", val)}
               options={filteredSizes.map((s) => ({
                 value: s.id,
-                label: s.size.toString(),
+                label: `${s.size.toString()} cm`,
               }))}
               error={touched.sizeId ? errors.sizeId : undefined}
             />

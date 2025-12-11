@@ -114,7 +114,7 @@ export const HeavyProvider = ({ children }: { children: ReactNode }) => {
   const selectOptions: SelectOption<string>[] = [
     { label: "All", value: "" },
     ...allData.map((h) => ({
-      label: `${h.weight} g`,
+      label: `${h.weight} gram`,
       value: h.id,
     })),
   ];

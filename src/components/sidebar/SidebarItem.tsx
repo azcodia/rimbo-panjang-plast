@@ -48,6 +48,7 @@ export default function SidebarItem({ item, pathname }: SidebarItemProps) {
           </div>
           <ChevronDown
             size={15}
+            strokeWidth={2.5}
             className={`transition-transform duration-200 text-gray-400 group-hover:text-gray-500 ${
               open ? "rotate-0" : "rotate-180"
             }`}

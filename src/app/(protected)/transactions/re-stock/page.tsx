@@ -39,14 +39,14 @@ export default function ReStockPage() {
         onFilterChange={handleFilter}
         onPageChange={setPage}
         onActionClick={handleActionClick}
-        visibleActions={["delete"]}
+        visibleActions={["delete", "show"]}
         buttons={[
           { text: "Tambah Re-Stock", onClick: () => setIsModalOpen(true) },
         ]}
       />
       <AddReStockModal
         isOpen={isModalOpen}
-        size="xl"
+        size="xxl"
         onClose={() => setIsModalOpen(false)}
         onSaved={() => fetchData()}
       />

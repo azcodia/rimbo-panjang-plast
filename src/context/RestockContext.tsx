@@ -11,6 +11,7 @@ import {
 import { TableRow } from "@/components/table/Table";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
+import { formatDate } from "@/lib/formatDate";
 
 export interface ReStockItem {
   stock_id: string;
@@ -81,7 +82,11 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
       render: (_value: any, row: ReStockData) =>
         row.items.map((i) => `Qty: ${i.quantity}`).join(", "),
     },
-    { key: "created_at", label: "Created At" },
+    {
+      key: "input_date",
+      label: "Tanggal Input",
+      render: (_value: any, row: ReStockData) => formatDate(row.input_date),
+    },
   ];
 
   const getToken = () =>
@@ -95,7 +100,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        if (filter) params.append("filter", filter);
+        if (filter) params.append("code", filter); // ← cuma filter code
         params.append("page", pageNum.toString());
         params.append("pageSize", pageSize.toString());
 
@@ -176,9 +181,20 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
           input_date: inputDate,
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to add re-stock");
 
+      const json = await res.json();
+
+      if (!res.ok) {
+        // tangkap error duplikat
+        if (json.message?.includes("already exists")) {
+          enqueueSnackbar(json.message, { variant: "error" });
+        } else {
+          throw new Error(json.message || "Failed to add re-stock");
+        }
+        return;
+      }
+
+      // === tetap seperti code lama mu ===
       for (const item of itemsWithToken) {
         await fetch(`/api/stocks/stock`, {
           method: "PATCH",
@@ -207,7 +223,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
             quantity: item.quantity,
             note: "Re-stock added",
             tokenHistory: item.tokenHistory,
-            input_date: inputDate, // ← sertakan juga di history
+            input_date: inputDate,
           }),
         });
       }
