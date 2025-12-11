@@ -36,8 +36,11 @@ export const getReStocks = async (query: any, skip: number, limit: number) => {
 };
 
 export const createReStock = async (data: ReStockInput) => {
-  const exists = await ReStock.findOne({ code: data.code });
-  if (exists) throw new Error("ReStock code already exists");
+  const normalizedCode = data.code.trim().toUpperCase();
+
+  const exists = await ReStock.findOne({ code: normalizedCode });
+  if (exists)
+    throw new Error(`ReStock code "${normalizedCode}" already exists`);
 
   const items = data.items.map((i) => ({
     stock_id: toObjectId(i.stock_id),
@@ -49,12 +52,11 @@ export const createReStock = async (data: ReStockInput) => {
   }));
 
   return ReStock.create({
-    code: data.code,
+    ...data,
+    code: normalizedCode,
     user_id: toObjectId(data.user_id),
-    note: data.note,
-    description: data.description,
-    input_date: data.input_date ? new Date(data.input_date) : new Date(), // ← pakai sekarang kalau tidak ada
     items,
+    input_date: data.input_date ? new Date(data.input_date) : new Date(),
   });
 };
 
