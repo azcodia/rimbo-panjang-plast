@@ -62,7 +62,7 @@ export default function AddReStockModal({
         code: values.code,
         note: values.note,
         description: values.description,
-        input_date: values.inputDate || new Date().toISOString(), // default sekarang
+        input_date: values.inputDate || new Date().toISOString(),
         items: values.items.map((i) => {
           const stock = stocks.find(
             (s) =>

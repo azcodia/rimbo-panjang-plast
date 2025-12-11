@@ -15,9 +15,6 @@ export default function ReStockPage() {
     loading,
     filterValue,
     isModalOpen,
-    editingRow,
-    isEditModalOpen,
-    setIsEditModalOpen,
     setPage,
     handleFilter,
     handleActionClick,
@@ -42,7 +39,7 @@ export default function ReStockPage() {
         onFilterChange={handleFilter}
         onPageChange={setPage}
         onActionClick={handleActionClick}
-        visibleActions={["edit", "delete"]}
+        visibleActions={["delete"]}
         buttons={[
           { text: "Tambah Re-Stock", onClick: () => setIsModalOpen(true) },
         ]}
@@ -53,13 +50,6 @@ export default function ReStockPage() {
         onClose={() => setIsModalOpen(false)}
         onSaved={() => fetchData()}
       />
-      {/* <EditReStockModal
-        isOpen={isEditModalOpen}
-        restock={editingRow}
-        size="lg"
-        onClose={() => setIsEditModalOpen(false)}
-        onSaved={() => fetchData()}
-      /> */}
     </div>
   );
 }
