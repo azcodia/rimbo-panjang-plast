@@ -4,6 +4,7 @@ import TableWithControls from "@/components/table/TableWithControls";
 import { useReStockContext } from "@/context/RestockContext";
 import { useEffect } from "react";
 import AddReStockModal from "./AddReStockModal";
+import { useStockContext } from "@/context/StockContext";
 
 export default function ReStockPage() {
   const {
@@ -21,6 +22,7 @@ export default function ReStockPage() {
     setIsModalOpen,
     fetchData,
   } = useReStockContext();
+  const { fetchData: fetchStock } = useStockContext();
 
   useEffect(() => {
     console.log("RE-STOCK", data);
@@ -46,9 +48,12 @@ export default function ReStockPage() {
       />
       <AddReStockModal
         isOpen={isModalOpen}
-        size="xxl"
+        size="xl"
         onClose={() => setIsModalOpen(false)}
-        onSaved={() => fetchData()}
+        onSaved={() => {
+          fetchData();
+          fetchStock();
+        }}
       />
     </div>
   );
