@@ -50,7 +50,7 @@ export default function StockCascadingDropdown({
 
     const filteredSizes = stocks
       .filter((s) => s.color_id === value.colorId && s.size !== undefined)
-      .map((s) => ({ value: s.size_id, label: s.size!.toString() }));
+      .map((s) => ({ value: s.size_id, label: `${s.size} cm` })); // tambahkan 'cm'
 
     const uniqueSizes = Array.from(
       new Map(filteredSizes.map((s) => [s.value, s])).values()
@@ -73,7 +73,7 @@ export default function StockCascadingDropdown({
 
     const filteredHeavies = stocks
       .filter((s) => s.color_id === value.colorId && s.size_id === value.sizeId)
-      .map((s) => ({ value: s.heavy_id, label: `${s.heavy} g` }));
+      .map((s) => ({ value: s.heavy_id, label: `${s.heavy} g` })); // tambahkan 'g'
 
     const uniqueHeavies = Array.from(
       new Map(filteredHeavies.map((h) => [h.value, h])).values()

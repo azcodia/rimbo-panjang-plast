@@ -76,7 +76,7 @@ export default function EditSizeModal({
             />
 
             <Input
-              label="Size"
+              label="Size (cm)"
               type="number"
               placeholder="Enter size"
               value={values.size}

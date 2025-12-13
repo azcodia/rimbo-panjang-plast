@@ -23,7 +23,7 @@ export interface ReStockItem {
 }
 
 export interface ReStockData {
-  _id: string;
+  _id?: string;
   code: string;
   note?: string;
   description?: string;
@@ -100,7 +100,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        if (filter) params.append("code", filter); // ← cuma filter code
+        if (filter) params.append("code", filter);
         params.append("page", pageNum.toString());
         params.append("pageSize", pageSize.toString());
 
@@ -145,7 +145,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete this re-stock?`)) {
-        deleteReStock(row._id, row.code);
+        deleteReStock(row._id || "", row.code);
       }
     } else if (action === "show") {
       alert(
