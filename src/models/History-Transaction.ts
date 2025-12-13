@@ -7,6 +7,8 @@ export interface IHistoryTransaction extends Document {
   heavy_id: mongoose.Types.ObjectId;
   type: "in" | "out" | "adjust";
   quantity: number;
+  unit_price?: number;
+  total_price?: number;
   note: string;
   description?: string;
   user_id: mongoose.Types.ObjectId;
@@ -23,6 +25,8 @@ const HistoryTransactionSchema = new Schema<IHistoryTransaction>({
   heavy_id: { type: Schema.Types.ObjectId, ref: "Heavy", required: true },
   type: { type: String, enum: ["in", "out", "adjust"], required: true },
   quantity: { type: Number, required: true },
+  unit_price: { type: Number },
+  total_price: { type: Number },
   note: { type: String, required: true },
   description: { type: String },
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
