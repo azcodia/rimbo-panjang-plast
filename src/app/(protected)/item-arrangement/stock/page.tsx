@@ -38,7 +38,7 @@ export default function StockPage() {
         onFilterChange={handleFilter}
         onPageChange={setPage}
         onActionClick={handleActionClick}
-        visibleActions={["edit", "delete"]}
+        visibleActions={["delete"]}
         buttons={[{ text: "Tambah Data", onClick: () => setIsModalOpen(true) }]}
       />
       <AddStockModal
