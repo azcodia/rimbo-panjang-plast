@@ -25,9 +25,16 @@ export interface DeliveryItem {
   tokenHistory?: string;
 }
 
+export interface Customer {
+  _id: string;
+  name: string;
+  type: string;
+}
+
 export interface DeliveryData {
   _id?: string;
   code: string;
+  customer_id: Customer | string;
   note?: string;
   description?: string;
   created_at: string;
@@ -79,6 +86,14 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
 
   const columns = [
     { key: "code", label: "Code" },
+    {
+      key: "customer_id",
+      label: "Customer",
+      render: (_value: any, row: DeliveryData) =>
+        `${(row.customer_id as Customer).name} (${
+          (row.customer_id as Customer).type
+        })`,
+    },
     { key: "note", label: "Note" },
     { key: "description", label: "Description" },
     {
@@ -222,6 +237,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
             unit_price: item.unit_price,
             discount_per_item: item.discount_per_item || 0,
             total_price: item.total_price,
+            customer_id: delivery.customer_id,
             note: `Delivery added`,
             tokenHistory: item.tokenHistory,
             input_date: inputDate,
