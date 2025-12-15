@@ -5,6 +5,7 @@ export interface IHistoryTransaction extends Document {
   color_id: mongoose.Types.ObjectId;
   size_id: mongoose.Types.ObjectId;
   heavy_id: mongoose.Types.ObjectId;
+  customer_id?: mongoose.Types.ObjectId;
   type: "in" | "out" | "adjust";
   quantity: number;
   unit_price?: number;
@@ -24,7 +25,11 @@ const HistoryTransactionSchema = new Schema<IHistoryTransaction>({
   color_id: { type: Schema.Types.ObjectId, ref: "Color", required: true },
   size_id: { type: Schema.Types.ObjectId, ref: "Size", required: true },
   heavy_id: { type: Schema.Types.ObjectId, ref: "Heavy", required: true },
-
+  customer_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Customer",
+    required: false,
+  },
   type: {
     type: String,
     enum: ["in", "out", "adjust"],
