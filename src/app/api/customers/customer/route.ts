@@ -20,7 +20,12 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * pageSize;
 
     const query: any = {};
-    if (filter) query.name = { $regex: filter, $options: "i" };
+    if (filter) {
+      query.$or = [
+        { name: { $regex: filter, $options: "i" } },
+        { phone: { $regex: filter, $options: "i" } },
+      ];
+    }
 
     const result = await getCustomers(query, skip, pageSize);
     return NextResponse.json({ success: true, ...result });
@@ -37,27 +42,23 @@ export async function POST(req: NextRequest) {
   try {
     getUserIdFromReq(req);
 
-    const { name, email, phone, address, note } = await req.json();
+    const { name, type, email, phone, address, note } = await req.json();
     if (!name) throw new Error("Name is required");
 
     const newCustomer = await createCustomer({
       name,
+      type,
       email,
       phone,
       address,
       note,
     });
+
     return NextResponse.json({ success: true, data: newCustomer });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
-      {
-        status: ["Authorization header missing", "Invalid token"].includes(
-          err.message
-        )
-          ? 401
-          : 400,
-      }
+      { status: 400 }
     );
   }
 }
@@ -69,27 +70,24 @@ export async function PUT(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { name, email, phone, address, note } = await req.json();
+    const { name, type, email, phone, address, note } = await req.json();
+
     if (!id || !name) throw new Error("ID and name are required");
 
     const updated = await updateCustomer(id, {
       name,
+      type,
       email,
       phone,
       address,
       note,
     });
+
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
-      {
-        status: ["Authorization header missing", "Invalid token"].includes(
-          err.message
-        )
-          ? 401
-          : 400,
-      }
+      { status: 400 }
     );
   }
 }
@@ -108,13 +106,7 @@ export async function DELETE(req: NextRequest) {
   } catch (err: any) {
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
-      {
-        status: ["Authorization header missing", "Invalid token"].includes(
-          err.message
-        )
-          ? 401
-          : 400,
-      }
+      { status: 400 }
     );
   }
 }

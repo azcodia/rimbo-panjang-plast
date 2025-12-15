@@ -6,21 +6,30 @@ export const getCustomers = async (query: any, skip: number, limit: number) => {
     .skip(skip)
     .limit(limit)
     .sort({ created_at: -1 });
+
   return { total, data };
 };
 
 export const createCustomer = async (customerData: {
   name: string;
+  type?: "individual" | "company";
   email?: string;
   phone?: string;
   address?: string;
   note?: string;
 }) => {
-  const exists = await CustomerModel.findOne({
-    $or: [{ email: customerData.email }, { phone: customerData.phone }],
-  });
-  if (exists)
-    throw new Error("Customer with same email or phone already exists");
+  if (customerData.email || customerData.phone) {
+    const exists = await CustomerModel.findOne({
+      $or: [
+        customerData.email ? { email: customerData.email } : {},
+        customerData.phone ? { phone: customerData.phone } : {},
+      ],
+    });
+
+    if (exists)
+      throw new Error("Customer with same email or phone already exists");
+  }
+
   return CustomerModel.create(customerData);
 };
 
@@ -28,18 +37,26 @@ export const updateCustomer = async (
   id: string,
   customerData: {
     name: string;
+    type?: "individual" | "company";
     email?: string;
     phone?: string;
     address?: string;
     note?: string;
   }
 ) => {
-  const exists = await CustomerModel.findOne({
-    _id: { $ne: id },
-    $or: [{ email: customerData.email }, { phone: customerData.phone }],
-  });
-  if (exists)
-    throw new Error("Customer with same email or phone already exists");
+  if (customerData.email || customerData.phone) {
+    const exists = await CustomerModel.findOne({
+      _id: { $ne: id },
+      $or: [
+        customerData.email ? { email: customerData.email } : {},
+        customerData.phone ? { phone: customerData.phone } : {},
+      ],
+    });
+
+    if (exists)
+      throw new Error("Customer with same email or phone already exists");
+  }
+
   return CustomerModel.findByIdAndUpdate(id, customerData, { new: true });
 };
 
