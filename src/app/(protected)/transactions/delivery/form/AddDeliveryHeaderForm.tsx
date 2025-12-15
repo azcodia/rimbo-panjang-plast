@@ -2,9 +2,12 @@
 
 import Input from "@/components/ui/Input";
 import DatePicker from "@/components/ui/Date";
+import { useCustomerContext } from "@/context/CustomerContext";
+import Select from "@/components/ui/Select";
 
 interface DeliveryHeaderFormProps {
   values: {
+    customerId: string;
     code: string;
     note: string;
     description: string;
@@ -21,8 +24,16 @@ export default function DeliveryHeaderForm({
   touched,
   setFieldValue,
 }: DeliveryHeaderFormProps) {
+  const { selectOptions } = useCustomerContext();
   return (
     <div className="flex flex-col gap-4">
+      <Select
+        label="Customer (Optional)"
+        value={values.customerId || ""}
+        onChange={(val) => setFieldValue("customerId", val)}
+        options={selectOptions}
+        error={touched.customerId ? errors.customerId : undefined}
+      />
       <Input
         label="Delivery Code"
         placeholder="Enter delivery code"

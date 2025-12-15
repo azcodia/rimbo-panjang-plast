@@ -17,6 +17,7 @@ interface AddDeliveryModalProps {
 }
 
 interface DeliveryFormValues {
+  customerId: string;
   code: string;
   note: string;
   description: string;
@@ -32,6 +33,7 @@ interface DeliveryFormValues {
 }
 
 const initialValues: DeliveryFormValues = {
+  customerId: "",
   code: "",
   note: "",
   description: "",
@@ -94,6 +96,7 @@ export default function AddDeliveryModal({
         note: values.note,
         description: values.description,
         input_date: values.inputDate || new Date().toISOString(),
+        customer_id: values.customerId,
         items: values.items.map((i) => {
           const stock = stocks.find(
             (s) =>
@@ -146,6 +149,7 @@ export default function AddDeliveryModal({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <DeliveryHeaderForm
                 values={{
+                  customerId: values.customerId,
                   code: values.code,
                   note: values.note,
                   description: values.description,
