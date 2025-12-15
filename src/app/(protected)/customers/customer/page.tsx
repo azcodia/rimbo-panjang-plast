@@ -40,15 +40,20 @@ export default function CustomerPage() {
         onActionClick={handleActionClick}
         visibleActions={["edit", "delete"]}
         buttons={[
-          { text: "Tambah Customer", onClick: () => setIsModalOpen(true) },
+          {
+            text: "Tambah Customer",
+            onClick: () => setIsModalOpen(true),
+          },
         ]}
       />
+
       <AddCustomerModal
         isOpen={isModalOpen}
         size="sm"
         onClose={() => setIsModalOpen(false)}
         onSaved={() => fetchData(filterValue, page)}
       />
+
       {editingRow && (
         <EditCustomerModal
           isOpen={isEditModalOpen}
@@ -56,6 +61,7 @@ export default function CustomerPage() {
           onSaved={() => fetchData(filterValue, page)}
           id={editingRow.id}
           defaultCustomerData={{
+            type: editingRow.type,
             name: editingRow.name,
             email: editingRow.email,
             phone: editingRow.phone,
