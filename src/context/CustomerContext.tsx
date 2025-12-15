@@ -11,9 +11,11 @@ import React, {
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
+export type CustomerType = "individual" | "company";
 
 export interface CustomerData {
   id: string;
+  type: CustomerType;
   name: string;
   email?: string;
   phone?: string;
@@ -59,7 +61,6 @@ interface CustomerContextType {
 const CustomerContext = createContext<CustomerContextType | undefined>(
   undefined
 );
-
 export const CustomerProvider = ({ children }: { children: ReactNode }) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -67,7 +68,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
   const [allData, setAllData] = useState<CustomerData[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -76,6 +77,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const columns = [
+    { key: "type", label: "Type" },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
@@ -97,12 +99,14 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
         if (json.success) {
           const mappedData: CustomerData[] = json.data.map((d: any) => ({
             id: d._id,
+            type: d.type,
             name: d.name,
             email: d.email,
             phone: d.phone,
             address: d.address,
             note: d.note,
           }));
+
           setAllData(mappedData);
 
           setData(
@@ -125,7 +129,10 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
 
   const selectOptions: SelectOption<string>[] = [
     { label: "All", value: "" },
-    ...allData.map((c) => ({ label: c.name, value: c.id })),
+    ...allData.map((c) => ({
+      label: `${c.name} (${c.type === "company" ? "Company" : "Individual"})`,
+      value: c.id,
+    })),
   ];
 
   const handleFilter = (val: string) => {
@@ -146,7 +153,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
       setEditingRow(row);
       setIsEditModalOpen(true);
     } else if (action === "show") {
-      alert(`Show clicked: ${row.name}`);
+      alert(`${row.name}\nType: ${row.type}\nPhone: ${row.phone || "-"}`);
     }
   };
 
@@ -160,11 +167,10 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add customer");
       await fetchData();
-      enqueueSnackbar(`Added customer ${customer.name} successfully`, {
+      enqueueSnackbar(`Added customer ${customer.name}`, {
         variant: "success",
       });
     } catch (err: any) {
-      console.error(err);
       enqueueSnackbar(err.message || "Something went wrong", {
         variant: "error",
       });
@@ -179,9 +185,10 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to delete customer");
       await fetchData();
-      enqueueSnackbar("Deleted customer successfully", { variant: "success" });
+      enqueueSnackbar("Deleted customer successfully", {
+        variant: "success",
+      });
     } catch (err: any) {
-      console.error(err);
       enqueueSnackbar(err.message || "Something went wrong", {
         variant: "error",
       });
@@ -205,7 +212,6 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
         variant: "success",
       });
     } catch (err: any) {
-      console.error(err);
       enqueueSnackbar(err.message || "Something went wrong", {
         variant: "error",
       });
