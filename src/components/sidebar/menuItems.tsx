@@ -1,4 +1,10 @@
-import { LayoutDashboard, Boxes, Cog, PackageSearch } from "lucide-react";
+import {
+  LayoutDashboard,
+  Boxes,
+  Cog,
+  PackageSearch,
+  UserPlus2Icon,
+} from "lucide-react";
 import { ReactNode } from "react";
 
 export type MenuItem = {
@@ -18,7 +24,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     label: "Item Arrangement",
-    group: "Stock & Atribut",
+    group: "Stock, Atribut & Other",
     icon: <Boxes size={22.5} strokeWidth={2.2} />,
     children: [
       {
@@ -32,6 +38,12 @@ export const menuItems: MenuItem[] = [
         icon: <PackageSearch size={22.5} strokeWidth={2.2} />,
       },
     ],
+  },
+  {
+    label: "Customer",
+    path: "/customers/customer",
+    group: "Stock, Atribut & Other",
+    icon: <UserPlus2Icon size={22.5} strokeWidth={2.2} />,
   },
   {
     label: "Transaction",
