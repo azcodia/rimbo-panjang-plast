@@ -10,12 +10,13 @@ interface DeliveryItemInput {
   unit_price?: number;
   discount_per_item?: number;
   total_price?: number;
-  tokenHistory: string; // wajib ada per item
+  tokenHistory: string;
 }
 
 interface DeliveryInput {
   code: string;
   user_id: string;
+  customer_id?: string;
   note?: string;
   description?: string;
   input_date?: Date;
@@ -34,6 +35,7 @@ export const getDeliveries = async (
 
   const data = await Delivery.find(query)
     .populate("user_id", "name email")
+    .populate("customer_id", "name type")
     .populate("items.stock_id")
     .populate("items.color_id")
     .populate("items.size_id")
@@ -70,6 +72,7 @@ export const createDelivery = async (data: DeliveryInput) => {
   return Delivery.create({
     code: normalizedCode,
     user_id: toObjectId(data.user_id),
+    customer_id: data.customer_id ? toObjectId(data.customer_id) : undefined,
     note: data.note,
     description: data.description,
     input_date: data.input_date ? new Date(data.input_date) : new Date(),
@@ -101,6 +104,7 @@ export const updateDelivery = async (id: string, data: DeliveryInput) => {
     {
       code: data.code,
       user_id: toObjectId(data.user_id),
+      customer_id: data.customer_id ? toObjectId(data.customer_id) : undefined,
       note: data.note,
       description: data.description,
       input_date: data.input_date ? new Date(data.input_date) : new Date(),
@@ -109,6 +113,7 @@ export const updateDelivery = async (id: string, data: DeliveryInput) => {
     { new: true }
   )
     .populate("user_id", "name email")
+    .populate("customer_id", "name type")
     .populate("items.stock_id")
     .populate("items.color_id")
     .populate("items.size_id")

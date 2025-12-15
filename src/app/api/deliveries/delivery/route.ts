@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
   await dbConnect();
   try {
     const user_id = getUserIdFromReq(req);
-    const { code, note, description, items, input_date } = await req.json();
+    const { code, note, description, items, input_date, customer_id } =
+      await req.json();
 
     if (!code || !items || !Array.isArray(items) || items.length === 0)
       throw new Error("Code and items are required");
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
     const newDelivery = await createDelivery({
       code,
       user_id,
+      customer_id,
       note,
       description,
       items,
@@ -63,7 +65,8 @@ export async function PUT(req: NextRequest) {
     const user_id = getUserIdFromReq(req);
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { code, note, description, items, input_date } = await req.json();
+    const { code, note, description, items, input_date, customer_id } =
+      await req.json();
 
     if (!id || !code || !items || !Array.isArray(items) || items.length === 0)
       throw new Error("All fields are required");
@@ -71,6 +74,7 @@ export async function PUT(req: NextRequest) {
     const updated = await updateDelivery(id, {
       code,
       user_id,
+      customer_id,
       note,
       description,
       items,

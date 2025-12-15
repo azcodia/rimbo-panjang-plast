@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IDelivery extends Document {
   code: string;
   user_id: mongoose.Types.ObjectId;
+  customer_id?: mongoose.Types.ObjectId;
   note?: string;
   description?: string;
   input_date: Date;
@@ -23,6 +24,11 @@ export interface IDelivery extends Document {
 const DeliverySchema = new Schema<IDelivery>({
   code: { type: String, required: true, unique: true },
   user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  customer_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Customer",
+    required: false,
+  },
   note: { type: String },
   description: { type: String },
   input_date: { type: Date, default: Date.now },
