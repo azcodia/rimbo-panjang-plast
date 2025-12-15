@@ -8,6 +8,7 @@ export interface IHistoryTransaction extends Document {
   type: "in" | "out" | "adjust";
   quantity: number;
   unit_price?: number;
+  discount_per_item?: number;
   total_price?: number;
   note: string;
   description?: string;
@@ -23,9 +24,15 @@ const HistoryTransactionSchema = new Schema<IHistoryTransaction>({
   color_id: { type: Schema.Types.ObjectId, ref: "Color", required: true },
   size_id: { type: Schema.Types.ObjectId, ref: "Size", required: true },
   heavy_id: { type: Schema.Types.ObjectId, ref: "Heavy", required: true },
-  type: { type: String, enum: ["in", "out", "adjust"], required: true },
+
+  type: {
+    type: String,
+    enum: ["in", "out", "adjust"],
+    required: true,
+  },
   quantity: { type: Number, required: true },
   unit_price: { type: Number },
+  discount_per_item: { type: Number, default: 0 },
   total_price: { type: Number },
   note: { type: String, required: true },
   description: { type: String },
