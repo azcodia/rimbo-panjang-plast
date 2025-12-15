@@ -6,23 +6,18 @@ import Button from "@/components/ui/Button";
 import BaseModal from "@/components/ui/modals/modal";
 import { useCustomerContext } from "@/context/CustomerContext";
 import { CustomerSchema } from "@/lib/schemas/CustomerSchema";
+import Select from "@/components/ui/Select";
 
 interface EditCustomerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSaved?: () => void;
-  size?: "sm" | "md" | "lg";
   id: string;
-  defaultCustomerData: {
-    name: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-    note?: string;
-  };
+  defaultCustomerData: CustomerFormValues;
 }
 
-interface CustomerFormValues {
+export interface CustomerFormValues {
+  type: "individual" | "company";
   name: string;
   email?: string;
   phone?: string;
@@ -36,17 +31,8 @@ export default function EditCustomerModal({
   onSaved,
   id,
   defaultCustomerData,
-  size = "sm",
 }: EditCustomerModalProps) {
   const { updateCustomer } = useCustomerContext();
-
-  const initialValues: CustomerFormValues = {
-    name: defaultCustomerData.name || "",
-    email: defaultCustomerData.email || "",
-    phone: defaultCustomerData.phone || "",
-    address: defaultCustomerData.address || "",
-    note: defaultCustomerData.note || "",
-  };
 
   const handleSubmit = async (
     values: CustomerFormValues,
@@ -55,10 +41,8 @@ export default function EditCustomerModal({
     try {
       await updateCustomer(id, values);
       onClose();
-
-      if (onSaved) onSaved();
+      onSaved?.();
     } catch (err: any) {
-      console.error(err);
       alert(err.message || "Something went wrong");
     } finally {
       setSubmitting(false);
@@ -70,16 +54,27 @@ export default function EditCustomerModal({
       title="Edit Customer"
       isOpen={isOpen}
       onClose={onClose}
-      size={size}
+      size="sm"
     >
       <Formik
-        enableReinitialize
-        initialValues={initialValues}
+        initialValues={defaultCustomerData}
         validationSchema={CustomerSchema}
+        enableReinitialize
         onSubmit={handleSubmit}
       >
         {({ values, errors, touched, handleChange, isSubmitting }) => (
           <Form className="flex flex-col gap-4">
+            <Select
+              label="Customer Type"
+              value={values.type}
+              onChange={handleChange("type")}
+              error={touched.type ? errors.type : undefined}
+              options={[
+                { label: "Perorangan", value: "individual" },
+                { label: "Pabrik / Perusahaan", value: "company" },
+              ]}
+            />
+
             <Input
               label="Name"
               placeholder="Enter customer name"

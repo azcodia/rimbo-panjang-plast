@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import BaseModal from "@/components/ui/modals/modal";
 import { useCustomerContext } from "@/context/CustomerContext";
 import { CustomerSchema } from "@/lib/schemas/CustomerSchema";
+import Select from "@/components/ui/Select";
 
 interface AddCustomerModalProps {
   isOpen: boolean;
@@ -14,7 +15,8 @@ interface AddCustomerModalProps {
   size?: "sm" | "md" | "lg";
 }
 
-interface CustomerFormValues {
+export interface CustomerFormValues {
+  type: "individual" | "company";
   name: string;
   email?: string;
   phone?: string;
@@ -23,6 +25,7 @@ interface CustomerFormValues {
 }
 
 const initialValues: CustomerFormValues = {
+  type: "individual",
   name: "",
   email: "",
   phone: "",
@@ -46,9 +49,8 @@ export default function AddCustomerModal({
       await addCustomer(values);
       resetForm();
       onClose();
-      if (onSaved) onSaved();
+      onSaved?.();
     } catch (err: any) {
-      console.error(err);
       alert(err.message || "Something went wrong");
     } finally {
       setSubmitting(false);
@@ -69,6 +71,16 @@ export default function AddCustomerModal({
       >
         {({ values, errors, touched, handleChange, isSubmitting }) => (
           <Form className="flex flex-col gap-4">
+            <Select
+              label="Customer Type"
+              value={values.type}
+              onChange={handleChange("type")}
+              error={touched.type ? errors.type : undefined}
+              options={[
+                { label: "Perorangan", value: "individual" },
+                { label: "Pabrik / Perusahaan", value: "company" },
+              ]}
+            />
             <Input
               label="Name"
               placeholder="Enter customer name"
@@ -76,6 +88,7 @@ export default function AddCustomerModal({
               onChange={handleChange("name")}
               error={touched.name ? errors.name : undefined}
             />
+
             <Input
               label="Email"
               placeholder="Enter email"
@@ -83,6 +96,7 @@ export default function AddCustomerModal({
               onChange={handleChange("email")}
               error={touched.email ? errors.email : undefined}
             />
+
             <Input
               label="Phone"
               placeholder="Enter phone number"
@@ -90,6 +104,7 @@ export default function AddCustomerModal({
               onChange={handleChange("phone")}
               error={touched.phone ? errors.phone : undefined}
             />
+
             <Input
               label="Address"
               placeholder="Enter address"
@@ -97,6 +112,7 @@ export default function AddCustomerModal({
               onChange={handleChange("address")}
               error={touched.address ? errors.address : undefined}
             />
+
             <Input
               label="Note"
               placeholder="Additional note"
