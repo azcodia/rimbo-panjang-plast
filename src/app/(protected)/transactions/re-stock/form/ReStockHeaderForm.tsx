@@ -2,6 +2,7 @@
 
 import Input from "@/components/ui/Input";
 import DatePicker from "@/components/ui/Date";
+import Textarea from "@/components/ui/Textarea";
 
 interface ReStockHeaderFormProps {
   values: {
@@ -37,7 +38,7 @@ export default function ReStockHeaderForm({
         onChange={(val) => setFieldValue("note", val)}
         error={touched.note ? errors.note : undefined}
       />
-      <Input
+      <Textarea
         label="Description"
         placeholder="Enter description"
         value={values.description}

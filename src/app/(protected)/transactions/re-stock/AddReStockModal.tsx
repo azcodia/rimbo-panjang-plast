@@ -130,7 +130,7 @@ export default function AddReStockModal({
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, errors, touched, setFieldValue, isSubmitting }) => (
-          <Form className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto scrollbar-auto-hide">
+          <Form className="flex flex-col gap-4 max-h-[65vh] overflow-y-auto scrollbar-auto-hide">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <ReStockHeaderForm
                 values={{
@@ -144,7 +144,7 @@ export default function AddReStockModal({
                 setFieldValue={setFieldValue}
               />
 
-              <div className="flex flex-col gap-4 overflow-y-auto scrollbar-auto-hide max-h-[55vh] col-span-2">
+              <div className="flex flex-col gap-4 overflow-y-auto scrollbar-auto-hide max-h-[62vh] col-span-2">
                 <FieldArray name="items">
                   {({ push, remove }) => (
                     <div className="flex flex-col gap-4">

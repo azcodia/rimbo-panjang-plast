@@ -36,6 +36,7 @@ export default function ReStockPage() {
         total={total}
         page={page}
         totalPages={totalPages}
+        showSearch={false}
         loading={loading}
         filterValue={filterValue}
         onFilterChange={handleFilter}
