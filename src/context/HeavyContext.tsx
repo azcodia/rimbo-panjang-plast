@@ -11,6 +11,7 @@ import React, {
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
+import { formatNumber } from "@/lib/formatNumber";
 
 export interface HeavyData {
   id: string;
@@ -70,7 +71,8 @@ export const HeavyProvider = ({ children }: { children: ReactNode }) => {
     {
       key: "weight",
       label: "Weight",
-      render: (_value: any, row: { weight: any }) => `${row.weight} gram`,
+      render: (_value: any, row: { weight: any }) =>
+        `${formatNumber(row.weight)} gram`,
     },
   ];
 
