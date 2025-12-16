@@ -13,17 +13,23 @@ export async function GET(req: NextRequest) {
   await dbConnect();
   try {
     const { searchParams } = new URL(req.url);
-    const colorFilter = searchParams.get("color") || "";
-    const sizeFilter = searchParams.get("size") || "";
-    const heavyFilter = searchParams.get("heavy") || "";
+    const filter = searchParams.get("filter") || "";
+    const color_id = searchParams.get("color_id") || "";
+    const size_id = searchParams.get("size_id") || "";
+    const heavy_id = searchParams.get("heavy_id") || "";
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const skip = (page - 1) * pageSize;
 
     const query: any = {};
-    if (colorFilter) query.color_id = colorFilter;
-    if (sizeFilter) query.size_id = sizeFilter;
-    if (heavyFilter) query.heavy_id = heavyFilter;
+    if (filter)
+      query.$or = [
+        { quantity: { $regex: filter, $options: "i" } },
+        { tokenHistory: { $regex: filter, $options: "i" } },
+      ];
+    if (color_id) query.color_id = color_id;
+    if (size_id) query.size_id = size_id;
+    if (heavy_id) query.heavy_id = heavy_id;
 
     const result = await getStocks(query, skip, pageSize);
     return NextResponse.json({ success: true, ...result });
