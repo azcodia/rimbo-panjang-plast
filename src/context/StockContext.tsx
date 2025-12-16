@@ -46,6 +46,8 @@ interface StockContextType {
   total: number;
   loading: boolean;
   filterValue: string;
+  selectedColor: string;
+  setSelectedColor: (val: string) => void;
   isModalOpen: boolean;
   setIsModalOpen: (val: boolean) => void;
   editingRow: StockData | null;
@@ -57,7 +59,11 @@ interface StockContextType {
     row: StockData,
     action: "edit" | "delete" | "show"
   ) => void;
-  fetchData: (filter?: string, page?: number) => Promise<void>;
+  fetchData: (
+    filter?: string,
+    page?: number,
+    color_id?: string
+  ) => Promise<void>;
   addStock: (
     stock: Omit<StockData, "id" | "tokenHistory">,
     note?: string
@@ -84,6 +90,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filterValue, setFilterValue] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [editingRow, setEditingRow] = useState<StockData | null>(null);
@@ -95,39 +102,43 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     {
       key: "size",
       label: "Size",
-      render: (_value: any, row: { size: number }) => `${row.size} cm`,
+      render: (_v: any, row: any) => `${row.size} cm`,
     },
     {
       key: "heavy",
-      label: "heavy",
-      render: (_value: any, row: { heavy: any }) => `${row.heavy} gram`,
+      label: "Heavy",
+      render: (_v: any, row: any) => `${row.heavy} gram`,
     },
     {
       key: "quantity",
       label: "Stock",
-      render: (_value: any, row: { quantity?: number }) =>
-        formatNumber(row.quantity || 0),
+      render: (_v: any, row: any) => formatNumber(row.quantity || 0),
     },
     {
       key: "input_date",
       label: "Input Date",
-      render: (_value: any, row: { input_date?: string }) =>
-        formatDate(row.input_date),
+      render: (_v: any, row: any) => formatDate(row.input_date),
     },
   ];
 
   const getToken = () =>
     document.cookie
       .split("; ")
-      .find((row) => row.startsWith("token="))
+      .find((r) => r.startsWith("token="))
       ?.split("=")[1];
 
+  // FETCH DATA DENGAN FILTER DAN COLOR_ID
   const fetchData = useCallback(
-    async (filter: string = filterValue, pageNum: number = page) => {
+    async (
+      filter: string = filterValue,
+      pageNum: number = page,
+      color_id: string = selectedColor
+    ) => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
         if (filter) params.append("filter", filter);
+        if (color_id) params.append("color_id", color_id);
         params.append("page", pageNum.toString());
         params.append("pageSize", pageSize.toString());
 
@@ -161,13 +172,13 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
       }
     },
-    [filterValue, page, pageSize]
+    [filterValue, page, pageSize, selectedColor]
   );
 
   const handleFilter = (val: string) => {
     setFilterValue(val);
     setPage(1);
-    fetchData(val, 1);
+    fetchData(val, 1, selectedColor);
   };
 
   const handleActionClick = (
@@ -186,15 +197,18 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       setEditingRow(row);
       setIsEditModalOpen(true);
     } else if (action === "show") {
-      alert(
-        `Stock details:\nColor: ${row.color}\nSize: ${row.size}\nHeavy: ${row.heavy}\nQuantity: ${row.quantity}\nInput Date: ${row.input_date}`
-      );
+      alert(`Stock details:
+Color: ${row.color}
+Size: ${row.size}
+Heavy: ${row.heavy}
+Quantity: ${row.quantity}
+Input Date: ${row.input_date}`);
     }
   };
 
   const addStock = async (
     stock: Omit<StockData, "id" | "tokenHistory">,
-    note: string = "Product baru"
+    note = "Product baru"
   ) => {
     const tokenHistory = createTokenHistory();
     try {
@@ -203,14 +217,13 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...stock,
-          input_date: stock.input_date ? new Date(stock.input_date) : undefined,
           tokenHistory,
+          input_date: stock.input_date ? new Date(stock.input_date) : undefined,
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Failed to add stock");
-
-      await fetchData();
+      await fetchData(filterValue, page, selectedColor);
 
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
@@ -246,7 +259,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const deleteStock = async (
     id: string,
     tokenHistory: string,
-    note: string = "( Stock deleted by user )"
+    note = "( Stock deleted by user )"
   ) => {
     try {
       const token = getToken();
@@ -263,19 +276,14 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({ tokenHistory, note }),
         }
       );
-
-      const jsonHistory = await resHistory.json();
-      if (!resHistory.ok)
-        throw new Error(jsonHistory.message || "Failed to delete history");
+      if (!resHistory.ok) throw new Error("Failed to delete history");
 
       const res = await fetch(`/api/stocks/stock?id=${id}`, {
         method: "DELETE",
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to delete stock");
+      if (!res.ok) throw new Error("Failed to delete stock");
 
-      await fetchData();
-
+      await fetchData(filterValue, page, selectedColor);
       enqueueSnackbar("Deleted stock successfully", { variant: "success" });
     } catch (err: any) {
       console.error(err);
@@ -288,7 +296,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const updateStock = async (
     id: string,
     stock: Omit<StockData, "id" | "tokenHistory">,
-    note: string = "Stock updated"
+    note = "Stock updated"
   ) => {
     try {
       const oldStock = allData.find((s) => s.id === id);
@@ -301,10 +309,9 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           tokenHistory: oldStock?.tokenHistory,
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to update stock");
+      if (!res.ok) throw new Error("Failed to update stock");
 
-      await fetchData();
+      await fetchData(filterValue, page, selectedColor);
 
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
@@ -344,7 +351,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const groupeddataStock: TableRow<StockData>[] = useMemo(() => {
+  const groupeddataStock = useMemo(() => {
     const map = new Map<string, StockData[]>();
     allData.forEach((item) => {
       if (!map.has(item.color_id)) map.set(item.color_id, []);
@@ -352,41 +359,28 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const grouped: TableRow<StockData>[] = [];
-
     map.forEach((items, color_id) => {
       items.forEach((item, index) => {
         grouped.push({
-          data: {
-            id: item.id,
-            color_id: item.color_id,
-            color: index === 0 ? item.color : "",
-            size_id: item.size_id,
-            size: item.size,
-            heavy_id: item.heavy_id,
-            heavy: item.heavy,
-            quantity: item.quantity,
-            input_date: item.input_date,
-            tokenHistory: item.tokenHistory,
-          },
+          data: { ...item, color: index === 0 ? item.color : "" },
           actions: ["edit", "delete", "show"],
         });
       });
     });
-
     return grouped;
   }, [allData]);
 
-  useEffect(() => {
-    fetchData(filterValue, page);
-  }, [fetchData, page, pageSize, filterValue]);
-
   const selectOptions: SelectOption<string>[] = [
     { label: "All", value: "" },
-    ...allData.map((s) => ({
-      label: `${s.color_id}-${s.size_id}-${s.heavy_id}`,
-      value: s.id,
+    ...Array.from(new Set(allData.map((d) => d.color_id))).map((c) => ({
+      label: c,
+      value: c,
     })),
   ];
+
+  useEffect(() => {
+    fetchData(filterValue, page, selectedColor);
+  }, [fetchData, page, pageSize, filterValue, selectedColor]);
 
   return (
     <StockContext.Provider
@@ -403,6 +397,8 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
         total,
         loading,
         filterValue,
+        selectedColor,
+        setSelectedColor,
         isModalOpen,
         setIsModalOpen,
         editingRow,
