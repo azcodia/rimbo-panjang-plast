@@ -128,7 +128,6 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const selectOptions: SelectOption<string>[] = [
-    { label: "All", value: "" },
     ...allData.map((c) => ({
       label: `${c.name} (${c.type === "company" ? "Company" : "Individual"})`,
       value: c.id,
