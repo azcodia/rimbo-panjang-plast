@@ -1,7 +1,10 @@
 "use client";
 
 import StockCascadingDropdown from "@/components/stock/StockCascadingDropdown";
-import Input from "@/components/ui/Input";
+import CurrencyInput from "@/components/ui/CurrencyInput";
+import ThousandInput from "@/components/ui/ThousandInput";
+import { formatNumber } from "@/lib/formatNumber";
+import { formatRp } from "@/lib/formatRp";
 import { ChevronDown, Trash2 } from "lucide-react";
 
 interface AddDeliveryItemFormProps {
@@ -56,21 +59,25 @@ export default function AddDeliveryItemForm({
             </span>
             <span>
               <span className="font-medium">Heavy:</span>{" "}
-              {heavyMap[item.heavyId] ? `${heavyMap[item.heavyId]} gram` : "-"}
+              {heavyMap[item.heavyId]
+                ? `${formatNumber(heavyMap[item.heavyId])} gram`
+                : "-"}
             </span>
             <span>
-              <span className="font-medium">Qty:</span> {item.quantity || 0}
+              <span className="font-medium">Qty:</span>{" "}
+              {formatNumber(item.quantity) || 0}
             </span>
             <span>
               <span className="font-medium">Unit Price:</span>{" "}
-              {item.unitPrice || 0}
+              {formatRp(item.unitPrice) || 0}
             </span>
             <span>
               <span className="font-medium">Discount:</span>{" "}
-              {item.discount || 0}
+              {formatRp(item.discount) || 0}
             </span>
             <span>
-              <span className="font-medium">Total Price:</span> {totalPrice}
+              <span className="font-medium">Total Price:</span>{" "}
+              {formatRp(totalPrice)}
             </span>
           </div>
         </div>
@@ -89,13 +96,15 @@ export default function AddDeliveryItemForm({
               }}
             />
           )}
-          <ChevronDown
-            strokeWidth={2.5}
-            size={22.5}
-            className={`text-xl font-bold p-1 border-success border rounded-md text-success hover:border-success-light hover:text-success-light transition-transform duration-200 ${
-              openIndex === index ? "rotate-180" : "rotate-0"
-            }`}
-          />
+          <div className={`border-success border rounded-md`}>
+            <ChevronDown
+              strokeWidth={2.5}
+              size={22.5}
+              className={`text-xl font-bold p-1 text-success hover:border-success-light hover:text-succes-light transition-transform duration-200 ${
+                openIndex === index ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </div>
         </div>
       </div>
 
@@ -119,7 +128,7 @@ export default function AddDeliveryItemForm({
             }}
           />
 
-          <Input
+          {/* <Input
             label="Quantity"
             type="number"
             placeholder="Enter quantity"
@@ -130,9 +139,21 @@ export default function AddDeliveryItemForm({
                 val === "" ? "" : Number(val)
               )
             }
+          /> */}
+
+          <ThousandInput
+            label="Quantity"
+            placeholder="Enter quantity"
+            value={item.quantity}
+            onChange={(val) =>
+              setFieldValue(
+                `items.${index}.quantity`,
+                val === "" ? "" : Number(val)
+              )
+            }
           />
 
-          <Input
+          {/* <Input
             label="Unit Price"
             type="number"
             placeholder="Enter unit price"
@@ -143,9 +164,21 @@ export default function AddDeliveryItemForm({
                 val === "" ? "" : Number(val)
               )
             }
+          /> */}
+
+          <CurrencyInput
+            label="Unit Price (Rp)"
+            placeholder="Enter unit price"
+            value={item.unitPrice}
+            onChange={(val) =>
+              setFieldValue(
+                `items.${index}.unitPrice`,
+                val === "" ? "" : Number(val)
+              )
+            }
           />
 
-          <Input
+          {/* <Input
             label="Discount"
             type="number"
             placeholder="Enter discount"
@@ -156,11 +189,29 @@ export default function AddDeliveryItemForm({
                 val === "" ? 0 : Number(val)
               )
             }
+          /> */}
+
+          <CurrencyInput
+            label="Discount (Rp)"
+            placeholder="Enter discount"
+            value={item.discount}
+            onChange={(val) =>
+              setFieldValue(
+                `items.${index}.discount`,
+                val === "" ? 0 : Number(val)
+              )
+            }
           />
 
-          <Input
+          {/* <Input
             label="Total Price"
             type="number"
+            placeholder="Total Price"
+            value={totalPrice}
+            disabled
+          /> */}
+          <CurrencyInput
+            label="Total Price"
             placeholder="Total Price"
             value={totalPrice}
             disabled
