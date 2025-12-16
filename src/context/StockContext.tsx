@@ -14,6 +14,7 @@ import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";
+import { formatNumber } from "@/lib/formatNumber";
 
 export interface StockData {
   id: string;
@@ -101,7 +102,12 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       label: "heavy",
       render: (_value: any, row: { heavy: any }) => `${row.heavy} gram`,
     },
-    { key: "quantity", label: "Stock" },
+    {
+      key: "quantity",
+      label: "Stock",
+      render: (_value: any, row: { quantity?: number }) =>
+        formatNumber(row.quantity || 0),
+    },
     {
       key: "input_date",
       label: "Input Date",
