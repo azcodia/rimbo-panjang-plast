@@ -12,6 +12,7 @@ import { TableRow } from "@/components/table/Table";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";
+import { formatNumber } from "@/lib/formatNumber";
 
 export interface DeliveryItem {
   stock_id: string;
@@ -100,7 +101,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
       key: "items",
       label: "Items",
       render: (_value: any, row: DeliveryData) =>
-        row.items.map((i) => `Qty: ${i.quantity}`).join(", "),
+        row.items.map((i) => `Qty: ${formatNumber(i.quantity)}`).join(", "),
     },
     {
       key: "input_date",
