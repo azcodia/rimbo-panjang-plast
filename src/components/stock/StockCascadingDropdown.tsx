@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Select from "@/components/ui/Select";
-import Input from "@/components/ui/Input";
 import { useStockContext } from "@/context/StockContext";
+import ThousandInput from "../ui/ThousandInput";
 
 interface StockCascadingDropdownProps {
   value: {
@@ -127,7 +127,7 @@ export default function StockCascadingDropdown({
         disabled={!value.sizeId || heavies.length === 0}
       />
 
-      <Input
+      <ThousandInput
         label="Stock Saat Ini"
         value={currentStock.toString()}
         onChange={() => undefined}
