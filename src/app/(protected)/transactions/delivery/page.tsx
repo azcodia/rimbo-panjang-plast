@@ -38,6 +38,7 @@ export default function DeliveryPage() {
         page={page}
         totalPages={totalPages}
         loading={loading}
+        showSearch={false}
         filterValue={filterValue}
         onFilterChange={handleFilter}
         onPageChange={setPage}

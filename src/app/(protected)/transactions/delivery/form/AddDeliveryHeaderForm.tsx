@@ -4,6 +4,8 @@ import Input from "@/components/ui/Input";
 import DatePicker from "@/components/ui/Date";
 import { useCustomerContext } from "@/context/CustomerContext";
 import Select from "@/components/ui/Select";
+import { useEffect } from "react";
+import Textarea from "@/components/ui/Textarea";
 
 interface DeliveryHeaderFormProps {
   values: {
@@ -25,11 +27,18 @@ export default function DeliveryHeaderForm({
   setFieldValue,
 }: DeliveryHeaderFormProps) {
   const { selectOptions } = useCustomerContext();
+
+  useEffect(() => {
+    if (selectOptions.length > 1 && !values.customerId) {
+      setFieldValue("customerId", selectOptions[0].value);
+    }
+  }, [selectOptions, setFieldValue, values.customerId]);
+
   return (
     <div className="flex flex-col gap-4">
       <Select
         label="Customer (Optional)"
-        value={values.customerId || ""}
+        value={values.customerId}
         onChange={(val) => setFieldValue("customerId", val)}
         options={selectOptions}
         error={touched.customerId ? errors.customerId : undefined}
@@ -48,7 +57,7 @@ export default function DeliveryHeaderForm({
         onChange={(val) => setFieldValue("note", val)}
         error={touched.note ? errors.note : undefined}
       />
-      <Input
+      <Textarea
         label="Description"
         placeholder="Enter description"
         value={values.description}

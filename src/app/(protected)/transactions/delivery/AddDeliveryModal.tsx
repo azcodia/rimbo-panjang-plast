@@ -121,7 +121,6 @@ export default function AddDeliveryModal({
           };
         }),
       };
-      console.log("PAYLOAD", payload);
 
       await addDelivery(payload);
 
@@ -145,7 +144,7 @@ export default function AddDeliveryModal({
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, setFieldValue, isSubmitting, errors, touched }) => (
-          <Form className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto scrollbar-auto-hide">
+          <Form className="flex flex-col gap-4 max-h-[65vh] overflow-y-auto scrollbar-auto-hide">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <DeliveryHeaderForm
                 values={{
@@ -160,7 +159,7 @@ export default function AddDeliveryModal({
                 setFieldValue={setFieldValue}
               />
 
-              <div className="flex flex-col gap-4 overflow-y-auto scrollbar-auto-hide max-h-[55vh] col-span-2">
+              <div className="flex flex-col gap-4 overflow-y-auto scrollbar-auto-hide max-h-[77vh] col-span-2">
                 <FieldArray name="items">
                   {({ push, remove }) => (
                     <div className="flex flex-col gap-4">
