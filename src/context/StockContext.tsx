@@ -249,14 +249,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
     note: string = "( Stock deleted by user )"
   ) => {
     try {
-      const res = await fetch(`/api/stocks/stock?id=${id}`, {
-        method: "DELETE",
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message || "Failed to delete stock");
-
-      await fetchData();
-
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
 
@@ -271,9 +263,18 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({ tokenHistory, note }),
         }
       );
+
       const jsonHistory = await resHistory.json();
       if (!resHistory.ok)
         throw new Error(jsonHistory.message || "Failed to delete history");
+
+      const res = await fetch(`/api/stocks/stock?id=${id}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message || "Failed to delete stock");
+
+      await fetchData();
 
       enqueueSnackbar("Deleted stock successfully", { variant: "success" });
     } catch (err: any) {

@@ -35,6 +35,7 @@ export default function StockPage() {
         totalPages={totalPages}
         loading={loading}
         filterValue={filterValue}
+        showSearch={false}
         onFilterChange={handleFilter}
         onPageChange={setPage}
         onActionClick={handleActionClick}
