@@ -156,7 +156,6 @@ export default function AddReStockModal({
                           openIndex={openIndex}
                           setOpenIndex={setOpenIndex}
                           remove={remove}
-                          stocks={stocks}
                           colorMap={colorMap}
                           sizeMap={sizeMap}
                           heavyMap={heavyMap}
