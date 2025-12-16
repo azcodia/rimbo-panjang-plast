@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import TableWithControls from "@/components/table/TableWithControls";
 import { useStockContext } from "@/context/StockContext";
+import { useColorContext } from "@/context/ColorContext";
 import AddStockModal from "./AddStockModal";
 import EditStockModal from "./EditStockModal";
 
@@ -9,52 +11,74 @@ export default function StockPage() {
   const {
     groupeddataStock,
     page,
-    columns,
-    totalPages,
+    pageSize,
     total,
+    columns,
     loading,
     filterValue,
-    isModalOpen,
-    editingRow,
-    isEditModalOpen,
-    setIsEditModalOpen,
     setPage,
     handleFilter,
     handleActionClick,
-    setIsModalOpen,
     fetchData,
   } = useStockContext();
+
+  const { selectOptions, selectedColor, setSelectedColor } = useColorContext();
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingRow, setEditingRow] = useState<any>(null);
 
   return (
     <div className="bg-white m-4 p-4">
       <TableWithControls
         columns={columns as any}
+        selectOptions={selectOptions}
+        selectedValue={selectedColor ?? undefined}
+        onSelectChange={(val) => {
+          setSelectedColor(String(val));
+          fetchData(filterValue, 1, String(val));
+          setPage(1);
+        }}
         data={groupeddataStock}
         total={total}
         page={page}
-        totalPages={totalPages}
+        totalPages={Math.ceil(total / pageSize)}
         loading={loading}
         filterValue={filterValue}
         showSearch={false}
-        onFilterChange={handleFilter}
-        onPageChange={setPage}
+        onFilterChange={(value) => {
+          handleFilter(value);
+          setPage(1);
+        }}
+        onPageChange={(newPage) => {
+          setPage(newPage);
+          fetchData(filterValue, newPage);
+        }}
         onActionClick={handleActionClick}
         visibleActions={["delete"]}
-        buttons={[{ text: "Tambah Data", onClick: () => setIsModalOpen(true) }]}
+        buttons={[
+          {
+            text: "Tambah Data",
+            onClick: () => setIsAddModalOpen(true),
+          },
+        ]}
       />
+
       <AddStockModal
-        isOpen={isModalOpen}
+        isOpen={isAddModalOpen}
         size="sm"
-        onClose={() => setIsModalOpen(false)}
-        onSaved={() => fetchData()}
+        onClose={() => setIsAddModalOpen(false)}
+        onSaved={() => fetchData(filterValue, page)}
       />
-      <EditStockModal
-        isOpen={isEditModalOpen}
-        stock={editingRow}
-        size="sm"
-        onClose={() => setIsEditModalOpen(false)}
-        onSaved={() => fetchData()}
-      />
+
+      {editingRow && (
+        <EditStockModal
+          isOpen={!!editingRow}
+          stock={editingRow}
+          size="sm"
+          onClose={() => setEditingRow(null)}
+          onSaved={() => fetchData(filterValue, page)}
+        />
+      )}
     </div>
   );
 }
