@@ -1,9 +1,16 @@
 import Stock from "@/models/Stock";
 
 export const getStocks = async (query: any, skip: number, limit: number) => {
-  const total = await Stock.countDocuments(query);
+  // query bisa punya color_id, size_id, heavy_id
+  const mongoQuery: any = {};
 
-  const data = await Stock.find(query)
+  if (query.color_id) mongoQuery.color_id = query.color_id;
+  if (query.size_id) mongoQuery.size_id = query.size_id;
+  if (query.heavy_id) mongoQuery.heavy_id = query.heavy_id;
+
+  const total = await Stock.countDocuments(mongoQuery);
+
+  const data = await Stock.find(mongoQuery)
     .populate("color_id", "color")
     .populate("size_id", "size")
     .populate("heavy_id", "weight")
@@ -29,7 +36,7 @@ export const getStocks = async (query: any, skip: number, limit: number) => {
     created_at: s.created_at,
   }));
 
-  return { total: total, data: mappedData };
+  return { total, data: mappedData };
 };
 
 export const createStock = async (
