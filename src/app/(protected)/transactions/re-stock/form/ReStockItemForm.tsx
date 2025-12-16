@@ -1,7 +1,8 @@
 "use client";
 
 import StockCascadingDropdown from "@/components/stock/StockCascadingDropdown";
-import Input from "@/components/ui/Input";
+import ThousandInput from "@/components/ui/ThousandInput";
+import { formatNumber } from "@/lib/formatNumber";
 import { ChevronDown, Trash2 } from "lucide-react";
 
 interface ReStockItemFormProps {
@@ -10,7 +11,6 @@ interface ReStockItemFormProps {
   openIndex: number | null;
   setOpenIndex: (idx: number | null) => void;
   remove: (idx: number) => void;
-  stocks: any[];
   colorMap: Record<string, string>;
   sizeMap: Record<string, string>;
   heavyMap: Record<string, string>;
@@ -24,21 +24,12 @@ export default function ReStockItemForm({
   openIndex,
   setOpenIndex,
   remove,
-  stocks,
   colorMap,
   sizeMap,
   heavyMap,
   setFieldValue,
   itemsLength,
 }: ReStockItemFormProps) {
-  const stock = stocks.find(
-    (s) =>
-      s.color_id === item.colorId &&
-      s.size_id === item.sizeId &&
-      s.heavy_id === item.heavyId
-  );
-  const maxStock = stock ? stock.quantity : 0;
-
   return (
     <div className="border rounded">
       <div
@@ -58,10 +49,13 @@ export default function ReStockItemForm({
             </span>
             <span>
               <span className="font-medium">Heavy:</span>{" "}
-              {heavyMap[item.heavyId] ? `${heavyMap[item.heavyId]} gram` : "-"}
+              {heavyMap[item.heavyId]
+                ? `${formatNumber(heavyMap[item.heavyId])} gram`
+                : "-"}
             </span>
             <span>
-              <span className="font-medium">Qty:</span> {item.quantity || "0"}
+              <span className="font-medium">Qty:</span>{" "}
+              {formatNumber(item.quantity) || "0"}
             </span>
           </div>
         </div>
@@ -80,13 +74,15 @@ export default function ReStockItemForm({
               }}
             />
           )}
-          <ChevronDown
-            strokeWidth={2.5}
-            size={22.5}
-            className={`text-xl font-bold p-1 border-success border rounded-md text-success hover:border-success-light hover:text-succes-light transition-transform duration-200 ${
-              openIndex === index ? "rotate-180" : "rotate-0"
-            }`}
-          />
+          <div className={`border-success border rounded-md`}>
+            <ChevronDown
+              strokeWidth={2.5}
+              size={22.5}
+              className={`text-xl font-bold p-1 text-success hover:border-success-light hover:text-succes-light transition-transform duration-200 ${
+                openIndex === index ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </div>
         </div>
       </div>
 
@@ -109,9 +105,8 @@ export default function ReStockItemForm({
             }}
           />
 
-          <Input
+          <ThousandInput
             label="Quantity"
-            type="number"
             placeholder="Enter quantity"
             value={item.quantity}
             onChange={(val) => setFieldValue(`items.${index}.quantity`, val)}
