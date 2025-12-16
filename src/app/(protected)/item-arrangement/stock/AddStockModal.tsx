@@ -3,7 +3,6 @@
 import { Formik, Form, FormikHelpers } from "formik";
 import BaseModal from "@/components/ui/modals/modal";
 import Select from "@/components/ui/Select";
-import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/Date";
 import { useColorContext } from "@/context/ColorContext";
@@ -11,6 +10,7 @@ import { useSizeContext } from "@/context/SizeContext";
 import { useStockContext } from "@/context/StockContext";
 import { useHeavyContext } from "@/context/HeavyContext";
 import { StockSchema } from "@/lib/schemas/StockSchema";
+import ThousandInput from "@/components/ui/ThousandInput";
 
 interface AddStockModalProps {
   isOpen: boolean;
@@ -118,9 +118,8 @@ export default function AddStockModal({
               error={touched.inputDate ? errors.inputDate : undefined}
             />
 
-            <Input
+            <ThousandInput
               label="Quantity"
-              type="number"
               placeholder="Enter quantity"
               value={values.quantity}
               onChange={(val) => setFieldValue("quantity", val)}

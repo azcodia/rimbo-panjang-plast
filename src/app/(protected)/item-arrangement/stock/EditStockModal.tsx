@@ -3,7 +3,6 @@
 import { Formik, Form, FormikHelpers } from "formik";
 import BaseModal from "@/components/ui/modals/modal";
 import Select from "@/components/ui/Select";
-import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { useColorContext } from "@/context/ColorContext";
 import { useSizeContext } from "@/context/SizeContext";
@@ -12,6 +11,7 @@ import { useHeavyContext } from "@/context/HeavyContext";
 import { useEffect } from "react";
 import DatePicker from "@/components/ui/Date";
 import { StockSchema } from "@/lib/schemas/StockSchema";
+import ThousandInput from "@/components/ui/ThousandInput";
 
 interface EditStockModalProps {
   isOpen: boolean;
@@ -74,10 +74,6 @@ export default function EditStockModal({
       setSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    console.log("LOGGGG", stock);
-  }, [stock]);
 
   useEffect(() => {
     if (isOpen && stock?.color_id) {
@@ -144,9 +140,17 @@ export default function EditStockModal({
               error={touched.inputDate ? errors.inputDate : undefined}
             />
 
-            <Input
+            {/* <Input
               label="Quantity"
               type="number"
+              placeholder="Enter quantity"
+              value={values.quantity}
+              onChange={(val) => setFieldValue("quantity", val)}
+              error={touched.quantity ? errors.quantity : undefined}
+            /> */}
+
+            <ThousandInput
+              label="Quantity"
               placeholder="Enter quantity"
               value={values.quantity}
               onChange={(val) => setFieldValue("quantity", val)}
