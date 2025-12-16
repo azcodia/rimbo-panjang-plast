@@ -1,12 +1,11 @@
 "use client";
 
 import { Formik, Form, FormikHelpers } from "formik";
-import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import BaseModal from "@/components/ui/modals/modal";
-import * as Yup from "yup";
 import { useHeavyContext } from "@/context/HeavyContext";
 import { AddHeavySchema } from "@/lib/schemas/AddHeavySchema";
+import ThousandInput from "@/components/ui/ThousandInput";
 
 interface EditHeavyModalProps {
   isOpen: boolean;
@@ -62,10 +61,18 @@ export default function EditHeavyModal({
       >
         {({ values, errors, touched, handleChange, isSubmitting }) => (
           <Form className="flex flex-col gap-4">
-            <Input
+            {/* <Input
               label="Weight (gram)"
               placeholder="Enter weight in grams"
               type="number"
+              value={values.weight === "" ? "" : values.weight.toString()}
+              onChange={handleChange("weight")}
+              error={touched.weight ? errors.weight : undefined}
+            /> */}
+
+            <ThousandInput
+              label="Weight (gram)"
+              placeholder="Enter weight in grams"
               value={values.weight === "" ? "" : values.weight.toString()}
               onChange={handleChange("weight")}
               error={touched.weight ? errors.weight : undefined}
