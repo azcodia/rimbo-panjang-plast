@@ -148,14 +148,17 @@ export async function PATCH(req: NextRequest) {
   await dbConnect();
   try {
     getUserIdFromReq(req); // login required
+
     const { stock_id, quantityChange } = await req.json();
-    if (!stock_id || typeof quantityChange !== "number")
-      throw new Error("stock_id and quantityChange are required");
+    if (!stock_id) throw new Error("stock_id is required");
 
-    const updatedStock = await updateStockQuantity(stock_id, quantityChange);
-
+    const updatedStock = await updateStockQuantity(
+      stock_id,
+      Number(quantityChange)
+    );
     return NextResponse.json({ success: true, data: updatedStock });
   } catch (err: any) {
+    console.error(err);
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
       {

@@ -106,10 +106,15 @@ export const updateStockQuantity = async (
   const stock = await Stock.findById(stockId);
   if (!stock) throw new Error("Stock not found");
 
-  stock.quantity += quantityChange;
-  if (stock.quantity < 0) stock.quantity = 0;
-  stock.updated_at = new Date();
+  const change = Number(quantityChange);
+  if (isNaN(change)) throw new Error("Invalid quantityChange");
 
+  stock.quantity = Number(stock.quantity || 0) + change;
+
+  if (stock.quantity < 0) stock.quantity = 0;
+
+  stock.updated_at = new Date();
   await stock.save();
+
   return stock;
 };
