@@ -7,7 +7,7 @@ export const StockSchema = Yup.object().shape({
   quantity: Yup.number()
     .typeError("Quantity must be a number")
     .required("Quantity is required")
-    .positive("Quantity must be positive")
+    .min(0, "Quantity cannot be negative") // bisa 0
     .integer("Quantity must be an integer"),
   inputDate: Yup.string().required("Date is required"),
 });

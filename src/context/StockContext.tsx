@@ -88,7 +88,7 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<TableRow<StockData>[]>([]);
   const [allData, setAllData] = useState<StockData[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(500);
   const [filterValue, setFilterValue] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [loading, setLoading] = useState(true);
