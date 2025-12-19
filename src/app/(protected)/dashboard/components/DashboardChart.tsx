@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { fetchChartData } from "../services/chartService";
 import { formatRp } from "@/lib/formatRp";
 import { formatNumber } from "@/lib/formatNumber";
+import Button from "@/components/ui/Button";
 
 ChartJS.register(
   CategoryScale,
@@ -75,18 +76,19 @@ export default function DashboardChart({
       {
         label: "Restock",
         data: chartData.map((d) => d.in),
-        borderColor: "#4ade80",
-        backgroundColor: "#4ade80",
+        borderColor: "#7bb927",
+        backgroundColor: "#7bb927",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
-        pointHitRadius: 10,
+        pointHitRadius: 20,
       },
       {
         label: "Pengiriman",
         data: chartData.map((d) => d.out),
-        borderColor: "#f87171",
-        backgroundColor: "#f87171",
+        borderColor: "#cd0f09",
+        backgroundColor: "#cd0f09",
+
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -95,8 +97,8 @@ export default function DashboardChart({
       {
         label: "Penjualan (Rp)",
         data: chartData.map((d) => d.sales),
-        borderColor: "#3b82f6",
-        backgroundColor: "#3b82f6",
+        borderColor: "#1a648a",
+        backgroundColor: "#1a648a",
         tension: 0.3,
         yAxisID: "y1",
         pointRadius: 5,
@@ -147,7 +149,7 @@ export default function DashboardChart({
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm relative">
+    <div className="bg-white p-4 rounded-md shadow-sm relative">
       <h2 className="text-lg font-semibold mb-3">Tren Stok & Penjualan</h2>
 
       <div className="flex gap-2 items-center flex-wrap mb-4">
@@ -163,24 +165,22 @@ export default function DashboardChart({
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
-        <button
-          className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 disabled:opacity-50"
+        <Button
           onClick={() => loadChart(startDate, endDate)}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Filter"}
-        </button>
-        <button
-          className="bg-gray-200 px-4 py-1 rounded hover:bg-gray-300 disabled:opacity-50"
+          loading={loading}
+          text={loading ? "Loading..." : "Filter"}
+          className="w-24"
+        />
+        <Button
+          type="button"
+          text="Reset"
           onClick={() => {
             setStartDate(defaultStartDate);
             setEndDate(defaultEndDate);
             loadChart(defaultStartDate, defaultEndDate);
           }}
-          disabled={loading}
-        >
-          Reset
-        </button>
+          className="w-24 bg-gray-200 text-black hover:bg-gray-300"
+        />
       </div>
 
       {loading && (
