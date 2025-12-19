@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Table, { TableRow } from "@/components/table/Table";
@@ -99,8 +98,8 @@ export default function RecentTransactions() {
   }, [page]);
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">
+    <div className="bg-white shadow rounded p-4">
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">
         Recent Transactions
       </h2>
 
