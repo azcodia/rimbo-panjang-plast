@@ -8,16 +8,16 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#1a648a",
-          light: "#2098d5",
+          DEFAULT: "#2098d5",
+          light: "#1a648a",
         },
         success: {
           DEFAULT: "#7bb927",
           light: "#519d05",
         },
         danger: {
-          DEFAULT: "#cd0f09",
-          light: "#e81417",
+          DEFAULT: "#e81417",
+          light: "#cd0f09",
         },
         grayd: {
           DEFAULT: "#F0F0F0",
