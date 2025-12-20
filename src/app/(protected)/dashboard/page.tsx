@@ -4,6 +4,7 @@ import DashboardSummary from "./components/DashboardSummary";
 import DashboardChart from "./components/DashboardChart";
 import RecentTransactions from "./components/RecentTransactions";
 import StockAlert from "./components/StockAlert";
+import StockCurrent from "./components/StockCurrent";
 
 export default function DashboardPage() {
   const today = new Date();
@@ -16,6 +17,7 @@ export default function DashboardPage() {
     <div className="space-y-8 px-4 py-2">
       <DashboardSummary />
       <StockAlert />
+      <StockCurrent />
       <DashboardChart
         defaultStartDate={formatDate(priorDate)}
         defaultEndDate={formatDate(today)}
