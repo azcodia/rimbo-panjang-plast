@@ -1,14 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
@@ -30,66 +22,13 @@ export interface StockData {
   tokenHistory?: string;
 }
 
-interface StockContextType {
-  data: TableRow<StockData>[];
-  allData: StockData[];
-  groupeddataStock: TableRow<StockData>[];
-  page: number;
-  setPage: (page: number) => void;
-  columns: {
-    key: string;
-    label: string;
-    render?: (value: any, row: any) => string;
-  }[];
-  pageSize: number;
-  setPageSize: (size: number) => void;
-  totalPages: number;
-  total: number;
-  loading: boolean;
-  filterValue: string;
-  selectedColor: string;
-  setSelectedColor: (val: string) => void;
-  isModalOpen: boolean;
-  setIsModalOpen: (val: boolean) => void;
-  editingRow: StockData | null;
-  setEditingRow: (row: StockData | null) => void;
-  isEditModalOpen: boolean;
-  setIsEditModalOpen: (val: boolean) => void;
-  handleFilter: (val: string) => void;
-  handleActionClick: (
-    row: StockData,
-    action: "edit" | "delete" | "show"
-  ) => void;
-  fetchData: (
-    filter?: string,
-    page?: number,
-    color_id?: string
-  ) => Promise<void>;
-  addStock: (
-    stock: Omit<StockData, "id" | "tokenHistory">,
-    note?: string
-  ) => Promise<void>;
-  deleteStock: (
-    id: string,
-    tokenHistory: string,
-    note?: string
-  ) => Promise<void>;
-  updateStock: (
-    id: string,
-    stock: Omit<StockData, "id" | "tokenHistory">,
-    note?: string
-  ) => Promise<void>;
-}
-
-const StockContext = createContext<StockContextType | undefined>(undefined);
-
-export const StockProvider = ({ children }: { children: ReactNode }) => {
+export const useStock = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [data, setData] = useState<TableRow<StockData>[]>([]);
   const [allData, setAllData] = useState<StockData[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(500);
+  const [pageSize, setPageSize] = useState(10);
   const [filterValue, setFilterValue] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [loading, setLoading] = useState(true);
@@ -128,7 +67,6 @@ export const StockProvider = ({ children }: { children: ReactNode }) => {
       .find((r) => r.startsWith("token="))
       ?.split("=")[1];
 
-  // FETCH DATA DENGAN FILTER DAN COLOR_ID
   const fetchData = useCallback(
     async (
       filter: string = filterValue,
@@ -368,45 +306,32 @@ Input Date: ${row.input_date}`);
     fetchData(filterValue, page, selectedColor);
   }, [fetchData, page, pageSize, filterValue, selectedColor]);
 
-  return (
-    <StockContext.Provider
-      value={{
-        data,
-        allData,
-        groupeddataStock,
-        page,
-        setPage,
-        columns,
-        pageSize,
-        setPageSize,
-        totalPages: Math.ceil(total / pageSize),
-        total,
-        loading,
-        filterValue,
-        selectedColor,
-        setSelectedColor,
-        isModalOpen,
-        setIsModalOpen,
-        editingRow,
-        setEditingRow,
-        isEditModalOpen,
-        setIsEditModalOpen,
-        handleFilter,
-        handleActionClick,
-        fetchData,
-        addStock,
-        deleteStock,
-        updateStock,
-      }}
-    >
-      {children}
-    </StockContext.Provider>
-  );
-};
-
-export const useStockContext = () => {
-  const context = useContext(StockContext);
-  if (!context)
-    throw new Error("useStockContext must be used within a StockProvider");
-  return context;
+  return {
+    data,
+    allData,
+    groupeddataStock,
+    page,
+    setPage,
+    columns,
+    pageSize,
+    setPageSize,
+    totalPages: Math.ceil(total / pageSize),
+    total,
+    loading,
+    filterValue,
+    selectedColor,
+    setSelectedColor,
+    isModalOpen,
+    setIsModalOpen,
+    editingRow,
+    setEditingRow,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    handleFilter,
+    handleActionClick,
+    fetchData,
+    addStock,
+    deleteStock,
+    updateStock,
+  };
 };
