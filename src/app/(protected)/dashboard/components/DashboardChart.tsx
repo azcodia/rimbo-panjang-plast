@@ -165,22 +165,24 @@ export default function DashboardChart({
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
-        <Button
-          onClick={() => loadChart(startDate, endDate)}
-          loading={loading}
-          text={loading ? "Loading..." : "Filter"}
-          className="w-24"
-        />
-        <Button
-          type="button"
-          text="Reset"
-          onClick={() => {
-            setStartDate(defaultStartDate);
-            setEndDate(defaultEndDate);
-            loadChart(defaultStartDate, defaultEndDate);
-          }}
-          className="w-24 bg-gray-200 text-black hover:bg-gray-300"
-        />
+        <div className="flex flex-row items-center w-64 gap-4">
+          <Button
+            onClick={() => loadChart(startDate, endDate)}
+            loading={loading}
+            text={loading ? "Loading..." : "Filter"}
+            className=""
+          />
+          <Button
+            type="button"
+            text="Reset"
+            onClick={() => {
+              setStartDate(defaultStartDate);
+              setEndDate(defaultEndDate);
+              loadChart(defaultStartDate, defaultEndDate);
+            }}
+            className=" bg-gray-200 text-black hover:bg-gray-300"
+          />
+        </div>
       </div>
 
       {loading && (

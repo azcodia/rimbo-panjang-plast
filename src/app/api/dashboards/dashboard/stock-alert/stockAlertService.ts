@@ -5,9 +5,7 @@ interface GetStockAlertParams {
   inactiveDays?: number;
 }
 
-export const getStockAlert = async ({
-  threshold = 10,
-}: GetStockAlertParams) => {
+export const getStockAlert = async ({ threshold }: GetStockAlertParams) => {
   const lowStock = await Stock.find({
     deleted: { $ne: true },
     quantity: { $lte: threshold },

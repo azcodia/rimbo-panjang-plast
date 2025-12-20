@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     getUserIdFromReq(req);
 
     const { searchParams } = new URL(req.url);
-    const threshold = Number(searchParams.get("threshold")) || 10;
+    const threshold = Number(searchParams.get("threshold"));
 
     const data = await getStockAlert({ threshold });
 

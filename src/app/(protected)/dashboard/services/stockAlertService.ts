@@ -17,7 +17,7 @@ interface FetchStockAlertParams {
 }
 
 export const fetchStockAlert = async ({
-  threshold = 5000,
+  threshold,
 }: FetchStockAlertParams = {}): Promise<StockAlertResponse> => {
   const res = await fetch(
     `/api/dashboards/dashboard/stock-alert?threshold=${threshold}`

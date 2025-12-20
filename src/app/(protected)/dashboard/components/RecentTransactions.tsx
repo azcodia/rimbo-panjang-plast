@@ -98,7 +98,7 @@ export default function RecentTransactions() {
   }, [page]);
 
   return (
-    <div className="bg-white shadow rounded p-4">
+    <div className="bg-white shadow rounded p-4 h-[35.5rem] overflow-y-auto scrollbar-auto-hide">
       <h2 className="text-lg font-semibold text-gray-800 mb-3">
         Recent Transactions
       </h2>

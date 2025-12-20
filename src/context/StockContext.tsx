@@ -15,6 +15,7 @@ import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";
 import { formatNumber } from "@/lib/formatNumber";
+import { groupAndSortStock } from "@/lib/groupedStock";
 
 export interface StockData {
   id: string;
@@ -351,32 +352,17 @@ Input Date: ${row.input_date}`);
     }
   };
 
-  const groupeddataStock = useMemo(() => {
-    const map = new Map<string, StockData[]>();
-    allData.forEach((item) => {
-      if (!map.has(item.color_id)) map.set(item.color_id, []);
-      map.get(item.color_id)?.push({ ...item });
-    });
-
-    const grouped: TableRow<StockData>[] = [];
-    map.forEach((items, color_id) => {
-      items.forEach((item, index) => {
-        grouped.push({
-          data: { ...item, color: index === 0 ? item.color : "" },
-          actions: ["edit", "delete", "show"],
-        });
-      });
-    });
-    return grouped;
-  }, [allData]);
-
-  const selectOptions: SelectOption<string>[] = [
-    { label: "All", value: "" },
-    ...Array.from(new Set(allData.map((d) => d.color_id))).map((c) => ({
-      label: c,
-      value: c,
-    })),
-  ];
+  const groupeddataStock = useMemo(
+    () =>
+      groupAndSortStock(
+        allData.map((d) => ({
+          ...d,
+          size: d.size ?? "0",
+          color: d.color ?? "",
+        }))
+      ),
+    [allData]
+  );
 
   useEffect(() => {
     fetchData(filterValue, page, selectedColor);

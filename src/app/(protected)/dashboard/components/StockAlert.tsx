@@ -6,12 +6,15 @@ import {
   StockAlertResponse,
 } from "../services/stockAlertService";
 import { formatNumber } from "@/lib/formatNumber";
+import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
+import { threshold } from "@/lib/constanta";
 
 export default function StockAlert() {
+  const router = useRouter();
   const [data, setData] = useState<StockAlertResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [totalLow, setTotalLow] = useState(0);
-  const threshold = 5000;
 
   const fetchAlert = async () => {
     setLoading(true);
@@ -42,10 +45,43 @@ export default function StockAlert() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* LOW STOCK */}
       <div className="bg-white shadow rounded p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold mb-3">Stock Menipis</h3>
+          <h3 className="text-lg font-semibold">Quick Action</h3>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Button
+            type="button"
+            text="Tambah Pengiriman"
+            onClick={() => router.push("/transactions/delivery")}
+            className=""
+          />
+          <Button
+            type="button"
+            text="Atur Variasi"
+            onClick={() => router.push("/item-arrangement/atribut")}
+            className="bg-primary hover:bg-primary-light text-white"
+          />
+
+          <Button
+            type="button"
+            text="Atur Re-Stock"
+            onClick={() => router.push("/transactions/re-stock")}
+            className="bg-danger text-white hover:bg-danger-light"
+          />
+          <Button
+            type="button"
+            text="Tambah Customer"
+            onClick={() => router.push("/customers/customer")}
+            className="text-white font-semibold rounded
+             bg-gradient-to-r from-[#2098d5] via-[#7bb927] to-[#2098d5]
+             bg-[length:400%_400%] animate-gradient"
+          />
+        </div>
+      </div>
+      <div className="bg-white shadow rounded p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold mb-3">Stok Menipis</h3>
           <span className="text-xs bg-red-100 text-danger px-2 py-1 rounded">
             {totalLow} item
           </span>
@@ -54,7 +90,7 @@ export default function StockAlert() {
         {data.lowStock.length === 0 ? (
           <p className="text-sm text-success font-semibold">Semua stok aman</p>
         ) : (
-          <div className="text-sm max-h-36 overflow-y-auto scrollbar-auto-hide">
+          <div className="text-sm max-h-60 overflow-y-auto scrollbar-auto-hide">
             {/* Header */}
             <div className="flex justify-between font-bold border-b pb-1 mb-1 text-gray-700">
               <span className="w-1/4">Color</span>
@@ -81,13 +117,6 @@ export default function StockAlert() {
             </ul>
           </div>
         )}
-      </div>
-
-      {/* DEAD STOCK / Quick Action */}
-      <div className="bg-white shadow rounded p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold mb-3">Quick Action</h3>
-        </div>
       </div>
     </div>
   );
