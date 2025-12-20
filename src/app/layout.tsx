@@ -10,7 +10,6 @@ import { SizeProvider } from "@/context/SizeContext";
 import { HeavyProvider } from "@/context/HeavyContext";
 
 import { styled } from "@mui/material/styles";
-import { StockProvider } from "@/context/StockContext";
 import { ReStockProvider } from "@/context/RestockContext";
 import { DeliveryProvider } from "@/context/DeliveryContext";
 import { CustomerProvider } from "@/context/CustomerContext";
@@ -38,17 +37,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           <DeliveryProvider>
             <ReStockProvider>
-              <StockProvider>
-                <CustomerProvider>
-                  <HeavyProvider>
-                    <SizeProvider>
-                      <ColorProvider>
-                        <Provider store={store}>{children}</Provider>
-                      </ColorProvider>
-                    </SizeProvider>
-                  </HeavyProvider>
-                </CustomerProvider>
-              </StockProvider>
+              <CustomerProvider>
+                <HeavyProvider>
+                  <SizeProvider>
+                    <ColorProvider>
+                      <Provider store={store}>{children}</Provider>
+                    </ColorProvider>
+                  </SizeProvider>
+                </HeavyProvider>
+              </CustomerProvider>
             </ReStockProvider>
           </DeliveryProvider>
         </SnackbarProvider>

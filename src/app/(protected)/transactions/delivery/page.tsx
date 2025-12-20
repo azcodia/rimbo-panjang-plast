@@ -2,8 +2,6 @@
 
 import TableWithControls from "@/components/table/TableWithControls";
 import { useDeliveryContext } from "@/context/DeliveryContext";
-import { useEffect } from "react";
-import { useStockContext } from "@/context/StockContext";
 import AddDeliveryModal from "./AddDeliveryModal";
 
 export default function DeliveryPage() {
@@ -22,12 +20,6 @@ export default function DeliveryPage() {
     setIsModalOpen,
     fetchData,
   } = useDeliveryContext();
-
-  const { fetchData: fetchStock } = useStockContext();
-
-  useEffect(() => {
-    console.log("DELIVERY DATA", data);
-  }, [data]);
 
   return (
     <div className="bg-white m-4 p-4">
@@ -54,7 +46,6 @@ export default function DeliveryPage() {
         onClose={() => setIsModalOpen(false)}
         onSaved={() => {
           fetchData();
-          fetchStock();
         }}
       />
     </div>

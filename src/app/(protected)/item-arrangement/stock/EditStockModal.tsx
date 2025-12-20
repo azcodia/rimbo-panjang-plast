@@ -6,12 +6,12 @@ import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { useColorContext } from "@/context/ColorContext";
 import { useSizeContext } from "@/context/SizeContext";
-import { useStockContext, StockData } from "@/context/StockContext";
 import { useHeavyContext } from "@/context/HeavyContext";
 import { useEffect } from "react";
 import DatePicker from "@/components/ui/Date";
 import { StockSchema } from "@/lib/schemas/StockSchema";
 import ThousandInput from "@/components/ui/ThousandInput";
+import { StockData, useStock } from "@/hooks/useStock";
 
 interface EditStockModalProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ export default function EditStockModal({
   const { allData: colors } = useColorContext();
   const { filteredSizes, fetchSizesByColor } = useSizeContext();
   const { selectOptions: heavies } = useHeavyContext();
-  const { updateStock } = useStockContext();
+  const { updateStock } = useStock();
 
   const initialValues: StockFormValues = {
     colorId: stock?.color_id || "",

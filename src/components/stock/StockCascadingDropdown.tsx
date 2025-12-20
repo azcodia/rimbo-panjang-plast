@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Select from "@/components/ui/Select";
-import { useStockContext } from "@/context/StockContext";
 import ThousandInput from "../ui/ThousandInput";
+import { useStock } from "@/hooks/useStock";
 
 interface StockCascadingDropdownProps {
   value: {
@@ -23,7 +23,7 @@ export default function StockCascadingDropdown({
   value,
   onChange,
 }: StockCascadingDropdownProps) {
-  const { allData: stocks } = useStockContext();
+  const { allData: stocks } = useStock();
   const [colors, setColors] = useState<Option[]>([]);
   const [sizes, setSizes] = useState<Option[]>([]);
   const [heavies, setHeavies] = useState<Option[]>([]);

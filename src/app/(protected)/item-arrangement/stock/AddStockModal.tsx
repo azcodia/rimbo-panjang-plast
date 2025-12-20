@@ -7,10 +7,10 @@ import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/Date";
 import { useColorContext } from "@/context/ColorContext";
 import { useSizeContext } from "@/context/SizeContext";
-import { useStockContext } from "@/context/StockContext";
 import { useHeavyContext } from "@/context/HeavyContext";
 import { StockSchema } from "@/lib/schemas/StockSchema";
 import ThousandInput from "@/components/ui/ThousandInput";
+import { useStock } from "@/hooks/useStock";
 
 interface AddStockModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export default function AddStockModal({
   const { allData: colors } = useColorContext();
   const { filteredSizes, fetchSizesByColor } = useSizeContext();
   const { selectOptions: heavies } = useHeavyContext();
-  const { addStock } = useStockContext();
+  const { addStock } = useStock();
 
   const handleSubmit = async (
     values: StockFormValues,

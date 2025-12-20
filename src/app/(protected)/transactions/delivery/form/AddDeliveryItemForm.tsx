@@ -27,14 +27,12 @@ export default function AddDeliveryItemForm({
   openIndex,
   setOpenIndex,
   remove,
-  stocks,
   colorMap,
   sizeMap,
   heavyMap,
   setFieldValue,
   itemsLength,
 }: AddDeliveryItemFormProps) {
-  // Hitung total price secara live
   const totalPrice =
     (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0) -
     (Number(item.discount) || 0);
@@ -128,19 +126,6 @@ export default function AddDeliveryItemForm({
             }}
           />
 
-          {/* <Input
-            label="Quantity"
-            type="number"
-            placeholder="Enter quantity"
-            value={item.quantity}
-            onChange={(val) =>
-              setFieldValue(
-                `items.${index}.quantity`,
-                val === "" ? "" : Number(val)
-              )
-            }
-          /> */}
-
           <ThousandInput
             label="Quantity"
             placeholder="Enter quantity"
@@ -152,19 +137,6 @@ export default function AddDeliveryItemForm({
               )
             }
           />
-
-          {/* <Input
-            label="Unit Price"
-            type="number"
-            placeholder="Enter unit price"
-            value={item.unitPrice}
-            onChange={(val) =>
-              setFieldValue(
-                `items.${index}.unitPrice`,
-                val === "" ? "" : Number(val)
-              )
-            }
-          /> */}
 
           <CurrencyInput
             label="Unit Price (Rp)"
@@ -178,19 +150,6 @@ export default function AddDeliveryItemForm({
             }
           />
 
-          {/* <Input
-            label="Discount"
-            type="number"
-            placeholder="Enter discount"
-            value={item.discount}
-            onChange={(val) =>
-              setFieldValue(
-                `items.${index}.discount`,
-                val === "" ? 0 : Number(val)
-              )
-            }
-          /> */}
-
           <CurrencyInput
             label="Discount (Rp)"
             placeholder="Enter discount"
@@ -203,13 +162,6 @@ export default function AddDeliveryItemForm({
             }
           />
 
-          {/* <Input
-            label="Total Price"
-            type="number"
-            placeholder="Total Price"
-            value={totalPrice}
-            disabled
-          /> */}
           <CurrencyInput
             label="Total Price"
             placeholder="Total Price"

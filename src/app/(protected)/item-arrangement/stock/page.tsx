@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import TableWithControls from "@/components/table/TableWithControls";
-import { useStockContext } from "@/context/StockContext";
 import { useColorContext } from "@/context/ColorContext";
 import AddStockModal from "./AddStockModal";
 import EditStockModal from "./EditStockModal";
+import { useStock } from "@/hooks/useStock";
 
 export default function StockPage() {
   const {
@@ -20,7 +20,7 @@ export default function StockPage() {
     handleFilter,
     handleActionClick,
     fetchData,
-  } = useStockContext();
+  } = useStock();
 
   const { selectOptions, selectedColor, setSelectedColor } = useColorContext();
 

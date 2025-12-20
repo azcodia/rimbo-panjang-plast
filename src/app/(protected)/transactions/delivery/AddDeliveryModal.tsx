@@ -5,9 +5,9 @@ import { useState, useMemo } from "react";
 import BaseModal from "@/components/ui/modals/modal";
 import Button from "@/components/ui/Button";
 import { useDeliveryContext } from "@/context/DeliveryContext";
-import { useStockContext } from "@/context/StockContext";
 import DeliveryHeaderForm from "./form/AddDeliveryHeaderForm";
 import AddDeliveryItemForm from "./form/AddDeliveryItemForm";
+import { useStock } from "@/hooks/useStock";
 
 interface AddDeliveryModalProps {
   isOpen: boolean;
@@ -57,7 +57,7 @@ export default function AddDeliveryModal({
   size = "lg",
 }: AddDeliveryModalProps) {
   const { addDelivery } = useDeliveryContext();
-  const { allData: stocks } = useStockContext();
+  const { allData: stocks } = useStock();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const colorMap: Record<string, string> = useMemo(

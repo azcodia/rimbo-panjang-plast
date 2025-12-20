@@ -5,9 +5,9 @@ import { useState, useMemo } from "react";
 import BaseModal from "@/components/ui/modals/modal";
 import Button from "@/components/ui/Button";
 import { useReStockContext } from "@/context/RestockContext";
-import { useStockContext } from "@/context/StockContext";
 import ReStockHeaderForm from "./form/ReStockHeaderForm";
 import ReStockItemForm from "./form/ReStockItemForm";
+import { useStock } from "@/hooks/useStock";
 
 interface AddReStockModalProps {
   isOpen: boolean;
@@ -51,7 +51,7 @@ export default function AddReStockModal({
   size = "lg",
 }: AddReStockModalProps) {
   const { addReStock } = useReStockContext();
-  const { allData: stocks } = useStockContext();
+  const { allData: stocks } = useStock();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const colorMap: Record<string, string> = useMemo(
