@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import { ReStockProvider } from "@/context/RestockContext";
 import { DeliveryProvider } from "@/context/DeliveryContext";
 import { CustomerProvider } from "@/context/CustomerContext";
+import { BankProvider } from "@/context/BankContext";
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
   "&.notistack-MuiContent-success": {
     backgroundColor: "#7bb927",
@@ -37,15 +38,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           <DeliveryProvider>
             <ReStockProvider>
-              <CustomerProvider>
-                <HeavyProvider>
-                  <SizeProvider>
-                    <ColorProvider>
-                      <Provider store={store}>{children}</Provider>
-                    </ColorProvider>
-                  </SizeProvider>
-                </HeavyProvider>
-              </CustomerProvider>
+              <BankProvider>
+                <CustomerProvider>
+                  <HeavyProvider>
+                    <SizeProvider>
+                      <ColorProvider>
+                        <Provider store={store}>{children}</Provider>
+                      </ColorProvider>
+                    </SizeProvider>
+                  </HeavyProvider>
+                </CustomerProvider>
+              </BankProvider>
             </ReStockProvider>
           </DeliveryProvider>
         </SnackbarProvider>
