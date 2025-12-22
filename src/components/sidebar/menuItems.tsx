@@ -4,6 +4,7 @@ import {
   Cog,
   PackageSearch,
   UserPlus2Icon,
+  LandmarkIcon,
 } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -44,6 +45,12 @@ export const menuItems: MenuItem[] = [
     path: "/customers/customer",
     group: "Stock, Atribut & Other",
     icon: <UserPlus2Icon size={22.5} strokeWidth={2.2} />,
+  },
+  {
+    label: "Bank",
+    path: "/banks/bank",
+    group: "Stock, Atribut & Other",
+    icon: <LandmarkIcon size={22.5} strokeWidth={2.2} />,
   },
   {
     label: "Transaction",
