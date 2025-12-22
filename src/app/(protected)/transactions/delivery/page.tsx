@@ -3,6 +3,8 @@
 import TableWithControls from "@/components/table/TableWithControls";
 import { useDeliveryContext } from "@/context/DeliveryContext";
 import AddDeliveryModal from "./AddDeliveryModal";
+import AddPaidModal from "./AddPaidModal";
+import ShowDetailDeliveryModal from "./ShowDeliveryModal";
 
 export default function DeliveryPage() {
   const {
@@ -14,10 +16,15 @@ export default function DeliveryPage() {
     loading,
     filterValue,
     isModalOpen,
+    isModalPaidOpen,
+    isModalDetailDeliveryOpen,
+    selectedDelivery,
     setPage,
     handleFilter,
     handleActionClick,
     setIsModalOpen,
+    setIsModalPaidOpen,
+    setIsModalDetailDeliveryOpen,
     fetchData,
   } = useDeliveryContext();
 
@@ -35,7 +42,7 @@ export default function DeliveryPage() {
         onFilterChange={handleFilter}
         onPageChange={setPage}
         onActionClick={handleActionClick}
-        visibleActions={["delete", "show"]}
+        visibleActions={["paid", "show", "delete"]}
         buttons={[
           { text: "Tambah Delivery", onClick: () => setIsModalOpen(true) },
         ]}
@@ -48,6 +55,25 @@ export default function DeliveryPage() {
           fetchData();
         }}
       />
+
+      {selectedDelivery && (
+        <AddPaidModal
+          size="xxl"
+          isOpen={isModalPaidOpen}
+          deliveryCode={selectedDelivery}
+          onClose={() => setIsModalPaidOpen(false)}
+          onSaved={() => fetchData()}
+        />
+      )}
+      {selectedDelivery && (
+        <ShowDetailDeliveryModal
+          size="xxl"
+          isOpen={isModalDetailDeliveryOpen}
+          deliveryCode={selectedDelivery}
+          onClose={() => setIsModalDetailDeliveryOpen(false)}
+          // onSaved={() => fetchData()}
+        />
+      )}
     </div>
   );
 }
