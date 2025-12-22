@@ -51,7 +51,7 @@ export default function TableWithControls<T extends Record<string, any>>({
   onPageChange,
   onActionClick,
   buttons = [],
-  visibleActions = ["edit", "delete"],
+  visibleActions = ["paid", "delete"],
   showSearch = true,
   selectOptions = [],
   selectedValue,

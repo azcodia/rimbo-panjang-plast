@@ -122,7 +122,7 @@ export const useStock = () => {
 
   const handleActionClick = (
     row: StockData,
-    action: "edit" | "delete" | "show"
+    action: "paid" | "edit" | "delete" | "show"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete this stock?`)) {

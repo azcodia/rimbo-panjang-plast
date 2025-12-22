@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Edit, Trash2, Eye } from "lucide-react";
+import { Edit, Trash2, Eye, BanknoteArrowUp } from "lucide-react";
 import LoadingSpinner from "../LoadingSpinner";
 
 interface Column<T> {
@@ -10,7 +10,7 @@ interface Column<T> {
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
-export type TableAction = "edit" | "delete" | "show";
+export type TableAction = "paid" | "edit" | "delete" | "show";
 
 export interface TableRow<T> {
   data: T;
@@ -96,6 +96,17 @@ export default function Table<T extends Record<string, any>>({
             {row.actions
               .filter((a) => !visibleActions || visibleActions.includes(a))
               .map((a) => {
+                if (a === "paid")
+                  return (
+                    <button
+                      key="paid"
+                      onClick={() => onActionClick?.(row.data, "paid")}
+                      className="text-success-light hover:opacity-70 transition-colors"
+                      title="Paid"
+                    >
+                      <BanknoteArrowUp strokeWidth={2.2} size={18} />
+                    </button>
+                  );
                 if (a === "show")
                   return (
                     <button
@@ -104,7 +115,7 @@ export default function Table<T extends Record<string, any>>({
                       className="text-gray-700 hover:opacity-70 transition-colors"
                       title="Show"
                     >
-                      <Eye size={16} />
+                      <Eye strokeWidth={2.2} size={16} />
                     </button>
                   );
                 if (a === "edit")
@@ -115,7 +126,7 @@ export default function Table<T extends Record<string, any>>({
                       className="text-gray-700 hover:opacity-70 transition-colors"
                       title="Edit"
                     >
-                      <Edit size={16} />
+                      <Edit strokeWidth={2.2} size={16} />
                     </button>
                   );
                 if (a === "delete")
@@ -126,7 +137,7 @@ export default function Table<T extends Record<string, any>>({
                       className="text-red-500 hover:text-red-700 transition-colors"
                       title="Delete"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 strokeWidth={2.2} size={16} />
                     </button>
                   );
               })}

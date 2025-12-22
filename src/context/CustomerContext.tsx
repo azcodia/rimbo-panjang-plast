@@ -47,7 +47,7 @@ interface CustomerContextType {
   setSelectedCustomer: (val: string | null) => void;
   handleActionClick: (
     row: CustomerData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addCustomer: (customer: Partial<CustomerData>) => Promise<void>;
@@ -142,7 +142,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: CustomerData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete "${row.name}"?`)) {

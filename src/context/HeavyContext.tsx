@@ -42,7 +42,7 @@ interface HeavyContextType {
   setSelectedWeight: (val: string | null) => void;
   handleActionClick: (
     row: HeavyData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addHeavy: (weight: number) => Promise<void>;
@@ -129,7 +129,7 @@ export const HeavyProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: HeavyData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete "${row.weight} g"?`)) {

@@ -57,10 +57,16 @@ interface DeliveryContextType {
   filterValue: string;
   isModalOpen: boolean;
   setIsModalOpen: (val: boolean) => void;
+  isModalPaidOpen: boolean;
+  setIsModalPaidOpen: (val: boolean) => void;
+  selectedDelivery: string | null;
+  setSelectedDelivery: (val: string | null) => void;
+  isModalDetailDeliveryOpen: boolean;
+  setIsModalDetailDeliveryOpen: (val: boolean) => void;
   handleFilter: (val: string) => void;
   handleActionClick: (
     row: DeliveryData,
-    action: "edit" | "delete" | "show"
+    action: "paid" | "edit" | "delete" | "show"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addDelivery: (
@@ -84,6 +90,10 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalPaidOpen, setIsModalPaidOpen] = useState(false);
+  const [isModalDetailDeliveryOpen, setIsModalDetailDeliveryOpen] =
+    useState(false);
+  const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
 
   const columns = [
     { key: "code", label: "Code" },
@@ -142,7 +152,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
           setData(
             processedData.map((item: DeliveryData) => ({
               data: item,
-              actions: ["edit", "delete", "show"],
+              actions: ["paid", "edit", "delete", "show"],
             }))
           );
           setTotal(json.total);
@@ -164,20 +174,18 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: DeliveryData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete this delivery?`)) {
         deleteDelivery(row._id || "", row.code);
       }
-    } else if (action === "show") {
-      alert(
-        `Delivery details:\nCode: ${row.code}\nNote: ${
-          row.note
-        }\nDescription: ${row.description}\nItems: ${row.items
-          .map((i) => `Qty: ${i.quantity}`)
-          .join(", ")}`
-      );
+    } else if (action === "paid") {
+      setSelectedDelivery(row.code);
+      setIsModalPaidOpen(true);
+    } else if ((action = "show")) {
+      setSelectedDelivery(row.code);
+      setIsModalDetailDeliveryOpen(true);
     }
   };
 
@@ -352,6 +360,12 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
         filterValue,
         isModalOpen,
         setIsModalOpen,
+        isModalPaidOpen,
+        selectedDelivery,
+        isModalDetailDeliveryOpen,
+        setIsModalPaidOpen,
+        setSelectedDelivery,
+        setIsModalDetailDeliveryOpen,
         handleFilter,
         handleActionClick,
         fetchData,

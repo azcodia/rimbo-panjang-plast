@@ -47,7 +47,7 @@ interface BankContextType {
   setSelectedBank: (val: string | null) => void;
   handleActionClick: (
     row: BankData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addBank: (bank: Partial<BankData>) => Promise<void>;
@@ -134,7 +134,7 @@ export const BankProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: BankData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete "${row.name}"?`)) {

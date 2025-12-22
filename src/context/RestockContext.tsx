@@ -50,7 +50,7 @@ interface ReStockContextType {
   handleFilter: (val: string) => void;
   handleActionClick: (
     row: ReStockData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addReStock: (
@@ -142,7 +142,7 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: ReStockData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete this re-stock?`)) {

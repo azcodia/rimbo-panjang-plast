@@ -8,7 +8,7 @@ interface BaseModalProps {
   onClose: () => void;
   children: ReactNode;
   title: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "xxl";
 }
 
 export default function BaseModal({

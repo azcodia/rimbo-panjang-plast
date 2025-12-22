@@ -41,7 +41,7 @@ interface ColorContextType {
   setSelectedColor: (val: string | null) => void;
   handleActionClick: (
     row: ColorData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => void;
   fetchData: (filter?: string, page?: number) => Promise<void>;
   addColor: (color: string) => Promise<void>;
@@ -121,7 +121,7 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
 
   const handleActionClick = (
     row: ColorData,
-    action: "edit" | "delete" | "show"
+    action: "edit" | "delete" | "show" | "paid"
   ) => {
     if (action === "delete") {
       if (confirm(`Are you sure you want to delete "${row.color}"?`)) {
