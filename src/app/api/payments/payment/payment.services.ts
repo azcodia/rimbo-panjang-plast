@@ -1,35 +1,57 @@
 import { toObjectId } from "@/lib/mongo";
 import Payment from "@/models/Payment";
+import mongoose from "mongoose";
 
 interface PaymentInput {
   delivery_id: string;
   bank_id: string;
   amount: number;
   note?: string;
+  input_date?: Date;
   status?: "pending" | "paid";
 }
 
-export const getPayments = async (query: any, skip: number, limit: number) => {
+export const getPayments = async (
+  deliveryId: string,
+  query: any,
+  skip: number,
+  limit: number
+) => {
   const total = await Payment.countDocuments(query);
 
-  const payments = await Payment.find(query)
-    .populate("bank_id", "name type")
-    .select("amount note status bank_id")
+  const data = await Payment.find({
+    _id: new mongoose.Types.ObjectId(deliveryId),
+  })
+    .populate("delivery_id", "code")
+    .populate("bank_id", "name type account_number")
     .skip(skip)
     .limit(limit)
-    .sort({ created_at: -1 })
-    .lean();
+    .sort({ created_at: -1 });
 
-  const data = payments.map((p: any) => ({
+  return { total, data };
+};
+
+export const getPaymentsByDelivery = async (deliveryId: string) => {
+  const payments = await Payment.find({
+    delivery_id: new mongoose.Types.ObjectId(deliveryId),
+  })
+    .populate("bank_id", "name type account_number")
+    .sort({ input_date: -1 });
+
+  const allItems = payments.map((p: any) => ({
     _id: p._id,
     type: p.bank_id?.type,
     name: p.bank_id?.name,
+    account_number: p.bank_id?.account_number,
     amount: p.amount,
     note: p.note,
-    status: p.status,
+    input_date: p.input_date,
   }));
 
-  return { total, data };
+  return {
+    data: allItems,
+    total: allItems.length,
+  };
 };
 
 export const createPayment = async (data: PaymentInput) => {
@@ -38,6 +60,7 @@ export const createPayment = async (data: PaymentInput) => {
     bank_id: toObjectId(data.bank_id),
     amount: data.amount,
     note: data.note,
+    input_date: data.input_date,
     status: data.status ?? "paid",
     paid_at: data.status === "pending" ? undefined : new Date(),
   });

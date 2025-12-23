@@ -3,9 +3,9 @@ import dbConnect from "@/lib/mongodb";
 import { getUserIdFromReq } from "@/lib/auth";
 import {
   createPayment,
-  getPayments,
   updatePayment,
   deletePayment,
+  getPaymentsByDelivery,
 } from "./payment.services";
 
 export async function GET(req: NextRequest) {
@@ -14,16 +14,16 @@ export async function GET(req: NextRequest) {
     getUserIdFromReq(req);
 
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
-    const skip = (page - 1) * pageSize;
+    const deliveryId = searchParams.get("deliveryId");
 
-    const delivery_id = searchParams.get("delivery_id");
+    if (!deliveryId) {
+      return NextResponse.json(
+        { success: false, message: "deliveryId is required" },
+        { status: 400 }
+      );
+    }
 
-    const query: any = {};
-    if (delivery_id) query.delivery_id = delivery_id;
-
-    const result = await getPayments(query, skip, pageSize);
+    const result = await getPaymentsByDelivery(deliveryId);
 
     return NextResponse.json({ success: true, ...result });
   } catch (err: any) {
@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
   try {
     getUserIdFromReq(req);
 
-    const { delivery_id, bank_id, amount, note, status } = await req.json();
+    const { delivery_id, bank_id, amount, note, input_date, status } =
+      await req.json();
 
     if (!delivery_id || !bank_id || !amount)
       throw new Error("delivery_id, bank_id and amount are required");
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
       bank_id,
       amount,
       note,
+      input_date,
       status,
     });
 
