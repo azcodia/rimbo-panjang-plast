@@ -270,7 +270,6 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
-
       const resFetch = await fetch(
         `/api/deliveries/delivery?id=${deliveryId}`,
         {
@@ -326,6 +325,12 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      await fetch(`/api/payments/delete-by-delivery?id=${deliveryId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       const jsonDelete = await resDelete.json();
       if (!resDelete.ok)
         throw new Error(jsonDelete.message || "Failed to delete delivery");
