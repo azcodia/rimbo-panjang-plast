@@ -32,6 +32,7 @@ export interface PaymentItem {
   _id: string;
   type: string;
   name: string;
+  account_number: string;
   amount: number;
   note?: string;
   status: "paid" | "pending";
@@ -152,7 +153,7 @@ export const usePaidByCode = (code: string) => {
     setLoadingPayments(true);
     try {
       const params = new URLSearchParams();
-      params.append("code", code);
+      params.append("deliveryId", code);
 
       const res = await fetch(`/api/payments/payment?${params.toString()}`);
       const json = await res.json();
