@@ -28,6 +28,15 @@ export interface DeliverySummary {
   status: "not_yet_paid" | "partially_paid" | "paid_off";
 }
 
+export interface PaymentItem {
+  _id: string;
+  type: string;
+  name: string;
+  amount: number;
+  note?: string;
+  status: "paid" | "pending";
+}
+
 export const usePaidByCode = (code: string) => {
   // data list delivery
   const [data, setData] = useState<TableRow<DeliveryItem>[]>([]);
@@ -35,6 +44,9 @@ export const usePaidByCode = (code: string) => {
   // data Summary
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [summary, setSummary] = useState<DeliverySummary | null>(null);
+  // data list payment
+  const [payments, setPayments] = useState<PaymentItem[]>([]);
+  const [loadingPayments, setLoadingPayments] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -73,7 +85,7 @@ export const usePaidByCode = (code: string) => {
     },
   ];
 
-  const fetchDelivery = useCallback(
+  const fetchDeliveryByCode = useCallback(
     async (pageNum: number = 1, pageSizeNum: number = pageSize) => {
       if (!code) return;
 
@@ -111,7 +123,7 @@ export const usePaidByCode = (code: string) => {
     [code, pageSize]
   );
 
-  const fetchSummary = useCallback(async () => {
+  const fetchSummaryByCode = useCallback(async () => {
     if (!code) return;
     setLoadingSummary(true);
 
@@ -134,18 +146,42 @@ export const usePaidByCode = (code: string) => {
     }
   }, [code]);
 
+  const fetchPaymentsByCode = useCallback(async () => {
+    if (!code) return;
+
+    setLoadingPayments(true);
+    try {
+      const params = new URLSearchParams();
+      params.append("code", code);
+
+      const res = await fetch(`/api/payments/payment?${params.toString()}`);
+      const json = await res.json();
+
+      if (json.success) {
+        setPayments(json.data || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch payments:", err);
+    } finally {
+      setLoadingPayments(false);
+    }
+  }, [code]);
+
   return {
     columns,
     data,
+    summary,
+    payments,
     loading,
     page,
     loadingSummary,
-    summary,
+    loadingPayments,
     pageSize,
     total,
     setPage,
     setPageSize,
-    fetchDelivery,
-    fetchSummary,
+    fetchDeliveryByCode,
+    fetchSummaryByCode,
+    fetchPaymentsByCode,
   };
 };
