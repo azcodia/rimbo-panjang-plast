@@ -2,9 +2,9 @@
 
 import TableWithControls from "@/components/table/TableWithControls";
 import { useDeliveryContext } from "@/context/DeliveryContext";
-import AddDeliveryModal from "./AddDeliveryModal";
-import AddPaidModal from "./AddPaidModal";
-import ShowDetailDeliveryModal from "./ShowDeliveryModal";
+import AddPaidModal from "./ui/AddPaidModal";
+import ShowDetailDeliveryModal from "./ui/ShowDeliveryModal";
+import AddDeliveryModal from "./ui/AddDeliveryModal";
 
 export default function DeliveryPage() {
   const {
