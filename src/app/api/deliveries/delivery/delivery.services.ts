@@ -1,5 +1,6 @@
 import { toObjectId } from "@/lib/mongo";
 import Delivery from "@/models/Delivery";
+import Payment from "@/models/Payment";
 
 interface DeliveryItemInput {
   stock_id: string;
@@ -26,6 +27,11 @@ interface DeliveryInput {
 /**
  * GET LIST
  */
+
+interface DeliveryItem {
+  total_price?: number;
+}
+
 export const getDeliveries = async (
   query: any,
   skip: number,
@@ -33,7 +39,7 @@ export const getDeliveries = async (
 ) => {
   const total = await Delivery.countDocuments(query);
 
-  const data = await Delivery.find(query)
+  const deliveries = await Delivery.find(query)
     .populate("user_id", "name email")
     .populate("customer_id", "name type")
     .populate("items.stock_id")
@@ -42,7 +48,38 @@ export const getDeliveries = async (
     .populate("items.heavy_id")
     .skip(skip)
     .limit(limit)
-    .sort({ created_at: -1 });
+    .sort({ input_date: -1 });
+
+  const data = await Promise.all(
+    deliveries.map(async (delivery) => {
+      const totalPrice = (delivery.items as DeliveryItem[]).reduce(
+        (sum, item) => sum + (item.total_price || 0),
+        0
+      );
+
+      const payments = await Payment.aggregate([
+        { $match: { delivery_id: delivery._id } },
+        { $group: { _id: null, totalPaid: { $sum: "$amount" } } },
+      ]);
+
+      const totalPaid = payments.length > 0 ? payments[0].totalPaid : 0;
+
+      // Tentukan status
+      let status: "paid" | "partially_paid" | "unpaid";
+      if (totalPaid >= totalPrice) {
+        status = "paid";
+      } else if (totalPaid > 0 && totalPaid < totalPrice) {
+        status = "partially_paid";
+      } else {
+        status = "unpaid";
+      }
+
+      return {
+        ...delivery.toObject(),
+        status,
+      };
+    })
+  );
 
   return { total, data };
 };

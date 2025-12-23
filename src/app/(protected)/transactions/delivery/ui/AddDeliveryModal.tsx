@@ -122,7 +122,7 @@ export default function AddDeliveryModal({
         }),
       };
 
-      await addDelivery(payload);
+      await addDelivery(payload as any);
 
       resetForm();
       onClose();
