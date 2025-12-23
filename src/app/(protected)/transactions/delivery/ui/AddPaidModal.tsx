@@ -102,7 +102,7 @@ export default function AddPaidModal({
         await fetchDeliveryByCode(1, pageSize);
         await fetchSummaryByCode();
         await fetchPaymentsByCode();
-
+        onSaved?.();
         resetForm();
       } catch (err: any) {
         console.error("PAYMENT ERROR:", err);
