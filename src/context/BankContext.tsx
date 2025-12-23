@@ -7,6 +7,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useMemo,
 } from "react";
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
@@ -26,6 +27,8 @@ export interface BankData {
 interface BankContextType {
   data: TableRow<BankData>[];
   allData: BankData[];
+  cashBankOptions: SelectOption<string>[];
+  transferBankOptions: SelectOption<string>[];
   selectOptions: SelectOption<string>[];
   page: number;
   setPage: (page: number) => void;
@@ -64,7 +67,7 @@ export const BankProvider = ({ children }: { children: ReactNode }) => {
   const [allData, setAllData] = useState<BankData[]>([]);
   const [selectedBank, setSelectedBank] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(200);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -206,6 +209,25 @@ export const BankProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const cashBankOptions = useMemo(
+    () =>
+      allData
+        .filter((b) => b.type === "cash")
+        .map((b) => ({ value: b.id, label: b.name })),
+    [allData]
+  );
+
+  const transferBankOptions = useMemo(
+    () =>
+      allData
+        .filter((b) => b.type === "bank")
+        .map((b) => ({
+          value: b.id,
+          label: b.account_number ? `${b.name} (${b.account_number})` : b.name,
+        })),
+    [allData]
+  );
+
   useEffect(() => {
     fetchData(filterValue, page);
   }, [fetchData, page, pageSize, filterValue]);
@@ -216,6 +238,8 @@ export const BankProvider = ({ children }: { children: ReactNode }) => {
         data,
         allData,
         selectOptions,
+        cashBankOptions,
+        transferBankOptions,
         page,
         setPage,
         columns,
