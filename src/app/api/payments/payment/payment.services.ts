@@ -12,12 +12,22 @@ interface PaymentInput {
 export const getPayments = async (query: any, skip: number, limit: number) => {
   const total = await Payment.countDocuments(query);
 
-  const data = await Payment.find(query)
-    .populate("delivery_id", "code")
-    .populate("bank_id", "name type account_number")
+  const payments = await Payment.find(query)
+    .populate("bank_id", "name type")
+    .select("amount note status bank_id")
     .skip(skip)
     .limit(limit)
-    .sort({ created_at: -1 });
+    .sort({ created_at: -1 })
+    .lean();
+
+  const data = payments.map((p: any) => ({
+    _id: p._id,
+    type: p.bank_id?.type,
+    name: p.bank_id?.name,
+    amount: p.amount,
+    note: p.note,
+    status: p.status,
+  }));
 
   return { total, data };
 };
