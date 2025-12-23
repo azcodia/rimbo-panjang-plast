@@ -11,6 +11,7 @@ export interface IPayment extends Document {
   status: PaymentStatus;
   created_at: Date;
   updated_at: Date;
+  input_date: Date;
 }
 
 const PaymentSchema: Schema<IPayment> = new Schema(
@@ -42,6 +43,7 @@ const PaymentSchema: Schema<IPayment> = new Schema(
       enum: ["pending", "paid"],
       default: "paid",
     },
+    input_date: { type: Date, default: Date.now },
   },
   {
     collection: "payments",
