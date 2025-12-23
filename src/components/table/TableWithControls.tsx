@@ -105,7 +105,6 @@ export default function TableWithControls<T extends Record<string, any>>({
           )}
         </div>
       </div>
-
       <Table
         columns={columns as any}
         totalDataCount={total}

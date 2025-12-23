@@ -12,7 +12,7 @@ import { TableRow } from "@/components/table/Table";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";
-import { formatNumber } from "@/lib/formatNumber";
+import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 
 export interface DeliveryItem {
   stock_id: string;
@@ -40,6 +40,7 @@ export interface DeliveryData {
   description?: string;
   created_at: string;
   input_date: string;
+  status: "paid" | "partially_paid" | "unpaid";
   items: DeliveryItem[];
 }
 
@@ -96,28 +97,29 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
   const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
 
   const columns = [
+    {
+      key: "status",
+      label: "Status Pembayaran",
+      render: (_value: any, row: DeliveryData) => (
+        <PaymentStatusBadge status={row.status} />
+      ),
+    },
+    {
+      key: "input_date",
+      label: "Tanggal Transaksi",
+      render: (_value: any, row: DeliveryData) => formatDate(row.input_date),
+    },
     { key: "code", label: "Code" },
     {
       key: "customer_id",
-      label: "Customer",
+      label: "Nama Pelanggan",
       render: (_value: any, row: DeliveryData) =>
         `${(row.customer_id as Customer).name} (${
           (row.customer_id as Customer).type
         })`,
     },
-    { key: "note", label: "Note" },
-    { key: "description", label: "Description" },
-    {
-      key: "items",
-      label: "Items",
-      render: (_value: any, row: DeliveryData) =>
-        row.items.map((i) => `Qty: ${formatNumber(i.quantity)}`).join(", "),
-    },
-    {
-      key: "input_date",
-      label: "Tanggal Input",
-      render: (_value: any, row: DeliveryData) => formatDate(row.input_date),
-    },
+    { key: "note", label: "Catatan" },
+    { key: "description", label: "Keterangan" },
   ];
 
   const getToken = () =>
@@ -269,7 +271,6 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
       const token = getToken();
       if (!token) throw new Error("User not authenticated");
 
-      // Fetch delivery items first
       const resFetch = await fetch(
         `/api/deliveries/delivery?id=${deliveryId}`,
         {
@@ -318,7 +319,6 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
         });
       }
 
-      // Delete delivery
       const resDelete = await fetch(
         `/api/deliveries/delivery?id=${deliveryId}`,
         {
