@@ -5,6 +5,8 @@ import BaseModal from "@/components/ui/modals/modal";
 import { usePaidByCode } from "@/hooks/usePaidByCode";
 import PaidForm, { PaidFormValues } from "../components/PaidForm";
 import PaymentList from "../components/PaymentList";
+import { useSnackbar } from "notistack";
+import { formatRp } from "@/lib/formatRp";
 
 export default function AddPaidModal({
   isOpen,
@@ -17,10 +19,13 @@ export default function AddPaidModal({
     pageSize,
     summary,
     payments,
+    loadingSummary,
+    loadingPayments,
     fetchDeliveryByCode,
     fetchSummaryByCode,
     fetchPaymentsByCode,
   } = usePaidByCode(deliveryCode);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchDeliveryByCode(1, pageSize);
@@ -33,6 +38,7 @@ export default function AddPaidModal({
     bank_id: "",
     amount: 0,
     note: "",
+    input_date: new Date().toISOString().split("T")[0],
     code: summary?.code || "",
     customer_name: summary?.customer_name || "",
     total_price: summary?.total_price || 0,
@@ -47,12 +53,24 @@ export default function AddPaidModal({
     async (values: PaidFormValues, { setSubmitting, resetForm }: any) => {
       try {
         if (!values.bank_id) {
-          alert("Bank / Cash account wajib dipilih");
+          enqueueSnackbar("Bank / Cash account wajib dipilih", {
+            variant: "warning",
+          });
           return;
         }
 
         if (values.amount <= 0) {
-          alert("Nominal pembayaran harus lebih dari 0");
+          enqueueSnackbar("Nominal pembayaran harus lebih dari 0", {
+            variant: "warning",
+          });
+          return;
+        }
+
+        if (values.amount > values.remaining_payment) {
+          enqueueSnackbar(
+            `Sisa pembayaran maksimal: ${formatRp(values.remaining_payment)}`,
+            { variant: "warning" }
+          );
           return;
         }
 
@@ -61,6 +79,7 @@ export default function AddPaidModal({
           bank_id: values.bank_id,
           amount: values.amount,
           note: values.note,
+          input_date: values.input_date,
           status: values.status,
         };
 
@@ -73,8 +92,12 @@ export default function AddPaidModal({
         const json = await res.json();
 
         if (!res.ok || !json.success) {
+          enqueueSnackbar("Gagal menyimpan pembayaran", { variant: "error" });
           throw new Error(json.message || "Gagal menyimpan pembayaran");
         }
+        enqueueSnackbar("Pembayaran berhasil di simpan", {
+          variant: "success",
+        });
 
         await fetchDeliveryByCode(1, pageSize);
         await fetchSummaryByCode();
@@ -83,7 +106,7 @@ export default function AddPaidModal({
         resetForm();
       } catch (err: any) {
         console.error("PAYMENT ERROR:", err);
-        alert(err.message || "Terjadi kesalahan");
+        enqueueSnackbar("PAYMENT ERROR", { variant: "error" });
       } finally {
         setSubmitting(false);
       }
@@ -103,14 +126,23 @@ export default function AddPaidModal({
 
         const json = await res.json();
         if (!res.ok || !json.success) {
+          enqueueSnackbar("Gagal menghapus pembayaran", {
+            variant: "error",
+          });
           throw new Error(json.message || "Gagal menghapus pembayaran");
         }
+
+        enqueueSnackbar("Berhasil menghapus pembayaran", {
+          variant: "success",
+        });
 
         await fetchDeliveryByCode(1, pageSize);
         await fetchSummaryByCode();
         await fetchPaymentsByCode();
       } catch (err: any) {
-        alert(err.message || "Terjadi kesalahan");
+        enqueueSnackbar("Terjadi kesalahan", {
+          variant: "error",
+        });
       }
     },
     [fetchPaymentsByCode, fetchSummaryByCode, pageSize]
@@ -130,9 +162,17 @@ export default function AddPaidModal({
       size={size}
     >
       <div className="grid grid-cols-3 gap-4 h-[28.4rem]">
-        <PaidForm initialValues={initialValues} onSubmit={onHandleSubmit} />
+        <PaidForm
+          initialValues={initialValues}
+          onSubmit={onHandleSubmit}
+          loading={loadingSummary}
+        />
         <div className="col-span-2">
-          <PaymentList payments={payments} onDelete={handleDeletePayment} />
+          <PaymentList
+            payments={payments}
+            onDelete={handleDeletePayment}
+            loading={loadingPayments}
+          />
         </div>
       </div>
     </BaseModal>
