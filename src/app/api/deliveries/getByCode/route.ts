@@ -7,18 +7,22 @@ export async function GET(req: NextRequest) {
 
   try {
     const { searchParams } = new URL(req.url);
-    const code = searchParams.get("code");
+    const deliveryId = searchParams.get("deliveryId");
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
 
-    if (!code) {
+    if (!deliveryId) {
       return NextResponse.json(
         { success: false, message: "Code is required" },
         { status: 400 }
       );
     }
 
-    const result = await getDeliveryItemsByCodePaginated(code, page, pageSize);
+    const result = await getDeliveryItemsByCodePaginated(
+      deliveryId,
+      page,
+      pageSize
+    );
 
     return NextResponse.json({
       success: true,

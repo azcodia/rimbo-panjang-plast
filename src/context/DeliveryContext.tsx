@@ -181,10 +181,10 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
         deleteDelivery(row._id || "", row.code);
       }
     } else if (action === "paid") {
-      setSelectedDelivery(row.code);
+      setSelectedDelivery(row._id || "");
       setIsModalPaidOpen(true);
     } else if ((action = "show")) {
-      setSelectedDelivery(row.code);
+      setSelectedDelivery(row._id || "");
       setIsModalDetailDeliveryOpen(true);
     }
   };

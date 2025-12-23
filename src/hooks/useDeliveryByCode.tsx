@@ -92,7 +92,7 @@ export const useDeliveryByCode = (code: string) => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append("code", code);
+        params.append("deliveryId", code);
         params.append("page", pageNum.toString());
         params.append("pageSize", pageSizeNum.toString());
 
@@ -129,7 +129,7 @@ export const useDeliveryByCode = (code: string) => {
 
     try {
       const params = new URLSearchParams();
-      params.append("code", code);
+      params.append("deliveryId", code);
 
       const res = await fetch(
         `/api/deliveries/getDeliveryWithPayments?${params.toString()}`

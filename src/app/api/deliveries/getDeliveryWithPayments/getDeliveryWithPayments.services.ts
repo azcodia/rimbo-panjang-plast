@@ -2,10 +2,13 @@ import Delivery, { IDelivery } from "@/models/Delivery";
 import Payment from "@/models/Payment";
 import mongoose from "mongoose";
 
-export const getDeliveryWithPayments = async (code: string) => {
-  if (!code) return null;
+export const getDeliveryWithPayments = async (deliveryId: string) => {
+  if (!deliveryId) return null;
 
-  const delivery = await Delivery.findOne({ code })
+  // const delivery = await Delivery.findOne({ code })
+  const delivery = await Delivery.findOne({
+    _id: new mongoose.Types.ObjectId(deliveryId),
+  })
     .populate("customer_id", "name")
     .lean<IDelivery & { customer_id?: { name: string } }>();
 

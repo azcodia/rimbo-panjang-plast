@@ -7,16 +7,16 @@ export async function GET(req: NextRequest) {
 
   try {
     const { searchParams } = new URL(req.url);
-    const code = searchParams.get("code");
+    const deliveryId = searchParams.get("deliveryId");
 
-    if (!code) {
+    if (!deliveryId) {
       return NextResponse.json(
         { success: false, message: "Code is required" },
         { status: 400 }
       );
     }
 
-    const deliveryData = await getDeliveryWithPayments(code);
+    const deliveryData = await getDeliveryWithPayments(deliveryId);
 
     if (!deliveryData) {
       return NextResponse.json(

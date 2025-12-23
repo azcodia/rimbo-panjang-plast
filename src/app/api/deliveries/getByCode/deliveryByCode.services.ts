@@ -1,14 +1,15 @@
 import Delivery from "@/models/Delivery";
+import mongoose from "mongoose";
 
 export const getDeliveryItemsByCodePaginated = async (
-  code: string,
+  deliveryId: string,
   page: number,
   pageSize: number
 ) => {
   const skip = (page - 1) * pageSize;
 
   const deliveries = await Delivery.find({
-    code: { $regex: code, $options: "i" },
+    _id: new mongoose.Types.ObjectId(deliveryId),
   })
     .populate("items.color_id", "color")
     .populate("items.size_id", "size")
