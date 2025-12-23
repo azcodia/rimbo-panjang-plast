@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { TableRow } from "@/components/table/Table";
-import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";

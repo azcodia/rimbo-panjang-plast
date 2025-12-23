@@ -102,7 +102,7 @@ export default function Table<T extends Record<string, any>>({
                       key="paid"
                       onClick={() => onActionClick?.(row.data, "paid")}
                       className="text-success-light hover:opacity-70 transition-colors"
-                      title="Paid"
+                      title="Pembayaran"
                     >
                       <BanknoteArrowUp strokeWidth={2.2} size={18} />
                     </button>
@@ -113,7 +113,7 @@ export default function Table<T extends Record<string, any>>({
                       key="show"
                       onClick={() => onActionClick?.(row.data, "show")}
                       className="text-gray-700 hover:opacity-70 transition-colors"
-                      title="Show"
+                      title="Detail"
                     >
                       <Eye strokeWidth={2.2} size={16} />
                     </button>
@@ -135,7 +135,7 @@ export default function Table<T extends Record<string, any>>({
                       key="delete"
                       onClick={() => onActionClick?.(row.data, "delete")}
                       className="text-red-500 hover:text-red-700 transition-colors"
-                      title="Delete"
+                      title="Hapus"
                     >
                       <Trash2 strokeWidth={2.2} size={16} />
                     </button>

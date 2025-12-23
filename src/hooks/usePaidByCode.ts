@@ -17,6 +17,7 @@ export interface DeliveryItem {
 }
 
 export interface DeliverySummary {
+  delivery_id: string;
   code: string;
   customer_name: string;
   note: string;

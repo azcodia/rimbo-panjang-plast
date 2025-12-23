@@ -87,7 +87,7 @@ export default function ShowDetailDeliveryModal({
             />
             <Textarea
               label="Keterangan"
-              value={formatDate(summary?.description) || ""}
+              value={summary?.description || ""}
               onChange={() => undefined}
               disabled={true}
             />

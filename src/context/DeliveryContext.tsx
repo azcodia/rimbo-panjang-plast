@@ -152,7 +152,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
           setData(
             processedData.map((item: DeliveryData) => ({
               data: item,
-              actions: ["paid", "edit", "delete", "show"],
+              actions: ["paid", "edit", "show", "delete"],
             }))
           );
           setTotal(json.total);

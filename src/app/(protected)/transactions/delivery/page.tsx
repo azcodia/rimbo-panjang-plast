@@ -71,7 +71,6 @@ export default function DeliveryPage() {
           isOpen={isModalDetailDeliveryOpen}
           deliveryCode={selectedDelivery}
           onClose={() => setIsModalDetailDeliveryOpen(false)}
-          // onSaved={() => fetchData()}
         />
       )}
     </div>
