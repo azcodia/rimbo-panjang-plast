@@ -7,13 +7,15 @@ import Select from "@/components/ui/Select";
 import Textarea from "@/components/ui/Textarea";
 import Button from "@/components/ui/Button";
 import { useBankContext } from "@/context/BankContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import DatePicker from "@/components/ui/Date";
 
 export interface PaidFormValues {
   delivery_id: string;
   bank_id: string;
   amount: number;
   note?: string;
-
+  input_date: string;
   code: string;
   customer_name: string;
   total_price: number;
@@ -26,10 +28,19 @@ export interface PaidFormValues {
 interface Props {
   initialValues: PaidFormValues;
   onSubmit: (values: PaidFormValues, formik: any) => void;
+  loading?: boolean;
 }
 
-export default function PaidForm({ initialValues, onSubmit }: Props) {
+export default function PaidForm({ initialValues, onSubmit, loading }: Props) {
   const { cashBankOptions, transferBankOptions } = useBankContext();
+
+  if (loading) {
+    return (
+      <div className="h-[28.3rem] flex items-center justify-center rounded-md border bg-white p-4 shadow-sm">
+        <LoadingSpinner size={8} color="text-gray-500" />
+      </div>
+    );
+  }
 
   return (
     <Formik
@@ -68,7 +79,11 @@ export default function PaidForm({ initialValues, onSubmit }: Props) {
               value={values.remaining_payment}
               disabled
             />
-
+            <DatePicker
+              label="Tanggal Transaction"
+              value={values.input_date}
+              onChange={(val) => setFieldValue("input_date", val)}
+            />
             <div className="flex gap-4">
               <div className="w-2/5">
                 <Select
@@ -84,11 +99,10 @@ export default function PaidForm({ initialValues, onSubmit }: Props) {
                   ]}
                 />
               </div>
-
               <div className="w-3/5">
                 <Select
                   label={
-                    values.payment_method === "cash" ? "Cash Account" : "Bank"
+                    values.payment_method === "cash" ? "Rekening Kas" : "Bank"
                   }
                   value={values.bank_id}
                   onChange={(val) => setFieldValue("bank_id", val)}
