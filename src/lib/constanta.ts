@@ -1,1 +1,1 @@
-export const threshold: number = 500;
+export const threshold: number = 150;
