@@ -11,7 +11,7 @@ import React, {
 import { TableRow } from "@/components/table/Table";
 import { SelectOption } from "@/types/select";
 import { useSnackbar } from "notistack";
-export type CustomerType = "individual" | "company";
+export type CustomerType = "per/orang" | "warung";
 
 export interface CustomerData {
   id: string;
@@ -68,7 +68,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
   const [allData, setAllData] = useState<CustomerData[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(500);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -129,7 +129,7 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
 
   const selectOptions: SelectOption<string>[] = [
     ...allData.map((c) => ({
-      label: `${c.name} (${c.type === "company" ? "Company" : "Individual"})`,
+      label: `${c.name} (${c.type === "per/orang" ? "Per/orang" : "Warung"})`,
       value: c.id,
     })),
   ];
