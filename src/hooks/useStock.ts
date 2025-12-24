@@ -289,17 +289,30 @@ Input Date: ${row.input_date}`);
     }
   };
 
-  const groupeddataStock = useMemo(
-    () =>
-      groupAndSortStock(
-        allData.map((d) => ({
-          ...d,
-          size: d.size ?? "0",
-          color: d.color ?? "",
-        }))
-      ),
-    [allData]
-  );
+  // const groupeddataStock = useMemo(
+  //   () =>
+  //     groupAndSortStock(
+  //       allData.map((d) => ({
+  //         ...d,
+  //         size: d.size ?? "0",
+  //         color: d.color ?? "",
+  //       }))
+  //     ),
+  //   [allData]
+  // );
+
+  const groupeddataStock = useMemo(() => {
+    const normalized = allData.map((d) => ({
+      ...d,
+      size: d.size ?? "0",
+      color: d.color ?? "",
+    }));
+
+    return groupAndSortStock(normalized).map((row: any) => ({
+      ...row,
+      actions: ["delete"],
+    }));
+  }, [allData]);
 
   useEffect(() => {
     fetchData(filterValue, page, selectedColor);
