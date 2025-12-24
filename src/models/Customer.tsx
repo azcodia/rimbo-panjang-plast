@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export type CustomerType = "individual" | "company";
+export type CustomerType = "per/orang" | "warung";
 
 export interface ICustomer extends Document {
   type: CustomerType;
@@ -17,17 +17,43 @@ const CustomerSchema: Schema<ICustomer> = new Schema(
   {
     type: {
       type: String,
-      enum: ["individual", "company"],
-      default: "individual",
+      enum: ["per/orang", "warung"],
+      default: "per/orang",
       required: true,
     },
-    name: { type: String, required: true },
-    email: { type: String, sparse: true },
-    phone: { type: String, sparse: true },
-    address: { type: String },
-    note: { type: String },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
+
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+      lowercase: true,
+      default: undefined,
+      set: (v: string) => (v?.trim() === "" ? undefined : v),
+    },
+
+    phone: {
+      type: String,
+      trim: true,
+      default: undefined,
+      set: (v: string) => (v?.trim() === "" ? undefined : v),
+    },
+
+    address: {
+      type: String,
+      default: undefined,
+    },
+
+    note: {
+      type: String,
+      default: undefined,
+    },
   },
   {
     collection: "customers",
