@@ -59,7 +59,7 @@ export const HeavyProvider = ({ children }: { children: ReactNode }) => {
   const [allData, setAllData] = useState<HeavyData[]>([]);
   const [selectedWeight, setSelectedWeight] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(500);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
