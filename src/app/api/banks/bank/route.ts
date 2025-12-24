@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const filter = searchParams.get("filter") || "";
-    const type = searchParams.get("type"); // cash | bank
+    const type = searchParams.get("type");
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const skip = (page - 1) * pageSize;
@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
     getUserIdFromReq(req);
 
     const { type, name, account_name, account_number, note } = await req.json();
-
     if (!type || !name) throw new Error("Type and name are required");
 
     const bank = await createBank({
@@ -68,9 +67,11 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
+    if (!id) throw new Error("ID is required");
+
     const { type, name, account_name, account_number, note } = await req.json();
 
-    if (!id || !name) throw new Error("ID and name are required");
+    if (!name) throw new Error("Name is required");
 
     const updated = await updateBank(id, {
       type,
