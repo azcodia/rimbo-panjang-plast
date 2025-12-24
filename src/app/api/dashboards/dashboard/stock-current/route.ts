@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const skip = (page - 1) * pageSize;
 
-    const query: any = { quantity: { $gt: 0 } };
+    const query: any = {};
     if (color_id) query.color_id = color_id;
     if (size_id) query.size_id = size_id;
     if (heavy_id) query.heavy_id = heavy_id;
