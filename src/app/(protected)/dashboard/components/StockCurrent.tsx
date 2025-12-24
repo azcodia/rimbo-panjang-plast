@@ -70,7 +70,7 @@ export default function StockCurrent() {
           if (row.quantity === 0)
             return <span className="text-danger">❌ Habis</span>;
           if (row.quantity < threshold)
-            return <span className="text-warning">⚠ Menipis</span>;
+            return <span className="text-orange-400">⚠ Menipis</span>;
           return <span className="text-success-light">✅ Aman</span>;
         },
       },
