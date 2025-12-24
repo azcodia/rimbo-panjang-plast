@@ -70,7 +70,7 @@ export const HeavyProvider = ({ children }: { children: ReactNode }) => {
   const columns = [
     {
       key: "weight",
-      label: "Weight",
+      label: "Berat",
       render: (_value: any, row: { weight: any }) =>
         `${formatNumber(row.weight)} gram`,
     },

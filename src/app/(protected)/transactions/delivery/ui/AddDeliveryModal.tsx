@@ -137,7 +137,7 @@ export default function AddDeliveryModal({
 
   return (
     <BaseModal
-      title="Add Delivery"
+      title="Tambah Penjualan"
       isOpen={isOpen}
       onClose={onClose}
       size={size}
@@ -182,7 +182,7 @@ export default function AddDeliveryModal({
 
                       <Button
                         type="button"
-                        text="Add Item"
+                        text="Tambah Item"
                         onClick={() =>
                           push({
                             colorId: "",
@@ -201,10 +201,10 @@ export default function AddDeliveryModal({
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button type="submit" text="Save" loading={isSubmitting} />
+              <Button type="submit" text="Simpan" loading={isSubmitting} />
               <Button
                 type="button"
-                text="Cancel"
+                text="Tutup"
                 onClick={onClose}
                 className="bg-gray-200 text-black hover:bg-gray-300"
               />

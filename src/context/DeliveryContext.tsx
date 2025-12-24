@@ -109,7 +109,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
       label: "Tanggal Transaksi",
       render: (_value: any, row: DeliveryData) => formatDate(row.input_date),
     },
-    { key: "code", label: "Code" },
+    { key: "code", label: "No Transaksi" },
     {
       key: "customer_id",
       label: "Nama Pelanggan",

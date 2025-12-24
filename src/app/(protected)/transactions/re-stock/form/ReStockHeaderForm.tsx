@@ -25,28 +25,28 @@ export default function ReStockHeaderForm({
   return (
     <div className="flex flex-col gap-4">
       <Input
-        label="ReStock Code"
-        placeholder="Enter code"
+        label="No Transaksi"
+        placeholder="Isi No Transaksi"
         value={values.code}
         onChange={(val) => setFieldValue("code", val)}
         error={touched.code ? errors.code : undefined}
       />
       <Input
-        label="Note"
-        placeholder="Enter note"
+        label="Catatan *"
+        placeholder="Isi Catatan"
         value={values.note}
         onChange={(val) => setFieldValue("note", val)}
         error={touched.note ? errors.note : undefined}
       />
       <Textarea
-        label="Description"
-        placeholder="Enter description"
+        label="Keterangan *"
+        placeholder="Isi Keterangan"
         value={values.description}
         onChange={(val) => setFieldValue("description", val)}
         error={touched.description ? errors.description : undefined}
       />
       <DatePicker
-        label="Input Date"
+        label="Tanggal Transaksi"
         value={values.inputDate}
         onChange={(val) => setFieldValue("inputDate", val)}
         error={touched.inputDate ? errors.inputDate : undefined}

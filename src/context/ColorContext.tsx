@@ -66,7 +66,7 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const columns = [{ key: "color", label: "Color" }];
+  const columns = [{ key: "color", label: "Warna" }];
 
   const fetchData = useCallback(
     async (filter: string = filterValue, pageNum: number = page) => {

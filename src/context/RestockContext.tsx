@@ -74,18 +74,17 @@ export const ReStockProvider = ({ children }: { children: ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns = [
-    { key: "code", label: "Code" },
-    { key: "note", label: "Note" },
-    { key: "description", label: "Description" },
+    { key: "code", label: "No Transaksi" },
+    { key: "note", label: "Catatan" },
+    { key: "description", label: "Keterangan" },
     {
       key: "items",
-      label: "Items",
-      render: (_value: any, row: ReStockData) =>
-        row.items.map((i) => `Qty: ${formatNumber(i.quantity)}`).join(", "),
+      label: "Total Items",
+      render: (_value: any, row: ReStockData) => `${row.items.length} items`,
     },
     {
       key: "input_date",
-      label: "Tanggal Input",
+      label: "Tanggal Transaksi",
       render: (_value: any, row: ReStockData) => formatDate(row.input_date),
     },
   ];

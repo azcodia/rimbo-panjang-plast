@@ -80,7 +80,7 @@ export default function AddStockModal({
         {({ values, errors, touched, setFieldValue, isSubmitting }) => (
           <Form className="flex flex-col gap-4">
             <Select
-              label="Color"
+              label="Warna"
               value={values.colorId}
               onChange={async (val) => {
                 setFieldValue("colorId", val);
@@ -93,7 +93,7 @@ export default function AddStockModal({
             />
 
             <Select
-              label="Size"
+              label="Ukuran"
               value={values.sizeId}
               onChange={(val) => setFieldValue("sizeId", val)}
               options={filteredSizes.map((s) => ({
@@ -104,7 +104,7 @@ export default function AddStockModal({
             />
 
             <Select
-              label="Heavy"
+              label="Berat"
               value={values.heavyId}
               onChange={(val) => setFieldValue("heavyId", val)}
               options={heavies.filter((h) => h.value !== "")}
@@ -112,7 +112,7 @@ export default function AddStockModal({
             />
 
             <DatePicker
-              label="Input Date"
+              label="Tanggal Input"
               value={values.inputDate}
               onChange={(val) => setFieldValue("inputDate", val)}
               error={touched.inputDate ? errors.inputDate : undefined}
@@ -127,10 +127,10 @@ export default function AddStockModal({
             />
 
             <div className="flex justify-end gap-2 mt-2">
-              <Button type="submit" text="Save" loading={isSubmitting} />
+              <Button type="submit" text="Simpan" loading={isSubmitting} />
               <Button
                 type="button"
-                text="Cancel"
+                text="Tutup"
                 onClick={onClose}
                 className="bg-gray-200 text-black hover:bg-gray-300"
               />

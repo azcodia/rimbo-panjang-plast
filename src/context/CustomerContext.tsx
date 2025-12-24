@@ -78,10 +78,10 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
 
   const columns = [
     { key: "type", label: "Type" },
-    { key: "name", label: "Name" },
+    { key: "name", label: "Nama Pelanggan" },
     { key: "email", label: "Email" },
-    { key: "phone", label: "Phone" },
-    { key: "address", label: "Address" },
+    { key: "phone", label: "No Telepon" },
+    { key: "address", label: "Alamat" },
   ];
 
   const fetchData = useCallback(

@@ -48,15 +48,15 @@ export default function AddDeliveryItemForm({
           <h4 className="font-semibold mb-1">Item {index + 1}</h4>
           <div className="flex flex-wrap gap-4 text-sm text-[#1f1f1f]">
             <span>
-              <span className="font-medium">Color:</span>{" "}
+              <span className="font-medium">Warna:</span>{" "}
               {colorMap[item.colorId] || "-"}
             </span>
             <span>
-              <span className="font-medium">Size:</span>{" "}
+              <span className="font-medium">Ukuran:</span>{" "}
               {`${sizeMap[item.sizeId] || "-"} cm`}
             </span>
             <span>
-              <span className="font-medium">Heavy:</span>{" "}
+              <span className="font-medium">Berat:</span>{" "}
               {heavyMap[item.heavyId]
                 ? `${formatNumber(heavyMap[item.heavyId])} gram`
                 : "-"}
@@ -66,15 +66,15 @@ export default function AddDeliveryItemForm({
               {formatNumber(item.quantity) || 0}
             </span>
             <span>
-              <span className="font-medium">Unit Price:</span>{" "}
+              <span className="font-medium">harga satuan:</span>{" "}
               {formatRp(item.unitPrice) || 0}
             </span>
             <span>
-              <span className="font-medium">Discount:</span>{" "}
+              <span className="font-medium">Diskon</span>{" "}
               {formatRp(item.discount) || 0}
             </span>
             <span>
-              <span className="font-medium">Total Price:</span>{" "}
+              <span className="font-medium">Total Harga:</span>{" "}
               {formatRp(totalPrice)}
             </span>
           </div>
@@ -106,7 +106,6 @@ export default function AddDeliveryItemForm({
         </div>
       </div>
 
-      {/* Expandable Form */}
       <div
         className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${
           openIndex === index ? "max-h-[1000px]" : "max-h-0"
@@ -139,8 +138,8 @@ export default function AddDeliveryItemForm({
           />
 
           <CurrencyInput
-            label="Unit Price (Rp)"
-            placeholder="Enter unit price"
+            label="Harga Satuan"
+            placeholder="Isi Harga Satuan"
             value={item.unitPrice}
             onChange={(val) =>
               setFieldValue(
@@ -151,7 +150,7 @@ export default function AddDeliveryItemForm({
           />
 
           <CurrencyInput
-            label="Discount (Rp)"
+            label="Diskon"
             placeholder="Enter discount"
             value={item.discount}
             onChange={(val) =>
@@ -163,7 +162,7 @@ export default function AddDeliveryItemForm({
           />
 
           <CurrencyInput
-            label="Total Price"
+            label="Total Harga"
             placeholder="Total Price"
             value={totalPrice}
             disabled

@@ -44,7 +44,7 @@ export default function DeliveryPage() {
         onActionClick={handleActionClick}
         visibleActions={["paid", "show", "delete"]}
         buttons={[
-          { text: "Tambah Delivery", onClick: () => setIsModalOpen(true) },
+          { text: "Tambah Penjualan", onClick: () => setIsModalOpen(true) },
         ]}
       />
       <AddDeliveryModal

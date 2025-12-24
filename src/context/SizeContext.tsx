@@ -66,10 +66,10 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   const [searchValue, setSearchValue] = useState("");
 
   const columns = [
-    { key: "color_name", label: "Color" },
+    { key: "color_name", label: "Warna" },
     {
       key: "size",
-      label: "Size",
+      label: "Ukuran",
       render: (_value: any, row: { size: number }) => `${row.size} cm`,
     },
   ];

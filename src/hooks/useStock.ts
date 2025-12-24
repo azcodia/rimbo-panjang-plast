@@ -37,25 +37,25 @@ export const useStock = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const columns = [
-    { key: "color", label: "Color" },
+    { key: "color", label: "Warna" },
     {
       key: "size",
-      label: "Size",
+      label: "Ukuran",
       render: (_v: any, row: any) => `${row.size} cm`,
     },
     {
       key: "heavy",
-      label: "Heavy",
+      label: "Berat",
       render: (_v: any, row: any) => `${row.heavy} gram`,
     },
     {
       key: "quantity",
-      label: "Stock",
+      label: "Stok Saat ini",
       render: (_v: any, row: any) => formatNumber(row.quantity || 0),
     },
     {
       key: "input_date",
-      label: "Input Date",
+      label: "Tanggal Input",
       render: (_v: any, row: any) => formatDate(row.input_date),
     },
   ];

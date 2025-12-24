@@ -28,17 +28,17 @@ export default function StockAlert() {
     () => [
       {
         key: "color",
-        label: "Color",
+        label: "Warna",
         render: (value: string) => value || "-",
       },
       {
         key: "size",
-        label: "Size",
+        label: "Ukuran",
         render: (_: unknown, row: LowStockItem) => `${row.size} cm`,
       },
       {
         key: "heavy",
-        label: "Weight",
+        label: "Berat",
         render: (_: unknown, row: LowStockItem) => `${row.heavy} gram`,
       },
       {
@@ -90,7 +90,6 @@ export default function StockAlert() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Quick Action */}
       <div className="bg-white shadow rounded p-4">
         <h3 className="text-lg font-semibold mb-3">Quick Action</h3>
 
@@ -124,7 +123,6 @@ export default function StockAlert() {
         </div>
       </div>
 
-      {/* Stock Alert */}
       <div className="bg-white shadow rounded p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold">Stok Menipis</h3>

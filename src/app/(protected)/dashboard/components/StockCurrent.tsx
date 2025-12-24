@@ -46,15 +46,15 @@ export default function StockCurrent() {
 
   const columns = useMemo(
     () => [
-      { key: "color", label: "Color" },
+      { key: "color", label: "Warna" },
       {
         key: "size",
-        label: "Size",
+        label: "Ukuran",
         render: (_: unknown, row: StockCurrentData) => `${row.size} cm`,
       },
       {
         key: "heavy",
-        label: "Heavy",
+        label: "Berat",
         render: (_: unknown, row: StockCurrentData) => `${row.heavy} gram`,
       },
       {

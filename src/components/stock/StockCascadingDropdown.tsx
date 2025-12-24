@@ -50,7 +50,7 @@ export default function StockCascadingDropdown({
 
     const filteredSizes = stocks
       .filter((s) => s.color_id === value.colorId && s.size !== undefined)
-      .map((s) => ({ value: s.size_id, label: `${s.size} cm` })); // tambahkan 'cm'
+      .map((s) => ({ value: s.size_id, label: `${s.size} cm` }));
 
     const uniqueSizes = Array.from(
       new Map(filteredSizes.map((s) => [s.value, s])).values()
@@ -73,7 +73,7 @@ export default function StockCascadingDropdown({
 
     const filteredHeavies = stocks
       .filter((s) => s.color_id === value.colorId && s.size_id === value.sizeId)
-      .map((s) => ({ value: s.heavy_id, label: `${s.heavy} g` })); // tambahkan 'g'
+      .map((s) => ({ value: s.heavy_id, label: `${s.heavy} g` }));
 
     const uniqueHeavies = Array.from(
       new Map(filteredHeavies.map((h) => [h.value, h])).values()
@@ -105,14 +105,14 @@ export default function StockCascadingDropdown({
   return (
     <div className="flex flex-col gap-2">
       <Select
-        label="Color"
+        label="Warna"
         value={value.colorId}
         onChange={(val) => onChange({ colorId: val, sizeId: "", heavyId: "" })}
         options={colors}
       />
 
       <Select
-        label="Size"
+        label="Ukuran"
         value={value.sizeId}
         onChange={(val) => onChange({ ...value, sizeId: val, heavyId: "" })}
         options={sizes}
@@ -120,7 +120,7 @@ export default function StockCascadingDropdown({
       />
 
       <Select
-        label="Heavy"
+        label="Berat"
         value={value.heavyId}
         onChange={(val) => onChange({ ...value, heavyId: val })}
         options={heavies}
@@ -128,7 +128,7 @@ export default function StockCascadingDropdown({
       />
 
       <ThousandInput
-        label="Stock Saat Ini"
+        label="Stok Saat ini"
         value={currentStock.toString()}
         onChange={() => undefined}
         disabled={true}

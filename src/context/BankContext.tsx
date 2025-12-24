@@ -77,9 +77,9 @@ export const BankProvider = ({ children }: { children: ReactNode }) => {
 
   const columns = [
     { key: "type", label: "Type" },
-    { key: "name", label: "Name" },
-    { key: "account_name", label: "Account Name" },
-    { key: "account_number", label: "Account Number" },
+    { key: "name", label: "Nama" },
+    { key: "account_name", label: "Nama Rekening" },
+    { key: "account_number", label: "No Rekening" },
   ];
 
   const fetchData = useCallback(

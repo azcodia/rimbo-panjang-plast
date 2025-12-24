@@ -39,15 +39,15 @@ export const useDeliveryByCode = (code: string) => {
   const [total, setTotal] = useState(0);
 
   const columns = [
-    { key: "color", label: "Color" },
+    { key: "color", label: "Warna" },
     {
       key: "size",
-      label: "Size",
+      label: "Ukuran",
       render: (_v: any, row: DeliveryItem) => `${row.size} cm`,
     },
     {
       key: "weight",
-      label: "Weight",
+      label: "Berat",
       render: (_v: any, row: DeliveryItem) => `${row.weight} g`,
     },
     {
@@ -57,17 +57,17 @@ export const useDeliveryByCode = (code: string) => {
     },
     {
       key: "unit_price",
-      label: "Unit Price",
+      label: "Harga Satuan",
       render: (_v: any, row: DeliveryItem) => formatRp(row.unit_price),
     },
     {
       key: "discount_per_item",
-      label: "Discount",
+      label: "Diskon",
       render: (_v: any, row: DeliveryItem) => formatRp(row.discount_per_item),
     },
     {
       key: "total_price",
-      label: "Total Price",
+      label: "Total Harga",
       render: (_v: any, row: DeliveryItem) => formatRp(row.total_price),
     },
   ];
