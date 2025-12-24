@@ -61,7 +61,7 @@ export const SizeProvider = ({ children }: { children: ReactNode }) => {
   const [filteredSizes, setFilteredSizes] = useState<SizeData[]>([]);
 
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(500);
   const [total, setTotal] = useState(0);
   const [searchValue, setSearchValue] = useState("");
 
