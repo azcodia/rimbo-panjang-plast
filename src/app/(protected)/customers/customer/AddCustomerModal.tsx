@@ -7,6 +7,7 @@ import BaseModal from "@/components/ui/modals/modal";
 import { useCustomerContext } from "@/context/CustomerContext";
 import { CustomerSchema } from "@/lib/schemas/CustomerSchema";
 import Select from "@/components/ui/Select";
+import Textarea from "@/components/ui/Textarea";
 
 interface AddCustomerModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ interface AddCustomerModalProps {
 }
 
 export interface CustomerFormValues {
-  type: "individual" | "company";
+  type: "per/orang" | "warung";
   name: string;
   email?: string;
   phone?: string;
@@ -25,7 +26,7 @@ export interface CustomerFormValues {
 }
 
 const initialValues: CustomerFormValues = {
-  type: "individual",
+  type: "per/orang",
   name: "",
   email: "",
   phone: "",
@@ -72,50 +73,50 @@ export default function AddCustomerModal({
         {({ values, errors, touched, handleChange, isSubmitting }) => (
           <Form className="flex flex-col gap-4">
             <Select
-              label="Customer Type"
+              label="Type Pelanggan"
               value={values.type}
               onChange={handleChange("type")}
               error={touched.type ? errors.type : undefined}
               options={[
-                { label: "Perorangan", value: "individual" },
-                { label: "Pabrik / Perusahaan", value: "company" },
+                { label: "Per/orang", value: "per/orang" },
+                { label: "Warung", value: "warung" },
               ]}
             />
             <Input
-              label="Name"
-              placeholder="Enter customer name"
+              label="Nama Pelanggan"
+              placeholder="Isi Nama Customer"
               value={values.name}
               onChange={handleChange("name")}
               error={touched.name ? errors.name : undefined}
             />
 
             <Input
-              label="Email"
-              placeholder="Enter email"
+              label="Email *"
+              placeholder="Isi Email"
               value={values.email || ""}
               onChange={handleChange("email")}
               error={touched.email ? errors.email : undefined}
             />
 
             <Input
-              label="Phone"
-              placeholder="Enter phone number"
+              label="No Telepon *"
+              placeholder="Isi No Telepon"
               value={values.phone || ""}
               onChange={handleChange("phone")}
               error={touched.phone ? errors.phone : undefined}
             />
 
             <Input
-              label="Address"
-              placeholder="Enter address"
+              label="Alamat *"
+              placeholder="Isi Alamat"
               value={values.address || ""}
               onChange={handleChange("address")}
               error={touched.address ? errors.address : undefined}
             />
 
-            <Input
-              label="Note"
-              placeholder="Additional note"
+            <Textarea
+              label="Catatan *"
+              placeholder="isi Catatan"
               value={values.note || ""}
               onChange={handleChange("note")}
               error={touched.note ? errors.note : undefined}
