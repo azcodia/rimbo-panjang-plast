@@ -17,10 +17,25 @@ export const createBank = async (bankData: {
   account_number?: string;
   note?: string;
 }) => {
-  const exists = await BankModel.findOne({ name: bankData.name });
-  if (exists) throw new Error("Bank name already exists");
+  const nameTrimmed = bankData.name.trim();
+  const accountNumberTrimmed = bankData.account_number?.trim();
 
-  return BankModel.create(bankData);
+  if (nameTrimmed && accountNumberTrimmed) {
+    const exists = await BankModel.findOne({
+      name: nameTrimmed,
+      account_number: accountNumberTrimmed,
+    });
+
+    if (exists) {
+      throw new Error("This account number already exists for this bank");
+    }
+  }
+
+  return BankModel.create({
+    ...bankData,
+    name: nameTrimmed,
+    account_number: accountNumberTrimmed,
+  });
 };
 
 export const updateBank = async (
@@ -33,14 +48,30 @@ export const updateBank = async (
     note?: string;
   }
 ) => {
-  const exists = await BankModel.findOne({
-    _id: { $ne: id },
-    name: bankData.name,
-  });
+  const nameTrimmed = bankData.name.trim();
+  const accountNumberTrimmed = bankData.account_number?.trim();
 
-  if (exists) throw new Error("Bank name already exists");
+  if (nameTrimmed && accountNumberTrimmed) {
+    const exists = await BankModel.findOne({
+      _id: { $ne: id },
+      name: nameTrimmed,
+      account_number: accountNumberTrimmed,
+    });
 
-  return BankModel.findByIdAndUpdate(id, bankData, { new: true });
+    if (exists) {
+      throw new Error("This account number already exists for this bank");
+    }
+  }
+
+  return BankModel.findByIdAndUpdate(
+    id,
+    {
+      ...bankData,
+      name: nameTrimmed,
+      account_number: accountNumberTrimmed,
+    },
+    { new: true }
+  );
 };
 
 export const deleteBank = async (id: string) => {
