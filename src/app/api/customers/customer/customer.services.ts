@@ -5,29 +5,40 @@ export const getCustomers = async (query: any, skip: number, limit: number) => {
   const data = await CustomerModel.find(query)
     .skip(skip)
     .limit(limit)
-    .sort({ created_at: -1 });
+    .sort({ type: 1, created_at: -1 });
 
   return { total, data };
 };
 
 export const createCustomer = async (customerData: {
   name: string;
-  type?: "individual" | "company";
+  type?: "per/orang" | "warung";
   email?: string;
   phone?: string;
   address?: string;
   note?: string;
 }) => {
+  if (customerData.email?.trim() === "") {
+    delete customerData.email;
+  }
+
+  if (customerData.phone?.trim() === "") {
+    delete customerData.phone;
+  }
+
   if (customerData.email || customerData.phone) {
+    const orConditions = [];
+
+    if (customerData.email) orConditions.push({ email: customerData.email });
+    if (customerData.phone) orConditions.push({ phone: customerData.phone });
+
     const exists = await CustomerModel.findOne({
-      $or: [
-        customerData.email ? { email: customerData.email } : {},
-        customerData.phone ? { phone: customerData.phone } : {},
-      ],
+      $or: orConditions,
     });
 
-    if (exists)
+    if (exists) {
       throw new Error("Customer with same email or phone already exists");
+    }
   }
 
   return CustomerModel.create(customerData);
@@ -37,7 +48,7 @@ export const updateCustomer = async (
   id: string,
   customerData: {
     name: string;
-    type?: "individual" | "company";
+    type?: "per/orang" | "warung";
     email?: string;
     phone?: string;
     address?: string;
