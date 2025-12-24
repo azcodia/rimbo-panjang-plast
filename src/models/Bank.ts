@@ -22,7 +22,6 @@ const BankSchema: Schema<IBank> = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     account_name: { type: String },
     account_number: { type: String },
@@ -37,7 +36,10 @@ const BankSchema: Schema<IBank> = new Schema(
   }
 );
 
-BankSchema.index({ name: 1 }, { unique: true });
+BankSchema.index(
+  { name: 1, account_number: 1 },
+  { unique: true, sparse: true }
+);
 
 const Bank: Model<IBank> =
   mongoose.models.Bank || mongoose.model<IBank>("Bank", BankSchema);
