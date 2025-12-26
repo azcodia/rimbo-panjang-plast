@@ -2,9 +2,9 @@
 
 import DashboardChart from "./components/DashboardChart/page";
 import DashboardSummary from "./components/DashboardSummary/page";
+import Inventory from "./components/Inventories/page";
 import RecentTransactions from "./components/RecentTransactions/page";
-import StockAlert from "./components/StockAlert/page";
-import StockCurrent from "./components/StockCurrent/page";
+import TopHighlights from "./components/TopHighlights/page";
 
 export default function DashboardPage() {
   const today = new Date();
@@ -16,8 +16,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 px-4 py-2">
       <DashboardSummary />
-      <StockAlert />
-      <StockCurrent />
+      <Inventory />
+      <TopHighlights />
       <DashboardChart
         defaultStartDate={formatDate(priorDate)}
         defaultEndDate={formatDate(today)}

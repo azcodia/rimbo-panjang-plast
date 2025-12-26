@@ -3,23 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import MiniTable from "@/components/table/MiniTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+import { threshold } from "@/lib/constanta";
 import { formatNumber } from "@/lib/formatNumber";
-
-import { fetchTopSelling } from "../../services/topSelling.service";
 import { groupAndSortStock } from "@/lib/groupedStock";
-import { formatWeight } from "@/lib/formatWeight";
 
-export interface TopSellingItem {
-  color_id: string;
-  color: string;
-  size: string | number;
-  heavy: string | number;
-  total_qty: number;
-  total_transactions: number;
-}
+import {
+  fetchCurrentStock,
+  StockCurrentData,
+} from "../../services/stockCurrent.service";
 
-export default function StockCurrentRight() {
-  const [items, setItems] = useState<TopSellingItem[]>([]);
+export default function InStockTable() {
+  const [stock, setStock] = useState<StockCurrentData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
@@ -28,25 +23,25 @@ export default function StockCurrentRight() {
 
   const pageSize = 5;
 
-  const loadTopSelling = async () => {
+  const loadStock = async () => {
     setLoading(true);
     try {
-      const result = await fetchTopSelling(page, pageSize);
-      setItems(result.data as any);
+      const result = await fetchCurrentStock(page, pageSize);
+      setStock(result.data);
       setTotalDataCount(result.total);
       setTotalPages(Math.ceil(result.total / pageSize));
     } catch (error) {
-      console.error("Failed to fetch top selling:", error);
+      console.error("Failed to fetch stock:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadTopSelling();
+    loadStock();
   }, [page]);
 
-  const tableData = useMemo(() => groupAndSortStock(items), [items]);
+  const groupedData = useMemo(() => groupAndSortStock(stock), [stock]);
 
   const columns = useMemo(
     () => [
@@ -54,28 +49,34 @@ export default function StockCurrentRight() {
       {
         key: "size",
         label: "Ukuran",
-        render: (_: unknown, row: TopSellingItem) => `${row.size} cm`,
+        render: (_: unknown, row: StockCurrentData) => `${row.size} cm`,
       },
       {
         key: "heavy",
         label: "Berat",
-        render: (_: unknown, row: TopSellingItem) => `${row.heavy} gram`,
+        render: (_: unknown, row: StockCurrentData) => `${row.heavy} gram`,
       },
       {
-        key: "total_qty_pcs",
-        label: "Satuan Pcs",
-        render: (_: unknown, row: TopSellingItem) =>
-          formatNumber(row.total_qty),
+        key: "quantity",
+        label: "Quantity",
+        render: (_: unknown, row: StockCurrentData) =>
+          formatNumber(row.quantity ?? 0),
       },
       {
-        key: "total_qty_weight",
-        label: "Terjual",
-        render: (_: unknown, row: TopSellingItem) =>
-          formatWeight(row.total_qty, row.heavy),
+        key: "status",
+        label: "Status",
+        render: (_: unknown, row: StockCurrentData) => {
+          if (row.quantity === 0)
+            return <span className="text-danger">❌ Habis</span>;
+          if (row.quantity < threshold)
+            return <span className="text-orange-400">⚠ Menipis</span>;
+          return <span className="text-success-light">✅ Aman</span>;
+        },
       },
     ],
     []
   );
+
   if (loading) {
     return (
       <div className="bg-white flex items-center justify-center shadow rounded p-4 text-gray-500 h-80">
@@ -87,17 +88,17 @@ export default function StockCurrentRight() {
   return (
     <div className="flex flex-col bg-white shadow rounded p-4 h-80 overflow-y-auto scrollbar-auto-hide">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">5 Produk Terpopuler</h3>
+        <h3 className="text-lg font-semibold">Stok Saat Ini</h3>
       </div>
 
       <MiniTable
         columns={columns as any}
-        data={tableData}
+        data={groupedData}
         page={page}
         totalPages={totalPages}
         totalDataCount={totalDataCount}
         loading={false}
-        emptyMessage="Belum ada penjualan"
+        emptyMessage="Tidak ada stock saat ini"
         onPageChange={setPage}
         className="mt-4"
       />
