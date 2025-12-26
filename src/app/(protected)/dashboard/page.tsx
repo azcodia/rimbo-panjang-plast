@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
   return (
-    <div className="space-y-8 px-4 py-2">
+    <div className="space-y-3.5 px-4 py-2">
       <DashboardSummary />
       <Inventory />
       <TopHighlights />

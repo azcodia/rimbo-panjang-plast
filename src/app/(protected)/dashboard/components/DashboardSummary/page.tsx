@@ -44,14 +44,14 @@ export default function DashboardSummary() {
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-2">
       <SummaryCard
         title="Total Restok"
         value={formatNumber(data.restock.total_qty)}
         subtitle={`${data.restock.total_transactions} transaksi`}
       />
       <SummaryCard
-        title="Total Pengiriman"
+        title="Total Penjualan Per Item"
         value={formatNumber(data.delivery.total_qty)}
         subtitle={`${data.delivery.total_transactions} transaksi`}
       />
