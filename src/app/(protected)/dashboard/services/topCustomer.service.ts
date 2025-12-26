@@ -14,7 +14,7 @@ export const fetchTopCustomer = async (
   pageSize: number
 ): Promise<TopCustomerResponse> => {
   const res = await fetch(
-    `/api/dashboards/dashboard/top-customer?limit=${pageSize}`
+    `/api/dashboards/dashboard/top-customer?page=${page}&pageSize=${pageSize}`
   );
   const json = await res.json();
 
@@ -23,7 +23,7 @@ export const fetchTopCustomer = async (
   }
 
   return {
-    total: json.data.length,
+    total: json.total,
     data: json.data,
   };
 };
