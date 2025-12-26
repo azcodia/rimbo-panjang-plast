@@ -1,6 +1,6 @@
 "use client";
 
-import TopCustomers from "./TopCustomerss";
+import TopCustomers from "./TopCustomers";
 import TopProducts from "./TopProducts";
 
 export default function TopHighlights() {
