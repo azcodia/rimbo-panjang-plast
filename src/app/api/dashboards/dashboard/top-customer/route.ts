@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
-import { getTopCustomersByWeight } from "./top-customer.services";
+import {
+  getAllCustomersWithWeight,
+  getTopCustomersByWeight,
+} from "./top-customer.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
   try {
     const { searchParams } = new URL(req.url);
-    const limit = parseInt(searchParams.get("limit") || "5", 10);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
 
-    const result = await getTopCustomersByWeight({ limit });
+    const result = await getAllCustomersWithWeight({ page, pageSize });
 
-    return NextResponse.json({
-      success: true,
-      data: result,
-    });
+    return NextResponse.json({ success: true, ...result });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, message: err.message || "Server error" },
