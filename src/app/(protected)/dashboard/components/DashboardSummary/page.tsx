@@ -2,7 +2,7 @@
 import SummaryCard from "@/components/cards/summaryCard";
 import { formatRp } from "@/lib/formatRp";
 import { useEffect, useState } from "react";
-import { fetchSummary } from "../services/summaryService";
+import { fetchSummary } from "../../services/summaryService";
 import { formatNumber } from "@/lib/formatNumber";
 
 interface SummaryTransaction {
@@ -15,11 +15,16 @@ interface SummarySales {
   total_transactions: number;
 }
 
+interface SummaryReceivable {
+  total: number;
+  unpaid_deliveries: number;
+}
+
 interface SummaryData {
-  total_stock: number;
   restock: SummaryTransaction;
   delivery: SummaryTransaction;
   sales: SummarySales;
+  receivable: SummaryReceivable;
 }
 
 export default function DashboardSummary() {
@@ -40,7 +45,6 @@ export default function DashboardSummary() {
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      <SummaryCard title="Total Stok" value={formatNumber(data.total_stock)} />
       <SummaryCard
         title="Total Restok"
         value={formatNumber(data.restock.total_qty)}
@@ -52,8 +56,13 @@ export default function DashboardSummary() {
         subtitle={`${data.delivery.total_transactions} transaksi`}
       />
       <SummaryCard
-        title="Total Penjualan"
+        title="Total Pembayaran"
         value={formatRp(data.sales.total_amount)}
+      />
+      <SummaryCard
+        title="Total Hutang"
+        value={formatRp(data.receivable.total)}
+        subtitle={`${data.receivable.unpaid_deliveries} belum lunas`}
       />
     </div>
   );

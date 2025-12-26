@@ -1,10 +1,10 @@
 "use client";
 
-import DashboardSummary from "./components/DashboardSummary";
-import DashboardChart from "./components/DashboardChart";
-import RecentTransactions from "./components/RecentTransactions";
-import StockAlert from "./components/StockAlert";
-import StockCurrent from "./components/StockCurrent";
+import DashboardChart from "./components/DashboardChart/page";
+import DashboardSummary from "./components/DashboardSummary/page";
+import RecentTransactions from "./components/RecentTransactions/page";
+import StockAlert from "./components/StockAlert/page";
+import StockCurrent from "./components/StockCurrent/page";
 
 export default function DashboardPage() {
   const today = new Date();

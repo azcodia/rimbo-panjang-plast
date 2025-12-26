@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import {
   fetchRecentTransactions,
   RecentTransaction,
-} from "../services/recentTransactionService";
+} from "../../services/recentTransactionService";
 
 export default function RecentTransactions() {
   const [data, setData] = useState<TableRow<RecentTransaction>[]>([]);

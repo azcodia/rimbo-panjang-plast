@@ -13,7 +13,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { fetchChartData } from "../services/chartService";
+import { fetchChartData } from "../../services/chartService";
 import { formatRp } from "@/lib/formatRp";
 import { formatNumber } from "@/lib/formatNumber";
 import Button from "@/components/ui/Button";

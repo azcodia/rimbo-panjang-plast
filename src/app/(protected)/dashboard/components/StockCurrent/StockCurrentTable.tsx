@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-
 import MiniTable from "@/components/table/MiniTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -12,9 +11,9 @@ import { groupAndSortStock } from "@/lib/groupedStock";
 import {
   fetchCurrentStock,
   StockCurrentData,
-} from "../services/stockCurrent.service";
+} from "../../services/stockCurrent.service";
 
-export default function StockCurrent() {
+export default function StockCurrentTable() {
   const [stock, setStock] = useState<StockCurrentData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,44 +79,29 @@ export default function StockCurrent() {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 gap-4">
-        {[...Array(2)].map((_, i) => (
-          <div
-            key={i}
-            className="bg-white flex items-center justify-center shadow rounded p-4 text-gray-500 h-80"
-          >
-            <LoadingSpinner size={8} color="text-gray-500" />
-          </div>
-        ))}
+      <div className="bg-white flex items-center justify-center shadow rounded p-4 text-gray-500 h-80">
+        <LoadingSpinner size={8} color="text-gray-500" />
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Stock Table */}
-      <div className="flex flex-col bg-white shadow rounded p-4 h-80 overflow-y-auto scrollbar-auto-hide">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Stok Saat Ini</h3>
-        </div>
-
-        <MiniTable
-          columns={columns as any}
-          data={groupedData}
-          page={page}
-          totalPages={totalPages}
-          totalDataCount={totalDataCount}
-          loading={false}
-          emptyMessage="Tidak ada stock saat ini"
-          onPageChange={setPage}
-          className="mt-4"
-        />
+    <div className="flex flex-col bg-white shadow rounded p-4 h-80 overflow-y-auto scrollbar-auto-hide">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Stok Saat Ini</h3>
       </div>
 
-      {/* Right Card */}
-      <div className="bg-white shadow rounded p-4 flex items-center justify-center text-gray-400">
-        Comming Soon!!!
-      </div>
+      <MiniTable
+        columns={columns as any}
+        data={groupedData}
+        page={page}
+        totalPages={totalPages}
+        totalDataCount={totalDataCount}
+        loading={false}
+        emptyMessage="Tidak ada stock saat ini"
+        onPageChange={setPage}
+        className="mt-4"
+      />
     </div>
   );
 }

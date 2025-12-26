@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   fetchStockAlert,
   StockAlertResponse,
-} from "../services/stockAlertService";
+} from "../../services/stockAlertService";
 
 import { formatNumber } from "@/lib/formatNumber";
 import { threshold } from "@/lib/constanta";
