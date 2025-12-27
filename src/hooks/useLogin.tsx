@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { login as loginAction } from "@/store/slice/authSlice";
 import { useSnackbar } from "notistack";
@@ -13,7 +12,6 @@ export interface LoginValues {
 export const useLogin = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const dispatch = useDispatch();
 
   const handleLogin = async (

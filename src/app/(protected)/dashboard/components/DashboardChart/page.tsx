@@ -17,6 +17,7 @@ import { fetchChartData } from "../../services/chartService";
 import { formatRp } from "@/lib/formatRp";
 import { formatNumber } from "@/lib/formatNumber";
 import Button from "@/components/ui/Button";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 ChartJS.register(
   CategoryScale,
@@ -198,11 +199,7 @@ export default function DashboardChart({
         </div>
       </div>
 
-      {loading && (
-        <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
-        </div>
-      )}
+      {loading && <LoadingSpinner />}
 
       {error && <p className="text-red-500 mb-2">Error: {error}</p>}
 
