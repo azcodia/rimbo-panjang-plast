@@ -78,9 +78,17 @@ export default function MiniTable<T extends Record<string, any>>({
             key={col.key}
             className="px-3 py-2 text-xs text-gray-700 font-medium"
           >
-            {col.render
-              ? col.render(row.data[col.key], row.data)
-              : row.data[col.key]}
+            {col.key === "actions" ? (
+              <div className="flex justify-center items-center">
+                {col.render
+                  ? col.render(row.data[col.key], row.data)
+                  : row.data[col.key]}
+              </div>
+            ) : col.render ? (
+              col.render(row.data[col.key], row.data)
+            ) : (
+              row.data[col.key]
+            )}
           </td>
         ))}
       </tr>
@@ -97,7 +105,9 @@ export default function MiniTable<T extends Record<string, any>>({
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-3 py-2 font-medium text-left uppercase"
+                className={`px-3 py-2 font-medium uppercase ${
+                  col.key === "actions" ? "text-center" : "text-left"
+                }`}
               >
                 {col.label}
               </th>

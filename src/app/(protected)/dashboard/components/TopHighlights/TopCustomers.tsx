@@ -6,6 +6,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { formatWeight } from "@/lib/formatWeight";
 
 import { fetchTopCustomer } from "../../services/topCustomer.service";
+import { Eye } from "lucide-react";
 
 export interface TopCustomerData {
   customer_id: string;
@@ -68,6 +69,18 @@ export default function TopCustomers() {
         label: "Total Berat",
         render: (_: number, row: TopCustomerData) =>
           row.total_weight != null ? formatWeight(row.total_weight, 1) : "-",
+      },
+      {
+        key: "actions",
+        label: "Actions",
+        render: (_: number, row: TopCustomerData) => (
+          <Eye
+            onClick={() => console.log("Row", row.customer_id)}
+            className="cursor-pointer"
+            strokeWidth={2.2}
+            size={16}
+          />
+        ),
       },
     ],
     []
