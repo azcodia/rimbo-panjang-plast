@@ -32,7 +32,7 @@ interface ChartDataItem {
   date: string;
   in: number;
   out: number;
-  adjust: number;
+  total_price: number;
   sales: number;
 }
 
@@ -74,7 +74,7 @@ export default function DashboardChart({
     labels,
     datasets: [
       {
-        label: "Restock",
+        label: "Barang Masuk (Qty)",
         data: chartData.map((d) => d.in),
         borderColor: "#7bb927",
         backgroundColor: "#7bb927",
@@ -82,28 +82,40 @@ export default function DashboardChart({
         pointRadius: 5,
         pointHoverRadius: 7,
         pointHitRadius: 20,
+        yAxisID: "yQty",
       },
       {
-        label: "Pengiriman",
+        label: "Barang Keluar (Qty)",
         data: chartData.map((d) => d.out),
         borderColor: "#cd0f09",
         backgroundColor: "#cd0f09",
-
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
         pointHitRadius: 10,
+        yAxisID: "yQty",
       },
       {
-        label: "Penjualan (Rp)",
+        label: "Total Harga Barang (Rp)",
+        data: chartData.map((d) => d.total_price),
+        borderColor: "#8a2be2",
+        backgroundColor: "#8a2be2",
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointHitRadius: 10,
+        yAxisID: "yPrice",
+      },
+      {
+        label: "Uang Diterima (Rp)",
         data: chartData.map((d) => d.sales),
         borderColor: "#1a648a",
         backgroundColor: "#1a648a",
         tension: 0.3,
-        yAxisID: "y1",
         pointRadius: 5,
         pointHoverRadius: 7,
         pointHitRadius: 10,
+        yAxisID: "yPrice",
       },
     ],
   };
@@ -121,29 +133,31 @@ export default function DashboardChart({
         callbacks: {
           label: function (context: any) {
             const label = context.dataset.label || "";
-            const value =
-              context.dataset.label === "Penjualan (Rp)"
-                ? formatRp(context.raw)
-                : formatNumber(context.raw);
+            const value = label.includes("Rp")
+              ? formatRp(context.raw)
+              : formatNumber(context.raw);
             return `${label}: ${value}`;
           },
         },
       },
     },
     scales: {
-      x: { title: { display: true, text: "Tanggal" } },
-      y: {
+      x: { title: { display: true, text: "Tanggal Transaksi" } },
+      yQty: {
         type: "linear",
         display: true,
         position: "left",
-        title: { display: true, text: "Qty" },
+        title: { display: true, text: "Jumlah Barang (Qty)" },
       },
-      y1: {
+      yPrice: {
         type: "linear",
         display: true,
         position: "right",
         grid: { drawOnChartArea: false },
-        title: { display: true, text: "Penjualan (Rp)" },
+        title: { display: true, text: "Penjualan / Total Harga (Rp)" },
+        ticks: {
+          callback: (value: any) => formatRp(Number(value)),
+        },
       },
     },
   };
@@ -170,7 +184,6 @@ export default function DashboardChart({
             onClick={() => loadChart(startDate, endDate)}
             loading={loading}
             text={loading ? "Loading..." : "Filter"}
-            className=""
           />
           <Button
             type="button"
@@ -180,16 +193,19 @@ export default function DashboardChart({
               setEndDate(defaultEndDate);
               loadChart(defaultStartDate, defaultEndDate);
             }}
-            className=" bg-gray-200 text-black hover:bg-gray-300"
+            className="bg-gray-200 text-black hover:bg-gray-300"
           />
         </div>
       </div>
 
       {loading && (
         <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-          <p>Loading...</p>
+          <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
         </div>
       )}
+
+      {error && <p className="text-red-500 mb-2">Error: {error}</p>}
+
       <Line key={startDate + "-" + endDate} data={lineData} options={options} />
     </div>
   );
