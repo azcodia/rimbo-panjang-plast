@@ -4,6 +4,7 @@ import TableWithControls from "@/components/table/TableWithControls";
 import { useBankContext } from "@/context/BankContext";
 import AddBankModal from "./AddBankModal";
 import EditBankModal from "./EditBankModal";
+import PageContainer from "@/components/PageContainer";
 
 export default function BankPage() {
   const {
@@ -26,7 +27,7 @@ export default function BankPage() {
   } = useBankContext();
 
   return (
-    <div className="bg-white m-4 p-4">
+    <PageContainer title="Manajemen Bank">
       <TableWithControls
         columns={columns as any}
         data={data}
@@ -69,6 +70,6 @@ export default function BankPage() {
           }}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

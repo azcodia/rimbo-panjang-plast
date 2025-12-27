@@ -5,6 +5,7 @@ import { useDeliveryContext } from "@/context/DeliveryContext";
 import AddPaidModal from "./ui/AddPaidModal";
 import ShowDetailDeliveryModal from "./ui/ShowDeliveryModal";
 import AddDeliveryModal from "./ui/AddDeliveryModal";
+import PageContainer from "@/components/PageContainer";
 
 export default function DeliveryPage() {
   const {
@@ -29,7 +30,7 @@ export default function DeliveryPage() {
   } = useDeliveryContext();
 
   return (
-    <div className="bg-white m-4 p-4">
+    <PageContainer title="Manajemen Variabel Produk">
       <TableWithControls
         columns={columns as any}
         data={data}
@@ -73,6 +74,6 @@ export default function DeliveryPage() {
           onClose={() => setIsModalDetailDeliveryOpen(false)}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -6,6 +6,7 @@ import { useColorContext } from "@/context/ColorContext";
 import AddStockModal from "./AddStockModal";
 import EditStockModal from "./EditStockModal";
 import { useStock } from "@/hooks/useStock";
+import PageContainer from "@/components/PageContainer";
 
 export default function StockPage() {
   const {
@@ -28,7 +29,7 @@ export default function StockPage() {
   const [editingRow, setEditingRow] = useState<any>(null);
 
   return (
-    <div className="bg-white m-4 p-4">
+    <PageContainer title="Manajemen Stok">
       <TableWithControls
         columns={columns as any}
         selectOptions={selectOptions}
@@ -79,6 +80,6 @@ export default function StockPage() {
           onSaved={() => fetchData(filterValue, page)}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

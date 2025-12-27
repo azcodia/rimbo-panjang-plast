@@ -3,6 +3,7 @@
 import TableWithControls from "@/components/table/TableWithControls";
 import { useReStockContext } from "@/context/RestockContext";
 import AddReStockModal from "./AddReStockModal";
+import PageContainer from "@/components/PageContainer";
 
 export default function ReStockPage() {
   const {
@@ -22,7 +23,7 @@ export default function ReStockPage() {
   } = useReStockContext();
 
   return (
-    <div className="bg-white m-4 p-4">
+    <PageContainer title="Update Stok Barang">
       <TableWithControls
         columns={columns as any}
         data={data}
@@ -48,6 +49,6 @@ export default function ReStockPage() {
           fetchData();
         }}
       />
-    </div>
+    </PageContainer>
   );
 }

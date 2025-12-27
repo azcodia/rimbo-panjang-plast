@@ -4,6 +4,7 @@ import TableWithControls from "@/components/table/TableWithControls";
 import { useCustomerContext } from "@/context/CustomerContext";
 import AddCustomerModal from "./AddCustomerModal";
 import EditCustomerModal from "./EditCustomerModal";
+import PageContainer from "@/components/PageContainer";
 
 export default function CustomerPage() {
   const {
@@ -26,7 +27,7 @@ export default function CustomerPage() {
   } = useCustomerContext();
 
   return (
-    <div className="bg-white m-4 p-4">
+    <PageContainer title="Manajemen Pelanggan">
       <TableWithControls
         columns={columns as any}
         data={data}
@@ -70,6 +71,6 @@ export default function CustomerPage() {
           }}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

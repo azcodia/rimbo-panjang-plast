@@ -1,5 +1,6 @@
 "use client";
 
+import PageContainer from "@/components/PageContainer";
 import DashboardChart from "./components/DashboardChart/page";
 import DashboardSummary from "./components/DashboardSummary/page";
 import Inventory from "./components/Inventories/page";
@@ -14,7 +15,7 @@ export default function DashboardPage() {
   const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
   return (
-    <div className="space-y-3.5 px-4 py-2">
+    <PageContainer title="Manajemen Stok">
       <DashboardSummary />
       <Inventory />
       <TopHighlights />
@@ -23,6 +24,6 @@ export default function DashboardPage() {
         defaultEndDate={formatDate(today)}
       />
       <RecentTransactions />
-    </div>
+    </PageContainer>
   );
 }

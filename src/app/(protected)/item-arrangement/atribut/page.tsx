@@ -1,3 +1,4 @@
+import PageContainer from "@/components/PageContainer";
 import Tabs, { TabItem } from "@/components/tabs/Tabs";
 import { Palette, User, Weight } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -41,8 +42,8 @@ export default function GroupingPage() {
   ];
 
   return (
-    <div className="bg-grayd m-4">
+    <PageContainer title="Manajemen Variabel Produk">
       <Tabs tabs={tabs} defaultTabId="color" />
-    </div>
+    </PageContainer>
   );
 }
