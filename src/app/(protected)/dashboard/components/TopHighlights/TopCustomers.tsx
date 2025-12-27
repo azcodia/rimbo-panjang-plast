@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import MiniTable from "@/components/table/MiniTable";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { formatWeight } from "@/lib/formatWeight";
+import { useRouter } from "next/navigation";
 
 import { fetchTopCustomer } from "../../services/topCustomer.service";
 import { Eye } from "lucide-react";
@@ -15,6 +16,7 @@ export interface TopCustomerData {
 }
 
 export default function TopCustomers() {
+  const router = useRouter();
   const [items, setItems] = useState<TopCustomerData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,7 +77,13 @@ export default function TopCustomers() {
         label: "Actions",
         render: (_: number, row: TopCustomerData) => (
           <Eye
-            onClick={() => console.log("Row", row.customer_id)}
+            onClick={() =>
+              router.push(
+                `/dashboard/detail-customer?customerId=${
+                  row.customer_id
+                }&customerName=${encodeURIComponent(row.customer_name)}`
+              )
+            }
             className="cursor-pointer"
             strokeWidth={2.2}
             size={16}
