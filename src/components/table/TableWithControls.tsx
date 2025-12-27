@@ -58,7 +58,7 @@ export default function TableWithControls<T extends Record<string, any>>({
   onSelectChange,
 }: TableWithControlsProps<T>) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 bg-white rounded-md p-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
         <div className="sm:w-60 w-full flex gap-2">
           {showSearch && (
