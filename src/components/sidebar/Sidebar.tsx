@@ -29,7 +29,7 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="bg-grayd rounded-md m-4 flex-col hidden xl:block w-[280px] fixed left-18 top-0 bottom-0 overflow-y-auto scrollbar-auto-hide-permanent">
+    <aside className="bg-grayd rounded-md m-4 flex-col hidden xl:block w-[250px] fixed left-18 top-0 bottom-0 overflow-y-auto scrollbar-auto-hide-permanent">
       <div className="flex  pb-6 pt-4">
         <div className="border-b p-2.5">
           <Image src="/images/logo.png" width={180} height={125} alt="Logo" />
