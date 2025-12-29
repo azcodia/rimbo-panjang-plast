@@ -36,21 +36,22 @@ export default function CustomerSummaryLayout() {
     loadData();
   }, [customerId]);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-44">
-        <LoadingSpinner />
-      </div>
-    );
-  if (error) return <div className="p-4 text-center text-red-500">{error}</div>;
-  if (!summary) return <div className="p-4 text-center">No data found</div>;
-
   return (
     <div className="grid grid-cols-11 gap-4">
       <div className="col-span-3 flex flex-col gap-4">
-        <CustomerInfo customer={summary.customer} />
-        <FinanceStatus finance={summary.finance} />
+        <CustomerInfo
+          loading={loading}
+          error={error}
+          customer={summary?.customer}
+        />
+
+        <FinanceStatus
+          loading={loading}
+          error={error}
+          finance={summary?.finance}
+        />
       </div>
+
       <div className="col-span-8 bg-red-900">Right</div>
     </div>
   );
