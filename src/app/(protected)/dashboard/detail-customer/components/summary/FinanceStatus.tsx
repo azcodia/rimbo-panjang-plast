@@ -49,7 +49,7 @@ export default function FinanceStatus({
         <h3 className="text-base font-semibold">Status Keuangan</h3>
       </div>
 
-      <div className="space-y-1 px-2">
+      <div className="flex flex-col gap-4 text-sm px-2">
         {financeData.map((item) => (
           <div
             key={item.label}

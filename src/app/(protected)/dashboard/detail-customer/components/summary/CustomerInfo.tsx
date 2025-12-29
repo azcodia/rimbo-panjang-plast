@@ -49,11 +49,15 @@ export default function CustomerInfo({
         <h3 className="text-base font-semibold">Info Pelanggan</h3>
       </div>
 
-      <div className="flex flex-col gap-2 text-sm px-4">
+      <div className="flex flex-col gap-2.5 text-sm px-4">
         {customerInfo.map(({ icon: Icon, value }, index) => (
           <div key={index} className="flex items-start gap-2">
-            <Icon size={13} strokeWidth={2.2} className="mt-0.5 shrink-0" />
-            <span className="leading-relaxed text-xs">{value}</span>
+            <Icon
+              size={16}
+              strokeWidth={2.2}
+              className="flex-shrink-0 mt-[2px]"
+            />
+            <span className="leading-relaxed text-sm break-words">{value}</span>
           </div>
         ))}
       </div>

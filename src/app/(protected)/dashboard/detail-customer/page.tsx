@@ -1,8 +1,8 @@
 "use client";
 
 import PageContainer from "@/components/PageContainer";
-import CustomerSummaryLayout from "./components/summary/CustomerSummaryLayout";
 import { useSearchParams } from "next/navigation";
+import CustomerSummaryLayout from "./CustomerSummaryLayout";
 
 export default function DetailCustomerPage() {
   const searchParams = useSearchParams();
