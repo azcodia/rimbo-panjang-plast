@@ -55,7 +55,7 @@ export default function CustomerInfo({
             <Icon
               size={16}
               strokeWidth={2.2}
-              className="flex-shrink-0 mt-[2px]"
+              className="flex-shrink-0 mt-[4px]"
             />
             <span className="leading-relaxed text-sm break-words">{value}</span>
           </div>

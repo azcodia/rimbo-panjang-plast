@@ -140,7 +140,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
 
   return (
     <div className="bg-white p-4 rounded-md shadow-sm">
-      <h2 className="text-lg font-semibold mb-3">Tren Pembayaran Customer</h2>
+      <h2 className="text-lg font-semibold mb-3">Tren Pembayaran Pelanggan</h2>
 
       <div className="flex gap-2 items-center flex-wrap mb-4">
         <input
@@ -162,7 +162,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       {data && (
-        <div className="relative h-[17.2rem]">
+        <div className="relative h-[18.1rem]">
           <Line
             key={`${startDate}-${endDate}`}
             data={lineData}
