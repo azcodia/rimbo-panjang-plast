@@ -42,9 +42,12 @@ export const getInventorySummary = async () => {
   ]);
 
   const restock = reStockResult[0] || { total_qty: 0, total_transactions: 0 };
-  const delivery = historyResult[0].delivery[0] || {
-    total_qty: 0,
-    total_transactions: 0,
+
+  const deliveryTransactionCount = await Delivery.countDocuments();
+
+  const delivery = {
+    total_qty: historyResult[0].delivery[0]?.total_qty || 0,
+    total_transactions: deliveryTransactionCount || 0,
   };
 
   const salesResult = await Payment.aggregate([
