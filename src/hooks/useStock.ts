@@ -51,7 +51,7 @@ export const useStock = () => {
     {
       key: "quantity",
       label: "Stok Saat ini",
-      render: (_v: any, row: any) => formatNumber(row.quantity || 0),
+      render: (_v: any, row: any) => `${formatNumber(row.quantity || 0)} Pcs`,
     },
     {
       key: "input_date",

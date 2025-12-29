@@ -60,7 +60,7 @@ export default function InStockTable() {
         key: "quantity",
         label: "Quantity",
         render: (_: unknown, row: StockCurrentData) =>
-          formatNumber(row.quantity ?? 0),
+          `${formatNumber(row.quantity ?? 0)} Pcs`,
       },
       {
         key: "status",

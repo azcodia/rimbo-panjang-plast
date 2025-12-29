@@ -53,7 +53,8 @@ export const useDeliveryByCode = (code: string) => {
     {
       key: "quantity",
       label: "Quantity",
-      render: (_v: any, row: DeliveryItem) => formatNumber(row.quantity),
+      render: (_v: any, row: DeliveryItem) =>
+        `${formatNumber(row.quantity)} Pcs`,
     },
     {
       key: "unit_price",

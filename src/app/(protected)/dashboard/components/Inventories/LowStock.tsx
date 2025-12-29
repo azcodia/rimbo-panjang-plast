@@ -37,7 +37,7 @@ export default function LowStock() {
         label: "Stock",
         render: (value: number, row: LowStockItem) => (
           <span className="font-medium text-danger">
-            {formatNumber(value)} {row.unit || ""}
+            {formatNumber(value)} {row.unit || ""} Pcs
           </span>
         ),
       },

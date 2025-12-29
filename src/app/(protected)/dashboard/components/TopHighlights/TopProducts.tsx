@@ -63,13 +63,13 @@ export default function TopProducts() {
       },
       {
         key: "total_qty_pcs",
-        label: "Satuan Pcs",
+        label: "Terjual",
         render: (_: unknown, row: TopSellingItem) =>
-          formatNumber(row.total_qty),
+          `${formatNumber(row.total_qty)} Pcs`,
       },
       {
         key: "total_qty_weight",
-        label: "Terjual",
+        label: "Total Berat",
         render: (_: unknown, row: TopSellingItem) =>
           formatWeight(row.total_qty, row.heavy),
       },

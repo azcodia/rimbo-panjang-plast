@@ -18,7 +18,7 @@ export default function RightPanelSummary({
 }: Props) {
   return (
     <div className="col-span-8">
-      <div className="grid grid-cols-4 gap-2 mb-4">
+      <div className="grid grid-cols-4 gap-2 mb-2">
         <SummaryCard
           title="Total Transaksi"
           value={formatNumber(purchase?.total_transactions || 0)}
@@ -26,7 +26,7 @@ export default function RightPanelSummary({
         />
         <SummaryCard
           title="Total Unit"
-          value={formatNumber(purchase?.total_quantity || 0)}
+          value={`${formatNumber(purchase?.total_quantity || 0)} Pcs`}
           loading={loading}
         />
         <SummaryCard
