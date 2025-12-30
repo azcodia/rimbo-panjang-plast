@@ -141,18 +141,28 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       <h2 className="text-lg font-semibold mb-3">Tren Pembayaran</h2>
 
       <div className="flex gap-2 items-center flex-wrap mb-4">
-        <input
-          type="date"
-          className="border rounded px-2 py-1"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <input
-          type="date"
-          className="border rounded px-2 py-1"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
+        <div>
+          <label className="block text-xs font-medium mb-0.5">
+            Dari Tanggal
+          </label>
+          <input
+            type="date"
+            className="border rounded px-2 py-1"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium mb-0.5">
+            Sampai Tanggal
+          </label>
+          <input
+            type="date"
+            className="border rounded px-2 py-1"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
       </div>
 
       {loading && <LoadingSpinner />}
