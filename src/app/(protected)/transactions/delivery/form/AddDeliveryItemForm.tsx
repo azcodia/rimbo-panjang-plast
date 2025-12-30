@@ -150,7 +150,7 @@ export default function AddDeliveryItemForm({
           />
 
           <CurrencyInput
-            label="Diskon"
+            label="Potongan Harga"
             placeholder="Enter discount"
             value={item.discount}
             onChange={(val) =>

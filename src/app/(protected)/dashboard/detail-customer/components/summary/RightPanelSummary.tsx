@@ -25,7 +25,7 @@ export default function RightPanelSummary({
           loading={loading}
         />
         <SummaryCard
-          title="Total Unit"
+          title="Pembelian Unit"
           value={`${formatNumber(purchase?.total_quantity || 0)} Pcs`}
           loading={loading}
         />

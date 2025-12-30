@@ -63,7 +63,7 @@ export const useDeliveryByCode = (code: string) => {
     },
     {
       key: "discount_per_item",
-      label: "Diskon",
+      label: "Potongan Harga",
       render: (_v: any, row: DeliveryItem) => formatRp(row.discount_per_item),
     },
     {
