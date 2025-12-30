@@ -18,6 +18,7 @@ interface Props {
   payments: Payment[];
   onDelete: (id: string) => void;
   loading?: boolean;
+  justShow?: boolean;
 }
 
 export default function PaymentList({ payments, onDelete, loading }: Props) {
