@@ -29,9 +29,15 @@ interface Props {
   initialValues: PaidFormValues;
   onSubmit: (values: PaidFormValues, formik: any) => void;
   loading?: boolean;
+  justShow?: boolean;
 }
 
-export default function PaidForm({ initialValues, onSubmit, loading }: Props) {
+export default function PaidForm({
+  initialValues,
+  onSubmit,
+  loading,
+  justShow,
+}: Props) {
   const { cashBankOptions, transferBankOptions } = useBankContext();
 
   if (loading) {
@@ -79,56 +85,62 @@ export default function PaidForm({ initialValues, onSubmit, loading }: Props) {
               value={values.remaining_payment}
               disabled
             />
-            <DatePicker
-              label="Tanggal Transaction"
-              value={values.input_date}
-              onChange={(val) => setFieldValue("input_date", val)}
-            />
-            <div className="flex gap-4">
-              <div className="w-2/5">
-                <Select
-                  label="Metode"
-                  value={values.payment_method}
-                  onChange={(val) => {
-                    setFieldValue("payment_method", val);
-                    setFieldValue("bank_id", "");
-                  }}
-                  options={[
-                    { value: "cash", label: "Cash" },
-                    { value: "bank", label: "Bank" },
-                  ]}
+            {!justShow && (
+              <>
+                <DatePicker
+                  label="Tanggal Transaction"
+                  value={values.input_date}
+                  onChange={(val) => setFieldValue("input_date", val)}
                 />
-              </div>
-              <div className="w-3/5">
-                <Select
-                  label={
-                    values.payment_method === "cash" ? "Rekening Kas" : "Bank"
-                  }
-                  value={values.bank_id}
-                  onChange={(val) => setFieldValue("bank_id", val)}
-                  options={
-                    values.payment_method === "bank"
-                      ? transferBankOptions
-                      : cashBankOptions
-                  }
+                <div className="flex gap-4">
+                  <div className="w-2/5">
+                    <Select
+                      label="Metode"
+                      value={values.payment_method}
+                      onChange={(val) => {
+                        setFieldValue("payment_method", val);
+                        setFieldValue("bank_id", "");
+                      }}
+                      options={[
+                        { value: "cash", label: "Cash" },
+                        { value: "bank", label: "Bank" },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-3/5">
+                    <Select
+                      label={
+                        values.payment_method === "cash"
+                          ? "Rekening Kas"
+                          : "Bank"
+                      }
+                      value={values.bank_id}
+                      onChange={(val) => setFieldValue("bank_id", val)}
+                      options={
+                        values.payment_method === "bank"
+                          ? transferBankOptions
+                          : cashBankOptions
+                      }
+                    />
+                  </div>
+                </div>
+
+                <CurrencyInput
+                  label="Nominal Pembayaran"
+                  value={values.amount}
+                  onChange={(val) => setFieldValue("amount", val)}
                 />
-              </div>
-            </div>
 
-            <CurrencyInput
-              label="Nominal Pembayaran"
-              value={values.amount}
-              onChange={(val) => setFieldValue("amount", val)}
-            />
+                <Textarea
+                  label="Catatan"
+                  value={values.note || ""}
+                  onChange={handleChange("note")}
+                  placeholder="Optional"
+                />
 
-            <Textarea
-              label="Catatan"
-              value={values.note || ""}
-              onChange={handleChange("note")}
-              placeholder="Optional"
-            />
-
-            <Button type="submit" text="Simpan" />
+                <Button type="submit" text="Simpan" />
+              </>
+            )}
           </div>
         </Form>
       )}
