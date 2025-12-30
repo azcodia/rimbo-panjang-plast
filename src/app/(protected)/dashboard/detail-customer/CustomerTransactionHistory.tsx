@@ -18,7 +18,7 @@ interface Props {
 
 export default function CustomerTransactionHistory({ customerId }: Props) {
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 5;
 
   const today = new Date();
   const priorDate = new Date();
