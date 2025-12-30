@@ -40,11 +40,9 @@ export const getInventorySummary = async () => {
       },
     },
   ]);
-
   const restock = reStockResult[0] || { total_qty: 0, total_transactions: 0 };
 
   const deliveryTransactionCount = await Delivery.countDocuments();
-
   const delivery = {
     total_qty: historyResult[0].delivery[0]?.total_qty || 0,
     total_transactions: deliveryTransactionCount || 0,
@@ -64,11 +62,7 @@ export const getInventorySummary = async () => {
       },
     },
   ]);
-
-  const sales = salesResult[0] || {
-    total_amount: 0,
-    total_transactions: 0,
-  };
+  const sales = salesResult[0] || { total_amount: 0, total_transactions: 0 };
 
   const deliveryTotals = await Delivery.aggregate([
     { $unwind: "$items" },
@@ -105,12 +99,42 @@ export const getInventorySummary = async () => {
   for (const d of deliveryTotals) {
     const paid = paymentMap.get(d._id.toString()) || 0;
     const remaining = d.delivery_total - paid;
-
     if (remaining > 0) {
       total_receivable += remaining;
       unpaid_deliveries += 1;
     }
   }
+
+  const deliveryWeights = await Delivery.aggregate([
+    { $unwind: "$items" },
+    {
+      $lookup: {
+        from: "stocks",
+        localField: "items.stock_id",
+        foreignField: "_id",
+        as: "stock_info",
+      },
+    },
+    { $unwind: "$stock_info" },
+    {
+      $lookup: {
+        from: "heavies",
+        localField: "stock_info.heavy_id",
+        foreignField: "_id",
+        as: "heavy_info",
+      },
+    },
+    { $unwind: "$heavy_info" },
+    {
+      $group: {
+        _id: null,
+        total_weight_gram: {
+          $sum: { $multiply: ["$items.quantity", "$heavy_info.weight"] },
+        },
+      },
+    },
+  ]);
+  const total_weight_gram = deliveryWeights[0]?.total_weight_gram || 0;
 
   return {
     restock,
@@ -120,5 +144,6 @@ export const getInventorySummary = async () => {
       total: total_receivable,
       unpaid_deliveries,
     },
+    total_weight_gram,
   };
 };
