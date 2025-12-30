@@ -32,7 +32,66 @@ export const getCustomerTransactions = async ({
         input_date: { $gte: start, $lte: end },
       },
     },
+
+    {
+      $addFields: {
+        _totalDeliveryCalc: {
+          $sum: "$items.total_price",
+        },
+      },
+    },
+
+    {
+      $lookup: {
+        from: "payments",
+        let: { deliveryId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$delivery_id", "$$deliveryId"] },
+              input_date: { $gte: start, $lte: end },
+            },
+          },
+        ],
+        as: "payments",
+      },
+    },
+    {
+      $addFields: {
+        totalPaid: {
+          $ifNull: [{ $sum: "$payments.amount" }, 0],
+        },
+      },
+    },
+
+    {
+      $addFields: {
+        status: {
+          $cond: [
+            { $gte: ["$totalPaid", "$_totalDeliveryCalc"] },
+            "paid",
+            {
+              $cond: [
+                {
+                  $and: [
+                    { $gt: ["$totalPaid", 0] },
+                    { $lt: ["$totalPaid", "$_totalDeliveryCalc"] },
+                  ],
+                },
+                "partially_paid",
+                "unpaid",
+              ],
+            },
+          ],
+        },
+        remaining: {
+          $subtract: ["$_totalDeliveryCalc", "$totalPaid"],
+        },
+      },
+    },
+
     { $unwind: "$items" },
+
     {
       $lookup: {
         from: "colors",
@@ -42,6 +101,7 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$color" },
+
     {
       $lookup: {
         from: "sizes",
@@ -51,6 +111,7 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$size" },
+
     {
       $lookup: {
         from: "heavies",
@@ -60,13 +121,20 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$heavy" },
+
     { $sort: { "color.color": 1 } },
+
     {
       $project: {
         _id: 0,
         deliveryId: "$_id",
         code: "$code",
         date: "$input_date",
+
+        totalPaid: 1,
+        remaining: 1,
+        status: 1,
+
         itemDetail: {
           $concat: [
             "$color.color",
@@ -83,10 +151,12 @@ export const getCustomerTransactions = async ({
         total_price: "$items.total_price",
       },
     },
+
     { $sort: { date: -1 } },
     { $skip: skip },
     { $limit: limit },
   ];
+
   const data = await Delivery.aggregate(dataPipeline);
 
   const totalPipeline: PipelineStage[] = [
