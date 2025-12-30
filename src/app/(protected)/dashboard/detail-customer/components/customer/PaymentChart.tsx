@@ -79,7 +79,6 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
         pointRadius: 5,
         pointHoverRadius: 7,
         pointHitRadius: 15,
-        pointStyle: "rect",
         yAxisID: "yPrice",
       },
       {
@@ -91,7 +90,6 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
         pointRadius: 5,
         pointHoverRadius: 7,
         pointHitRadius: 15,
-        pointStyle: "rect",
         yAxisID: "yPrice",
       },
     ],
@@ -140,7 +138,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
 
   return (
     <div className="bg-white p-4 rounded-md shadow-sm">
-      <h2 className="text-lg font-semibold mb-3">Tren Pembayaran Pelanggan</h2>
+      <h2 className="text-lg font-semibold mb-3">Tren Pembayaran</h2>
 
       <div className="flex gap-2 items-center flex-wrap mb-4">
         <input

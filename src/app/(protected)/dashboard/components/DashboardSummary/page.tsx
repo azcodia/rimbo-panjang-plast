@@ -4,6 +4,7 @@ import { formatRp } from "@/lib/formatRp";
 import { useEffect, useState } from "react";
 import { fetchSummary } from "../../services/summaryService";
 import { formatNumber } from "@/lib/formatNumber";
+import { formatWeight } from "@/lib/formatWeight";
 
 interface SummaryTransaction {
   total_qty: number;
@@ -25,6 +26,7 @@ interface SummaryData {
   delivery: SummaryTransaction;
   sales: SummarySales;
   receivable: SummaryReceivable;
+  total_weight_gram: number;
 }
 
 export default function DashboardSummary() {
@@ -44,24 +46,28 @@ export default function DashboardSummary() {
   if (!data) return null;
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-5 gap-2">
       <SummaryCard
         title="Total Restok"
         value={`${formatNumber(data.restock.total_qty)} Pcs`}
         subtitle={`${data.restock.total_transactions} transaksi`}
       />
       <SummaryCard
-        title="Total Penjualan Per Item"
+        title="Penjualan Per Pcs"
         value={`${formatNumber(data.delivery.total_qty)} Pcs`}
         subtitle={`${data.delivery.total_transactions} transaksi`}
       />
       <SummaryCard
+        title="Total Berat"
+        value={formatWeight(data.total_weight_gram, 1)}
+      />
+      <SummaryCard
         title="Total Pembayaran"
-        value={formatRp(data.sales.total_amount)}
+        value={formatRp(data.sales.total_amount, { format: "short" })}
       />
       <SummaryCard
         title="Total Hutang"
-        value={formatRp(data.receivable.total)}
+        value={formatRp(data.receivable.total, { format: "short" })}
         subtitle={`${data.receivable.unpaid_deliveries} belum lunas`}
       />
     </div>
