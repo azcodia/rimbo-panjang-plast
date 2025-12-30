@@ -8,13 +8,23 @@ import PaymentList from "../components/PaymentList";
 import { useSnackbar } from "notistack";
 import { formatRp } from "@/lib/formatRp";
 
+interface AddPaidModalProps {
+  isOpen: boolean;
+  deliveryCode: string;
+  onClose: any;
+  onSaved?: any;
+  justShow?: boolean;
+  size?: "sm" | "md" | "lg" | "xl" | "xxl";
+}
+
 export default function AddPaidModal({
   isOpen,
   deliveryCode,
   onClose,
   onSaved,
+  justShow = false,
   size = "sm",
-}: any) {
+}: AddPaidModalProps) {
   const {
     pageSize,
     summary,
@@ -166,12 +176,14 @@ export default function AddPaidModal({
           initialValues={initialValues}
           onSubmit={onHandleSubmit}
           loading={loadingSummary}
+          justShow={justShow}
         />
         <div className="col-span-2">
           <PaymentList
             payments={payments}
             onDelete={handleDeletePayment}
             loading={loadingPayments}
+            justShow={justShow}
           />
         </div>
       </div>
