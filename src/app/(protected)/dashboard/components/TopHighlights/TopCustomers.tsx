@@ -76,18 +76,23 @@ export default function TopCustomers() {
         key: "actions",
         label: "Actions",
         render: (_: number, row: TopCustomerData) => (
-          <Eye
-            onClick={() =>
-              router.push(
-                `/dashboard/detail-customer?customerId=${
-                  row.customer_id
-                }&customerName=${encodeURIComponent(row.customer_name)}`
-              )
-            }
-            className="cursor-pointer"
-            strokeWidth={2.2}
-            size={16}
-          />
+          <button
+            title="Detail"
+            className="text-gray-700 hover:opacity-70 transition-colors"
+          >
+            <Eye
+              onClick={() =>
+                router.push(
+                  `/dashboard/detail-customer?customerId=${
+                    row.customer_id
+                  }&customerName=${encodeURIComponent(row.customer_name)}`
+                )
+              }
+              className="cursor-pointer"
+              strokeWidth={2.2}
+              size={16}
+            />
+          </button>
         ),
       },
     ],
