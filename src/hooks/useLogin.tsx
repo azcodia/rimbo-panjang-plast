@@ -36,7 +36,9 @@ export const useLogin = () => {
         });
       } else {
         enqueueSnackbar("Login Success!", { variant: "success" });
-        document.cookie = `token=${data.token}; path=/; max-age=3600`;
+        document.cookie = `token=${data.token}; path=/; max-age=${
+          7 * 24 * 3600
+        }`;
         dispatch(loginAction());
         window.location.href = "/dashboard";
       }
