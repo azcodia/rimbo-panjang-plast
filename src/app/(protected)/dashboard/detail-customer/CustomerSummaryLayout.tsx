@@ -1,15 +1,15 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useCustomerSummary } from "./hooks/useCustomerSummary";
 import { useCustomerPurchaseSummary } from "./hooks/useCustomerPurchaseSummary";
 import LeftPanelSummary from "./components/summary/LeftPanelSummary";
 import RightPanelSummary from "./components/summary/RightPanelSummary";
 
-export default function CustomerSummaryLayout() {
-  const searchParams = useSearchParams();
-  const customerId = searchParams.get("customerId");
+interface Props {
+  customerId: string | null;
+}
 
+export default function CustomerSummaryLayout({ customerId }: Props) {
   const summaryState = useCustomerSummary(customerId);
   const purchaseState = useCustomerPurchaseSummary(customerId);
 
