@@ -8,6 +8,9 @@ import { formatRp } from "@/lib/formatRp";
 import { formatNumber } from "@/lib/formatNumber";
 import { formatDate } from "@/lib/formatDate";
 import { useCustomerTransactionHistory } from "./hooks/useCustomerTransactionHistory";
+import PaymentStatusBadge from "@/components/PaymentStatusBadge";
+import { Eye } from "lucide-react";
+import AddPaidModal from "../../transactions/delivery/ui/AddPaidModal";
 
 interface Props {
   customerId: string | null;
@@ -15,7 +18,7 @@ interface Props {
 
 export default function CustomerTransactionHistory({ customerId }: Props) {
   const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 10;
 
   const today = new Date();
   const priorDate = new Date();
@@ -23,6 +26,8 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
   const Dates = (d: Date) => d.toISOString().split("T")[0];
   const [startDate, setStartDate] = useState(Dates(priorDate));
   const [endDate, setEndDate] = useState(Dates(today));
+  const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
+  const [isModalPaidOpen, setIsModalPaidOpen] = useState(false);
 
   const { data, grandTotal, totalPages, loading, error } =
     useCustomerTransactionHistory({
@@ -42,6 +47,23 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
   const columns = useMemo(
     () => [
       {
+        key: "actions",
+        label: "Actions",
+        render: (_: unknown, row: { __isFirst: boolean; deliveryId: string }) =>
+          row.__isFirst ? (
+            <button
+              title="Detail"
+              onClick={() => {
+                setSelectedDelivery(row.deliveryId);
+                setIsModalPaidOpen(true);
+              }}
+              className="text-gray-700 hover:opacity-70 transition-colors"
+            >
+              <Eye strokeWidth={2.2} size={16} />
+            </button>
+          ) : null,
+      },
+      {
         key: "date",
         label: "Tanggal Transaksi",
         render: (_: unknown, row: CustomerTransactionItem) =>
@@ -51,6 +73,24 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
         key: "code",
         label: "Kode Transaksi",
         render: (_: unknown, row: CustomerTransactionItem) => row?.code ?? "-",
+      },
+      {
+        key: "status",
+        label: "Status Pembayaran",
+        render: (_: unknown, row: CustomerTransactionItem) =>
+          row?.code ? <PaymentStatusBadge status={row.status} /> : "",
+      },
+      {
+        key: "totalPaid",
+        label: "Total Di Bayar",
+        render: (_: unknown, row: CustomerTransactionItem) =>
+          formatRp(row.totalPaid),
+      },
+      {
+        key: "remaining",
+        label: "Sisa Piutang",
+        render: (_: unknown, row: CustomerTransactionItem) =>
+          formatRp(row.remaining),
       },
       {
         key: "itemDetail",
@@ -88,6 +128,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
 
   const groupedData: TableRow<CustomerTransactionItem>[] = useMemo(() => {
     const map = new Map<string, boolean>();
+
     return data.map((item) => {
       const dateKey = item.date || "";
       const key = `${dateKey}|${item.code}`;
@@ -99,10 +140,15 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
           ...item,
           code: isFirst ? item.code : "",
           date: isFirst ? dateKey : "",
+          status: isFirst ? item.status : "unpaid",
+          totalPaid: isFirst ? item.totalPaid : 0,
+          remaining: isFirst ? item.remaining : 0,
+          __isFirst: isFirst,
         },
       };
     });
   }, [data]);
+  console.log("selectedDelivery", selectedDelivery);
 
   return (
     <div className="rounded-md border bg-white py-2.5 px-4 shadow-sm mt-6">
@@ -132,7 +178,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
       {error && <p className="text-red-500">{error}</p>}
 
       <MiniTable
-        columns={columns}
+        columns={columns as any}
         data={groupedData}
         page={page}
         totalPages={totalPages}
@@ -146,6 +192,15 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
       <div className="mt-4 text-right font-semibold">
         Grand Total Periode: {formatRp(grandTotal)}
       </div>
+      {selectedDelivery && (
+        <AddPaidModal
+          size="xxl"
+          isOpen={isModalPaidOpen}
+          deliveryCode={selectedDelivery}
+          onClose={() => setIsModalPaidOpen(false)}
+          justShow={true}
+        />
+      )}
     </div>
   );
 }

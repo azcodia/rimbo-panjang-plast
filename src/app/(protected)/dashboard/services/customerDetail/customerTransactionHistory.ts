@@ -7,6 +7,9 @@ export interface CustomerTransactionItem {
   unit_price: number;
   discount_per_item: number;
   total_price: number;
+  totalPaid: number;
+  remaining: number;
+  status: "paid" | "partially_paid" | "unpaid";
 }
 
 export interface CustomerTransactionHistoryData {
