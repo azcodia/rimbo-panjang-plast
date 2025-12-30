@@ -60,6 +60,7 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$heavy" },
+    { $sort: { "color.color": 1 } },
     {
       $project: {
         _id: 0,
@@ -78,6 +79,7 @@ export const getCustomerTransactions = async ({
         },
         quantity: "$items.quantity",
         unit_price: "$items.unit_price",
+        discount_per_item: "$items.discount_per_item",
         total_price: "$items.total_price",
       },
     },
