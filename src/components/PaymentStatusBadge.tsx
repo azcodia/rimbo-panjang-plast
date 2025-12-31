@@ -17,13 +17,13 @@ const PaymentStatusBadge: React.FC<PaymentStatusBadgeProps> = ({ status }) => {
     case "partially_paid":
       return (
         <span className="flex justify-center items-center bg-primary text-white text-[10px] font-semibold py-1 px-2 rounded-md">
-          Bayar Sebagian
+          Belum Lunas
         </span>
       );
     case "unpaid":
       return (
         <span className="flex justify-center items-center bg-danger text-white text-[10px] font-semibold py-1 px-2 rounded-md">
-          Belum Bayar
+          Belum Dibayar
         </span>
       );
     default:
