@@ -22,6 +22,7 @@ export function useCustomerTransactionHistory({
 }: UseCustomerTransactionHistoryProps) {
   const [data, setData] = useState<CustomerTransactionItem[]>([]);
   const [grandTotal, setGrandTotal] = useState(0);
+  const [grandTotalWeight, setGrandTotalWeight] = useState(0);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ export function useCustomerTransactionHistory({
         setData(transactionData);
 
         setGrandTotal(res.grandTotal ?? 0);
+        setGrandTotalWeight(res.grandTotalWeight ?? 0);
         setTotal(res.total ?? 0);
         setTotalPages(res.totalPages ?? 1);
         setError(null);
@@ -59,5 +61,13 @@ export function useCustomerTransactionHistory({
     load();
   }, [customerId, page, pageSize, startDate, endDate]);
 
-  return { data, grandTotal, total, totalPages, loading, error };
+  return {
+    data,
+    grandTotal,
+    grandTotalWeight,
+    total,
+    totalPages,
+    loading,
+    error,
+  };
 }

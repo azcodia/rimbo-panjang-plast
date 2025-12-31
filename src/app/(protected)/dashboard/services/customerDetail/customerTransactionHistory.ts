@@ -8,6 +8,8 @@ export interface CustomerTransactionItem {
   discount_per_item: number;
   total_price: number;
   totalPaid: number;
+  totalWeight: number;
+  totalWeightAllItems: number;
   remaining: number;
   status: "paid" | "partially_paid" | "unpaid";
 }
@@ -15,6 +17,7 @@ export interface CustomerTransactionItem {
 export interface CustomerTransactionHistoryData {
   total: number;
   grandTotal: number;
+  grandTotalWeight: number;
   data: CustomerTransactionItem[];
   page: number;
   pageSize: number;
