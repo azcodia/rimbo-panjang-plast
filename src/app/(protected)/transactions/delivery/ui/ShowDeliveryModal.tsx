@@ -81,18 +81,6 @@ export default function ShowDetailDeliveryModal({
               onChange={() => undefined}
               disabled={true}
             />
-            <ThousandInput
-              label="Total Item"
-              value={summary?.total_items || 0}
-              onChange={() => undefined}
-              disabled={true}
-            />
-            <Input
-              label="Total Berat"
-              value={formatWeight(summary?.total_weight ?? 0, 1)}
-              onChange={() => undefined}
-              disabled={true}
-            />
             <Input
               label="Catatan"
               value={formatDate(summary?.note) || ""}
@@ -102,6 +90,18 @@ export default function ShowDetailDeliveryModal({
             <Textarea
               label="Keterangan"
               value={summary?.description || ""}
+              onChange={() => undefined}
+              disabled={true}
+            />
+            <ThousandInput
+              label="Total Item"
+              value={summary?.total_items || 0}
+              onChange={() => undefined}
+              disabled={true}
+            />
+            <Input
+              label="Total Berat"
+              value={formatWeight(summary?.total_weight ?? 0, 1)}
               onChange={() => undefined}
               disabled={true}
             />

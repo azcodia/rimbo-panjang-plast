@@ -9,6 +9,8 @@ import Button from "@/components/ui/Button";
 import { useBankContext } from "@/context/BankContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DatePicker from "@/components/ui/Date";
+import ThousandInput from "@/components/ui/ThousandInput";
+import { formatWeight } from "@/lib/formatWeight";
 
 export interface PaidFormValues {
   delivery_id: string;
@@ -16,6 +18,8 @@ export interface PaidFormValues {
   amount: number;
   note?: string;
   input_date: string;
+  total_items: number;
+  total_weight: number;
   code: string;
   customer_name: string;
   total_price: number;
@@ -69,7 +73,18 @@ export default function PaidForm({
               onChange={() => undefined}
               disabled
             />
-
+            <ThousandInput
+              label="Total Item"
+              value={values?.total_items || 0}
+              onChange={() => undefined}
+              disabled={true}
+            />
+            <Input
+              label="Total Berat"
+              value={formatWeight(values?.total_weight ?? 0, 1)}
+              onChange={() => undefined}
+              disabled={true}
+            />
             <CurrencyInput
               label="Total Harga"
               value={values.total_price}
@@ -81,7 +96,7 @@ export default function PaidForm({
               disabled
             />
             <CurrencyInput
-              label="Sisa Pembayaran"
+              label="Sisa Piutang"
               value={values.remaining_payment}
               disabled
             />

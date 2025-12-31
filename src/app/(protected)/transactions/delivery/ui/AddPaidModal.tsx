@@ -49,6 +49,8 @@ export default function AddPaidModal({
     amount: 0,
     note: "",
     input_date: new Date().toISOString().split("T")[0],
+    total_items: summary?.total_items || 0,
+    total_weight: summary?.total_weight || 0,
     code: summary?.code || "",
     customer_name: summary?.customer_name || "",
     total_price: summary?.total_price || 0,
@@ -115,7 +117,6 @@ export default function AddPaidModal({
         onSaved?.();
         resetForm();
       } catch (err: any) {
-        console.error("PAYMENT ERROR:", err);
         enqueueSnackbar("PAYMENT ERROR", { variant: "error" });
       } finally {
         setSubmitting(false);
