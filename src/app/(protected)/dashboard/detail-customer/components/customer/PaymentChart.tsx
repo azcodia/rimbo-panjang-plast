@@ -170,7 +170,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       {data && (
-        <div className="relative h-[17.1rem]">
+        <div className="relative h-[30.5rem]">
           <Line
             key={`${startDate}-${endDate}`}
             data={lineData}
