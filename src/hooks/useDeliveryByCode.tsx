@@ -22,6 +22,8 @@ export interface DeliverySummary {
   note: string;
   description: string;
   input_date: string;
+  total_items: number;
+  total_weight: number;
   total_price: number;
   total_payment: number;
   status: "not_yet_paid" | "partially_paid" | "paid_off";

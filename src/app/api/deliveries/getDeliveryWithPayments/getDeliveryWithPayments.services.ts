@@ -5,17 +5,34 @@ import mongoose from "mongoose";
 export const getDeliveryWithPayments = async (deliveryId: string) => {
   if (!deliveryId) return null;
 
-  // const delivery = await Delivery.findOne({ code })
   const delivery = await Delivery.findOne({
     _id: new mongoose.Types.ObjectId(deliveryId),
   })
     .populate("customer_id", "name")
-    .lean<IDelivery & { customer_id?: { name: string } }>();
+    .populate("items.heavy_id", "weight")
+    .lean<
+      IDelivery & {
+        customer_id?: { name: string };
+        items: (IDelivery["items"][number] & {
+          heavy_id?: { weight: number };
+        })[];
+      }
+    >();
 
   if (!delivery) return null;
 
   const total_price = delivery.items.reduce(
     (sum, item) => sum + (item.total_price ?? 0),
+    0
+  );
+
+  const total_items = delivery.items.length;
+
+  const total_weight = delivery.items.reduce(
+    (sum, item) =>
+      sum +
+      ((item.heavy_id as unknown as { weight: number })?.weight ?? 0) *
+        (item.quantity ?? 0),
     0
   );
 
@@ -43,6 +60,8 @@ export const getDeliveryWithPayments = async (deliveryId: string) => {
     input_date: delivery.input_date,
     total_price,
     total_payment,
+    total_items,
+    total_weight,
     status,
     payments_count: payments.length,
   };

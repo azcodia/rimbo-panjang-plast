@@ -3,8 +3,10 @@ import CurrencyInput from "@/components/ui/CurrencyInput";
 import Input from "@/components/ui/Input";
 import BaseModal from "@/components/ui/modals/modal";
 import Textarea from "@/components/ui/Textarea";
+import ThousandInput from "@/components/ui/ThousandInput";
 import { useDeliveryByCode } from "@/hooks/useDeliveryByCode";
 import { formatDate } from "@/lib/formatDate";
+import { formatWeight } from "@/lib/formatWeight";
 import { useEffect } from "react";
 
 interface ShowDetailDeliveryProps {
@@ -76,6 +78,18 @@ export default function ShowDetailDeliveryModal({
             <Input
               label="Tanggal Transaksi"
               value={formatDate(summary?.input_date) || ""}
+              onChange={() => undefined}
+              disabled={true}
+            />
+            <ThousandInput
+              label="Total Item"
+              value={summary?.total_items || 0}
+              onChange={() => undefined}
+              disabled={true}
+            />
+            <Input
+              label="Total Berat"
+              value={formatWeight(summary?.total_weight ?? 0, 1)}
               onChange={() => undefined}
               disabled={true}
             />
