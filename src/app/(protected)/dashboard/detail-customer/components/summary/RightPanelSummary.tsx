@@ -3,10 +3,6 @@ import { CustomerPurchaseSummaryData } from "../../../services/customerDetail/cu
 import { formatNumber } from "@/lib/formatNumber";
 import { formatWeight } from "@/lib/formatWeight";
 import { formatRp } from "@/lib/formatRp";
-import Tabs, { TabItem } from "@/components/tabs/Tabs";
-import { Palette } from "lucide-react";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import dynamic from "next/dynamic";
 
 interface Props {
   customerId: string;
@@ -14,31 +10,11 @@ interface Props {
   loading: boolean;
 }
 
-const ColorChartCustomer = dynamic(
-  () =>
-    import(
-      "@/app/(protected)/dashboard/detail-customer/components/demand/CustomerColorChart"
-    ).then((mod) => mod.default),
-  {
-    ssr: false,
-    loading: () => <LoadingSpinner />,
-  }
-);
-
 export default function RightPanelSummary({
   customerId,
   purchase,
   loading,
 }: Props) {
-  const tabs: TabItem[] = [
-    {
-      id: "color",
-      label: "Tren Grafik Warna",
-      icon: <Palette size={18} strokeWidth={2} />,
-      content: <ColorChartCustomer customerId={customerId} />,
-    },
-  ];
-
   return (
     <div className="col-span-8">
       <div className="grid grid-cols-4 gap-2 mb-2">
@@ -67,7 +43,9 @@ export default function RightPanelSummary({
       </div>
 
       <div className="rounded-lg  border bg-white">
-        <Tabs tabs={tabs} defaultTabId="color" />
+        <div className="flex justify-center items-center h-[26rem]">
+          <h3 className="text-3xl">Comming Soon</h3>
+        </div>
       </div>
     </div>
   );
