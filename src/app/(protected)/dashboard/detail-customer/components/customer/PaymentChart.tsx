@@ -73,8 +73,8 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {
         label: "Uang Diterima (Rp)",
         data: data?.total_paid || [],
-        borderColor: "#1a648a",
-        backgroundColor: "#1a648a",
+        borderColor: "#cd0f09",
+        backgroundColor: "#cd0f09",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -84,8 +84,8 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {
         label: "Total Harga Barang (Rp)",
         data: data?.total_unpaid || [],
-        borderColor: "#8a2be2",
-        backgroundColor: "#8a2be2",
+        borderColor: "#7bb927",
+        backgroundColor: "#7bb927",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -170,7 +170,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       {data && (
-        <div className="relative h-[18.1rem]">
+        <div className="relative h-[17.1rem]">
           <Line
             key={`${startDate}-${endDate}`}
             data={lineData}

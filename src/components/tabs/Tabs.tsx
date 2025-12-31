@@ -63,7 +63,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTabId }) => {
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-2">
         {tabs.map(
           (tab) => activeTab === tab.id && <div key={tab.id}>{tab.content}</div>
         )}

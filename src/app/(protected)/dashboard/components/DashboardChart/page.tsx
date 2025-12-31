@@ -77,8 +77,8 @@ export default function DashboardChart({
       {
         label: "Barang Masuk (Qty)",
         data: chartData.map((d) => d.in),
-        borderColor: "#7bb927",
-        backgroundColor: "#7bb927",
+        borderColor: "#2098d5",
+        backgroundColor: "#2098d5",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -88,8 +88,8 @@ export default function DashboardChart({
       {
         label: "Barang Keluar (Qty)",
         data: chartData.map((d) => d.out),
-        borderColor: "#cd0f09",
-        backgroundColor: "#cd0f09",
+        borderColor: "#8a2be2",
+        backgroundColor: "#8a2be2",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -99,8 +99,8 @@ export default function DashboardChart({
       {
         label: "Total Harga Barang (Rp)",
         data: chartData.map((d) => d.total_price),
-        borderColor: "#8a2be2",
-        backgroundColor: "#8a2be2",
+        borderColor: "#7bb927",
+        backgroundColor: "#7bb927",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -110,8 +110,8 @@ export default function DashboardChart({
       {
         label: "Uang Diterima (Rp)",
         data: chartData.map((d) => d.sales),
-        borderColor: "#1a648a",
-        backgroundColor: "#1a648a",
+        borderColor: "#cd0f09",
+        backgroundColor: "#cd0f09",
         tension: 0.3,
         pointRadius: 5,
         pointHoverRadius: 7,
