@@ -13,6 +13,7 @@ import { useSnackbar } from "notistack";
 import { createTokenHistory } from "@/lib/createTokenHistory";
 import { formatDate } from "@/lib/formatDate";
 import PaymentStatusBadge from "@/components/PaymentStatusBadge";
+import { formatWeight } from "@/lib/formatWeight";
 
 export interface DeliveryItem {
   stock_id: string;
@@ -40,6 +41,8 @@ export interface DeliveryData {
   description?: string;
   created_at: string;
   input_date: string;
+  total_items: number;
+  total_weight: number;
   status: "paid" | "partially_paid" | "unpaid";
   items: DeliveryItem[];
 }
@@ -117,6 +120,17 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
         `${(row.customer_id as Customer).name} (${
           (row.customer_id as Customer).type
         })`,
+    },
+    {
+      key: "total_items",
+      label: "Total Item",
+      render: (_value: any, row: DeliveryData) => `${row.total_items} Pcs`,
+    },
+    {
+      key: "total_weight",
+      label: "Total Berat",
+      render: (_value: any, row: DeliveryData) =>
+        formatWeight(row.total_weight, 1),
     },
     { key: "note", label: "Catatan" },
     { key: "description", label: "Keterangan" },

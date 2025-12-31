@@ -24,9 +24,13 @@ interface DeliveryInput {
   items: DeliveryItemInput[];
 }
 
-/**
- * GET LIST
- */
+interface DeliveryItem {
+  total_price?: number;
+  quantity?: number;
+  heavy_id?: {
+    weight?: number;
+  };
+}
 
 interface DeliveryItem {
   total_price?: number;
@@ -52,8 +56,18 @@ export const getDeliveries = async (
 
   const data = await Promise.all(
     deliveries.map(async (delivery) => {
-      const totalPrice = (delivery.items as DeliveryItem[]).reduce(
+      const items = delivery.items as DeliveryItem[];
+
+      const totalPrice = items.reduce(
         (sum, item) => sum + (item.total_price || 0),
+        0
+      );
+
+      const total_items = items.length;
+
+      const total_weight = items.reduce(
+        (sum, item) =>
+          sum + (item.heavy_id?.weight ?? 0) * (item.quantity ?? 0),
         0
       );
 
@@ -64,7 +78,6 @@ export const getDeliveries = async (
 
       const totalPaid = payments.length > 0 ? payments[0].totalPaid : 0;
 
-      // Tentukan status
       let status: "paid" | "partially_paid" | "unpaid";
       if (totalPaid >= totalPrice) {
         status = "paid";
@@ -76,6 +89,8 @@ export const getDeliveries = async (
 
       return {
         ...delivery.toObject(),
+        total_items,
+        total_weight,
         status,
       };
     })
@@ -84,9 +99,6 @@ export const getDeliveries = async (
   return { total, data };
 };
 
-/**
- * CREATE DELIVERY
- */
 export const createDelivery = async (data: DeliveryInput) => {
   const normalizedCode = data.code.trim().toUpperCase();
 
@@ -117,9 +129,6 @@ export const createDelivery = async (data: DeliveryInput) => {
   });
 };
 
-/**
- * UPDATE DELIVERY
- */
 export const updateDelivery = async (id: string, data: DeliveryInput) => {
   const delivery = await Delivery.findById(id);
   if (!delivery) throw new Error("Delivery not found");
@@ -157,9 +166,6 @@ export const updateDelivery = async (id: string, data: DeliveryInput) => {
     .populate("items.heavy_id");
 };
 
-/**
- * DELETE DELIVERY
- */
 export const deleteDelivery = async (id: string) => {
   return Delivery.findByIdAndDelete(id);
 };
