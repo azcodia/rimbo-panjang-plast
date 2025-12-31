@@ -11,6 +11,7 @@ import { useCustomerTransactionHistory } from "./hooks/useCustomerTransactionHis
 import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 import { Eye } from "lucide-react";
 import AddPaidModal from "../../transactions/delivery/ui/AddPaidModal";
+import { formatWeight } from "@/lib/formatWeight";
 
 interface Props {
   customerId: string | null;
@@ -29,7 +30,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
   const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
   const [isModalPaidOpen, setIsModalPaidOpen] = useState(false);
 
-  const { data, grandTotal, totalPages, loading, error } =
+  const { data, grandTotal, grandTotalWeight, totalPages, loading, error } =
     useCustomerTransactionHistory({
       customerId,
       page,
@@ -81,6 +82,14 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
           row?.code ? <PaymentStatusBadge status={row.status} /> : "",
       },
       {
+        key: "totalWeightAllItems",
+        label: "Total Berat Keseluruhan",
+        render: (
+          _: unknown,
+          row: { __isFirst: boolean; totalWeightAllItems: number }
+        ) => (row.__isFirst ? formatWeight(row.totalWeightAllItems, 1) : ""),
+      },
+      {
         key: "totalPaid",
         label: "Total Di Bayar",
         render: (_: unknown, row: CustomerTransactionItem) =>
@@ -103,6 +112,12 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
         label: "Quantity",
         render: (_: unknown, row: CustomerTransactionItem) =>
           formatNumber(row.quantity ?? 0),
+      },
+      {
+        key: "totalWeight",
+        label: "Total Berat",
+        render: (_: unknown, row: CustomerTransactionItem) =>
+          formatWeight(row.totalWeight, 1),
       },
       {
         key: "unit_price",
@@ -142,6 +157,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
           date: isFirst ? dateKey : "",
           status: isFirst ? item.status : "unpaid",
           totalPaid: isFirst ? item.totalPaid : 0,
+          totalWeightAllItems: isFirst ? item.totalWeightAllItems : 0,
           remaining: isFirst ? item.remaining : 0,
           __isFirst: isFirst,
         },
@@ -156,23 +172,41 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
         Riwayat Transaksi Pembelian
       </h2>
 
-      <div className="flex gap-2 mb-3">
-        {[
-          { label: "Dari Tanggal", type: "start", value: startDate },
-          { label: "Sampai Tanggal", type: "end", value: endDate },
-        ].map(({ label, type, value }) => (
-          <div key={type}>
-            <label className="block text-xs font-medium mb-0.5">{label}</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
-              value={value || ""}
-              onChange={(e) =>
-                handleDateChange(type as "start" | "end", e.target.value)
-              }
-            />
+      <div className="flex flex-row justify-between">
+        <div className="flex justify-end gap-6">
+          <div className="bg-grayd border rounded-md p-3 text-right shadow-sm">
+            <p className="text-sm text-gray-600">Grand Total Penjualan</p>
+            <p className="font-semibold text-gray-800">
+              {formatRp(grandTotal)}
+            </p>
           </div>
-        ))}
+          <div className="bg-grayd border rounded-md p-3 text-right shadow-sm">
+            <p className="text-sm text-gray-600">Grand Total Berat</p>
+            <p className="font-semibold text-gray-800">
+              {formatWeight(grandTotalWeight, 1)}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 mb-3">
+          {[
+            { label: "Dari Tanggal", type: "start", value: startDate },
+            { label: "Sampai Tanggal", type: "end", value: endDate },
+          ].map(({ label, type, value }) => (
+            <div key={type}>
+              <label className="block text-xs font-medium mb-0.5">
+                {label}
+              </label>
+              <input
+                type="date"
+                className="border rounded px-2 py-1"
+                value={value || ""}
+                onChange={(e) =>
+                  handleDateChange(type as "start" | "end", e.target.value)
+                }
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
@@ -188,9 +222,6 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
           onPageChange={setPage}
           className="mt-4"
         />
-        <div className="mt-4 text-right font-semibold">
-          Grand Total Periode: {formatRp(grandTotal)}
-        </div>
       </div>
 
       {selectedDelivery && (
