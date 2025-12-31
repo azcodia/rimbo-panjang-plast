@@ -15,7 +15,7 @@ export default function DashboardPage() {
   const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
   return (
-    <PageContainer title="Manajemen Stok">
+    <PageContainer title="Dashboard">
       <DashboardSummary />
       <Inventory />
       <TopHighlights />

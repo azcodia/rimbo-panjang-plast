@@ -30,7 +30,7 @@ export default function DeliveryPage() {
   } = useDeliveryContext();
 
   return (
-    <PageContainer title="Manajemen Variabel Produk">
+    <PageContainer title="Manajemen Penjualan">
       <TableWithControls
         columns={columns as any}
         data={data}
