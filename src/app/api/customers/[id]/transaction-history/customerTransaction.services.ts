@@ -32,15 +32,7 @@ export const getCustomerTransactions = async ({
         input_date: { $gte: start, $lte: end },
       },
     },
-
-    {
-      $addFields: {
-        _totalDeliveryCalc: {
-          $sum: "$items.total_price",
-        },
-      },
-    },
-
+    { $addFields: { _totalDeliveryCalc: { $sum: "$items.total_price" } } },
     {
       $lookup: {
         from: "payments",
@@ -57,13 +49,8 @@ export const getCustomerTransactions = async ({
       },
     },
     {
-      $addFields: {
-        totalPaid: {
-          $ifNull: [{ $sum: "$payments.amount" }, 0],
-        },
-      },
+      $addFields: { totalPaid: { $ifNull: [{ $sum: "$payments.amount" }, 0] } },
     },
-
     {
       $addFields: {
         status: {
@@ -84,14 +71,10 @@ export const getCustomerTransactions = async ({
             },
           ],
         },
-        remaining: {
-          $subtract: ["$_totalDeliveryCalc", "$totalPaid"],
-        },
+        remaining: { $subtract: ["$_totalDeliveryCalc", "$totalPaid"] },
       },
     },
-
     { $unwind: "$items" },
-
     {
       $lookup: {
         from: "colors",
@@ -101,7 +84,6 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$color" },
-
     {
       $lookup: {
         from: "sizes",
@@ -111,7 +93,6 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$size" },
-
     {
       $lookup: {
         from: "heavies",
@@ -121,27 +102,45 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$heavy" },
-
-    { $sort: { "color.color": 1 } },
-
+    {
+      $addFields: {
+        totalWeight: { $multiply: ["$items.quantity", "$heavy.weight"] },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        deliveryId: { $first: "$_id" },
+        code: { $first: "$code" },
+        date: { $first: "$input_date" },
+        totalPaid: { $first: "$totalPaid" },
+        remaining: { $first: "$remaining" },
+        status: { $first: "$status" },
+        items: { $push: "$items" },
+        colors: { $push: "$color" },
+        sizes: { $push: "$size" },
+        heavies: { $push: "$heavy" },
+        totalWeights: { $push: "$totalWeight" },
+      },
+    },
+    { $addFields: { totalWeightAllItems: { $sum: "$totalWeights" } } },
+    { $unwind: { path: "$items", includeArrayIndex: "idx" } },
     {
       $project: {
         _id: 0,
-        deliveryId: "$_id",
-        code: "$code",
-        date: "$input_date",
-
+        deliveryId: 1,
+        code: 1,
+        date: 1,
         totalPaid: 1,
         remaining: 1,
         status: 1,
-
         itemDetail: {
           $concat: [
-            "$color.color",
+            { $arrayElemAt: ["$colors.color", "$idx"] },
             " / ",
-            { $toString: "$size.size" },
+            { $toString: { $arrayElemAt: ["$sizes.size", "$idx"] } },
             "cm / ",
-            { $toString: "$heavy.weight" },
+            { $toString: { $arrayElemAt: ["$heavies.weight", "$idx"] } },
             "g",
           ],
         },
@@ -149,9 +148,10 @@ export const getCustomerTransactions = async ({
         unit_price: "$items.unit_price",
         discount_per_item: "$items.discount_per_item",
         total_price: "$items.total_price",
+        totalWeight: { $arrayElemAt: ["$totalWeights", "$idx"] },
+        totalWeightAllItems: 1,
       },
     },
-
     { $sort: { date: -1 } },
     { $skip: skip },
     { $limit: limit },
@@ -180,15 +180,48 @@ export const getCustomerTransactions = async ({
       },
     },
     { $unwind: "$items" },
-    {
-      $group: {
-        _id: null,
-        grandTotal: { $sum: "$items.total_price" },
-      },
-    },
+    { $group: { _id: null, grandTotal: { $sum: "$items.total_price" } } },
   ];
   const grandTotalResult = await Delivery.aggregate(grandTotalPipeline);
   const grandTotal = grandTotalResult[0]?.grandTotal || 0;
 
-  return { data, total, grandTotal };
+  const grandTotalWeightPipeline: PipelineStage[] = [
+    {
+      $match: {
+        customer_id: customerIdMatch,
+        input_date: { $gte: start, $lte: end },
+      },
+    },
+    { $unwind: "$items" },
+    {
+      $lookup: {
+        from: "heavies",
+        localField: "items.heavy_id",
+        foreignField: "_id",
+        as: "heavy",
+      },
+    },
+    { $unwind: "$heavy" },
+    {
+      $group: {
+        _id: null,
+        grandTotalWeight: {
+          $sum: { $multiply: ["$items.quantity", "$heavy.weight"] },
+        },
+      },
+    },
+  ];
+  const grandTotalWeightResult = await Delivery.aggregate(
+    grandTotalWeightPipeline
+  );
+  const grandTotalWeight = grandTotalWeightResult[0]?.grandTotalWeight || 0;
+
+  return {
+    data,
+    total,
+    grandTotal,
+    grandTotalWeight,
+    page: Math.floor(skip / limit) + 1,
+    pageSize: limit,
+  };
 };
