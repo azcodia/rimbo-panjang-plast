@@ -176,22 +176,23 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-
-      <MiniTable
-        columns={columns as any}
-        data={groupedData}
-        page={page}
-        totalPages={totalPages}
-        totalDataCount={data.length}
-        loading={loading}
-        emptyMessage="Tidak ada data"
-        onPageChange={setPage}
-        className="mt-4"
-      />
-
-      <div className="mt-4 text-right font-semibold">
-        Grand Total Periode: {formatRp(grandTotal)}
+      <div className="h-[30.5rem] overflow-y-auto scrollbar-auto-hide">
+        <MiniTable
+          columns={columns as any}
+          data={groupedData}
+          page={page}
+          totalPages={totalPages}
+          totalDataCount={data.length}
+          loading={loading}
+          emptyMessage="Tidak ada data"
+          onPageChange={setPage}
+          className="mt-4"
+        />
+        <div className="mt-4 text-right font-semibold">
+          Grand Total Periode: {formatRp(grandTotal)}
+        </div>
       </div>
+
       {selectedDelivery && (
         <AddPaidModal
           size="xxl"
