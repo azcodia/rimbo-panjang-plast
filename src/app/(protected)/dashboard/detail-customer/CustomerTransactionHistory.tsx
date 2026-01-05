@@ -210,7 +210,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-      <div className="h-[30.5rem] overflow-y-auto scrollbar-auto-hide">
+      <div className="h-[28rem] overflow-y-auto scrollbar-auto-hide">
         <MiniTable
           columns={columns as any}
           data={groupedData}

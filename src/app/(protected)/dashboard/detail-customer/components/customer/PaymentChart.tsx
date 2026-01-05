@@ -138,30 +138,31 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
 
   return (
     <div className="bg-white p-4 rounded-md shadow-sm">
-      <h2 className="text-lg font-semibold mb-3">Tren Pembayaran</h2>
-
-      <div className="flex gap-2 items-center flex-wrap mb-4">
-        <div>
-          <label className="block text-xs font-medium mb-0.5">
-            Dari Tanggal
-          </label>
-          <input
-            type="date"
-            className="border rounded px-2 py-1"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium mb-0.5">
-            Sampai Tanggal
-          </label>
-          <input
-            type="date"
-            className="border rounded px-2 py-1"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+      <div className="flex justify-between gap-2 flex-wrap mb-4">
+        <h3 className="text-lg font-semibold">Tren Pembayaran</h3>
+        <div className="flex flex-row">
+          <div>
+            <label className="block text-xs font-medium mb-0.5">
+              Dari Tanggal
+            </label>
+            <input
+              type="date"
+              className="border rounded px-2 py-1"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-0.5">
+              Sampai Tanggal
+            </label>
+            <input
+              type="date"
+              className="border rounded px-2 py-1"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -170,7 +171,7 @@ export default function PaymentChart({ customerId }: PaymentChartProps) {
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       {data && (
-        <div className="relative h-[30.5rem]">
+        <div className="relative h-[19.5rem]">
           <Line
             key={`${startDate}-${endDate}`}
             data={lineData}
