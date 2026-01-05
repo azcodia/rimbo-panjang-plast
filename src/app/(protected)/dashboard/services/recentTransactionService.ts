@@ -1,38 +1,57 @@
-export interface RecentTransaction {
+export interface DashboardTransactionItem {
+  deliveryId: string;
   code: string;
-  customer: string;
-  input_date: string;
-  color: string;
-  size: string;
-  heavy: string;
+  date: string;
+
+  customerName: string;
+
+  itemDetail: string;
   quantity: number;
   unit_price: number;
   discount_per_item: number;
   total_price: number;
-  note?: string;
+
+  totalPaid: number;
+  totalWeight: number;
+  totalWeightAllItems: number;
+  remaining: number;
+
+  status: "paid" | "partially_paid" | "unpaid";
 }
 
-interface RecentTransactionResponse {
+export interface DashboardTransactionData {
   total: number;
-  data: RecentTransaction[];
+  grandTotal: number;
+  grandTotalWeight: number;
+  data: DashboardTransactionItem[];
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
-export const fetchRecentTransactions = async (
-  page: number,
-  pageSize: number
-): Promise<RecentTransactionResponse> => {
+export async function fetchDashboardTransactions(
+  page = 1,
+  pageSize = 10,
+  startDate?: string,
+  endDate?: string
+): Promise<DashboardTransactionData> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  if (startDate) params.append("start_date", startDate);
+  if (endDate) params.append("end_date", endDate);
+
   const res = await fetch(
-    `/api/dashboards/dashboard/recent-transactions?page=${page}&pageSize=${pageSize}`
+    `/api/dashboards/dashboard/recent-transactions?${params.toString()}`
   );
 
-  const json = await res.json();
-
-  if (!json.success) {
-    throw new Error(json.message || "Failed to load recent transactions");
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch dashboard transactions: ${res.statusText}`
+    );
   }
 
-  return {
-    total: json.total,
-    data: json.data,
-  };
-};
+  return res.json();
+}
