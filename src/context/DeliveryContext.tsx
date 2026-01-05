@@ -89,7 +89,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<TableRow<DeliveryData>[]>([]);
   const [allData, setAllData] = useState<DeliveryData[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const [filterValue, setFilterValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
