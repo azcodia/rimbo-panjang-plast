@@ -124,7 +124,7 @@ export const DeliveryProvider = ({ children }: { children: ReactNode }) => {
     {
       key: "total_items",
       label: "Total Item",
-      render: (_value: any, row: DeliveryData) => `${row.total_items} Pcs`,
+      render: (_value: any, row: DeliveryData) => row.total_items,
     },
     {
       key: "total_weight",
