@@ -3,12 +3,14 @@
 import { TableRow } from "@/components/table/Table";
 import { formatNumber } from "@/lib/formatNumber";
 import { formatRp } from "@/lib/formatRp";
+import { formatWeight } from "@/lib/formatWeight";
 import { useState, useCallback, useMemo } from "react";
 
 export interface DeliveryItem {
   color: string;
   size: number | null;
   weight: number | null;
+  total_weight: number;
   quantity: number;
   unit_price: number;
   discount_per_item: number;
@@ -57,6 +59,11 @@ export const useDeliveryByCode = (code: string) => {
       label: "Quantity",
       render: (_v: any, row: DeliveryItem) =>
         `${formatNumber(row.quantity)} Pcs`,
+    },
+    {
+      key: "total_weight",
+      label: "Total Berat",
+      render: (_v: any, row: DeliveryItem) => formatWeight(row.total_weight, 1),
     },
     {
       key: "unit_price",
