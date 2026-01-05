@@ -114,7 +114,7 @@ export default function DashboardTransactionHistory() {
         key: "quantity",
         label: "Qty",
         render: (_: unknown, row: DashboardTransactionRow) =>
-          formatNumber(row.quantity),
+          `${formatNumber(row.quantity)} pcs`,
       },
       {
         key: "totalWeight",

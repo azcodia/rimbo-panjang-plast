@@ -111,7 +111,7 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
         key: "quantity",
         label: "Quantity",
         render: (_: unknown, row: CustomerTransactionItem) =>
-          formatNumber(row.quantity ?? 0),
+          `${formatNumber(row.quantity ?? 0)} Pcs`,
       },
       {
         key: "totalWeight",
