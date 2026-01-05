@@ -23,6 +23,7 @@ interface MiniTableProps<T> {
   loading?: boolean;
   emptyMessage?: string;
   className?: string;
+  isPagination?: boolean;
 }
 
 export default function MiniTable<T extends Record<string, any>>({
@@ -35,6 +36,7 @@ export default function MiniTable<T extends Record<string, any>>({
   loading = false,
   emptyMessage = "No data available",
   className,
+  isPagination = true,
 }: MiniTableProps<T>) {
   const handlePrev = () => {
     if (onPageChange && page > 1) onPageChange(page - 1);
@@ -121,22 +123,24 @@ export default function MiniTable<T extends Record<string, any>>({
         <span className="text-gray-400">
           Page {page} of {totalPages} / All data: {totalDataCount}
         </span>
-        <div className="flex space-x-2">
-          <button
-            onClick={handlePrev}
-            disabled={page === 1 || loading}
-            className="px-2 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors text-xs"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={page === totalPages || loading}
-            className="px-2 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors text-xs"
-          >
-            Next
-          </button>
-        </div>
+        {isPagination && (
+          <div className="flex space-x-2">
+            <button
+              onClick={handlePrev}
+              disabled={page === 1 || loading}
+              className="px-2 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors text-xs"
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={page === totalPages || loading}
+              className="px-2 py-1 rounded-md bg-gray-100 text-gray-700 disabled:text-gray-400 disabled:bg-gray-50 transition-colors text-xs"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
