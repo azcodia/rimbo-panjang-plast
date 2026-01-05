@@ -1,26 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
-import { getRecentTransactions } from "./recent-transactions.services";
+import { getDashboardTransactions } from "./recent-transactions.services";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
 
+  const { searchParams } = new URL(req.url);
+  const start = searchParams.get("start_date");
+  const end = searchParams.get("end_date");
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+
+  const skip = (page - 1) * pageSize;
+
   try {
-    const { searchParams } = new URL(req.url);
-
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
-    const skip = (page - 1) * pageSize;
-
-    const result = await getRecentTransactions(skip, pageSize);
+    const result = await getDashboardTransactions({
+      startDate: start,
+      endDate: end,
+      skip,
+      limit: pageSize,
+    });
 
     return NextResponse.json({
       success: true,
       ...result,
+      page,
+      pageSize,
+      totalPages: Math.ceil(result.total / pageSize),
     });
   } catch (err: any) {
     return NextResponse.json(
-      { success: false, message: err.message },
+      { success: false, message: err.message || "Server error" },
       { status: 500 }
     );
   }
