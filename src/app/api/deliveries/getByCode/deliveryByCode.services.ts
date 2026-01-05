@@ -17,15 +17,20 @@ export const getDeliveryItemsByCodePaginated = async (
     .sort({ created_at: -1 });
 
   const allItems = deliveries.flatMap((delivery: any) =>
-    delivery.items.map((item: any) => ({
-      color: item.color_id?.color ?? "-",
-      size: item.size_id?.size ?? null,
-      weight: item.heavy_id?.weight ?? null,
-      quantity: item.quantity ?? 0,
-      unit_price: item.unit_price ?? 0,
-      discount_per_item: item.discount_per_item ?? 0,
-      total_price: item.total_price ?? 0,
-    }))
+    delivery.items.map((item: any) => {
+      const quantity = item.quantity ?? 0;
+      const weight = item.heavy_id?.weight ?? 0;
+      return {
+        color: item.color_id?.color ?? "-",
+        size: item.size_id?.size ?? null,
+        weight,
+        quantity,
+        unit_price: item.unit_price ?? 0,
+        discount_per_item: item.discount_per_item ?? 0,
+        total_price: item.total_price ?? 0,
+        total_weight: quantity * weight,
+      };
+    })
   );
 
   allItems.sort((a, b) => {
