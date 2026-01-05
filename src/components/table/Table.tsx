@@ -148,7 +148,7 @@ export default function Table<T extends Record<string, any>>({
   };
 
   return (
-    <div className="relative overflow-x-auto bg-white shadow-xs rounded-md border border-default">
+    <div className="relative scrollbar-auto-hide-x bg-white shadow-xs rounded-md border border-default">
       <table className="w-full text-sm text-left rtl:text-right text-body">
         <thead>
           <tr className="bg-grayd text-gray-700">

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================= */
+/* SCROLLBAR PERMANENT HIDDEN (AUTO-HIDE 100%) */
+/* ========================================= */
 .scrollbar-auto-hide-permanent {
   overflow: auto;
   -ms-overflow-style: none;
@@ -10,6 +13,15 @@
 
 .scrollbar-auto-hide-permanent::-webkit-scrollbar {
   display: none;
+}
+
+/* ========================================= */
+/* VERTICAL SCROLLBAR AUTO-HIDE */
+/* ========================================= */
+.scrollbar-auto-hide {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
 .scrollbar-auto-hide::-webkit-scrollbar {
@@ -30,7 +42,59 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-.scrollbar-auto-hide {
+/* ========================================= */
+/* HORIZONTAL SCROLLBAR AUTO-HIDE */
+/* ========================================= */
+.scrollbar-auto-hide-x {
+  overflow-x: auto;
+  -ms-overflow-style: none;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.scrollbar-auto-hide-x::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scrollbar-auto-hide-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-auto-hide-x::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+
+.scrollbar-auto-hide-x::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* ========================================= */
+/* BOTH DIRECTIONS SCROLLBAR AUTO-HIDE */
+/* ========================================= */
+.scrollbar-auto-hide-both {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.scrollbar-auto-hide-both::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-auto-hide-both::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-auto-hide-both::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+
+.scrollbar-auto-hide-both::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.6);
 }

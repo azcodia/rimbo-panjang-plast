@@ -99,7 +99,7 @@ export default function MiniTable<T extends Record<string, any>>({
 
   return (
     <div
-      className={`relative overflow-x-auto bg-white shadow-xs rounded-md border border-gray-200 ${className}`}
+      className={`relative scrollbar-auto-hide-x bg-white shadow-xs rounded-md border border-gray-200 ${className}`}
     >
       <table className="w-full text-xs text-left text-body">
         <thead>
