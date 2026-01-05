@@ -3,6 +3,7 @@ import { CustomerPurchaseSummaryData } from "../../../services/customerDetail/cu
 import { formatNumber } from "@/lib/formatNumber";
 import { formatWeight } from "@/lib/formatWeight";
 import { formatRp } from "@/lib/formatRp";
+import PaymentChart from "../customer/PaymentChart";
 
 interface Props {
   customerId: string;
@@ -43,9 +44,7 @@ export default function RightPanelSummary({
       </div>
 
       <div className="rounded-lg  border bg-white">
-        <div className="flex justify-center items-center h-[26rem]">
-          <h3 className="text-3xl">Comming Soon</h3>
-        </div>
+        <PaymentChart customerId={customerId} />
       </div>
     </div>
   );
