@@ -184,7 +184,7 @@ export default function DashboardTransactionHistory() {
           />
         </div>
 
-        <div className="flex gap-2 mb-3">
+        <div className="flex gap-2">
           {[
             { label: "Dari", type: "start", value: startDate },
             { label: "Sampai", type: "end", value: endDate },
@@ -208,7 +208,7 @@ export default function DashboardTransactionHistory() {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="h-[28rem] overflow-y-auto scrollbar-auto-hide">
+      <div className="h-[24.5rem] overflow-y-auto scrollbar-auto-hide">
         <MiniTable
           columns={columns as any}
           data={groupedData}
