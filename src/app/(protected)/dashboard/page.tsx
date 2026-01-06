@@ -6,6 +6,7 @@ import DashboardSummary from "./components/DashboardSummary/page";
 import Inventory from "./components/Inventories/page";
 import RecentTransactions from "./components/RecentTransactions/page";
 import TopHighlights from "./components/TopHighlights/page";
+import DashboardRestockHistory from "./components/RecentReStocks.ts/page";
 
 export default function DashboardPage() {
   const today = new Date();
@@ -24,6 +25,7 @@ export default function DashboardPage() {
         defaultEndDate={formatDate(today)}
       />
       <RecentTransactions />
+      <DashboardRestockHistory />
     </PageContainer>
   );
 }
