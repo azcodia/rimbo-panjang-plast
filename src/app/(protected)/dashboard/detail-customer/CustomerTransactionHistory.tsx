@@ -12,6 +12,7 @@ import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 import { Eye } from "lucide-react";
 import AddPaidModal from "../../transactions/delivery/ui/AddPaidModal";
 import { formatWeight } from "@/lib/formatWeight";
+import SummaryCard from "@/components/cards/summaryCard";
 
 interface Props {
   customerId: string | null;
@@ -173,19 +174,15 @@ export default function CustomerTransactionHistory({ customerId }: Props) {
       </h2>
 
       <div className="flex flex-row justify-between">
-        <div className="flex justify-end gap-6">
-          <div className="bg-grayd border rounded-md p-3 text-right shadow-sm">
-            <p className="text-sm text-gray-600">Grand Total Penjualan</p>
-            <p className="font-semibold text-gray-800">
-              {formatRp(grandTotal)}
-            </p>
-          </div>
-          <div className="bg-grayd border rounded-md p-3 text-right shadow-sm">
-            <p className="text-sm text-gray-600">Grand Total Berat</p>
-            <p className="font-semibold text-gray-800">
-              {formatWeight(grandTotalWeight, 1)}
-            </p>
-          </div>
+        <div className="flex justify-end gap-2">
+          <SummaryCard
+            title="Grand Total Penjualan"
+            value={formatRp(grandTotal)}
+          />
+          <SummaryCard
+            title="Grand Total Berat"
+            value={formatWeight(grandTotalWeight, 1)}
+          />
         </div>
         <div className="flex gap-2 mb-3">
           {[

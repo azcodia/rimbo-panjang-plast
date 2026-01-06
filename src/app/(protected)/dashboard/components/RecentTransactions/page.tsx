@@ -11,6 +11,7 @@ import PaymentStatusBadge from "@/components/PaymentStatusBadge";
 import { Eye } from "lucide-react";
 import { useDashboardTransactions } from "../../detail-customer/hooks/useDashboardTransactions";
 import { DashboardTransactionItem } from "../../services/recentTransactionService";
+import SummaryCard from "@/components/cards/summaryCard";
 
 export default function DashboardTransactionHistory() {
   const [page, setPage] = useState(1);
@@ -64,79 +65,79 @@ export default function DashboardTransactionHistory() {
       },
       {
         key: "date",
-        label: "Tanggal",
+        label: "Tanggal Transaksi",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? formatDate(row.date) : "",
       },
       {
         key: "code",
-        label: "Kode",
+        label: "Kode Transaksi",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? row.code : "",
       },
       {
         key: "customerName",
-        label: "Customer",
+        label: "Pelanggan",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? row.customerName : "",
       },
       {
         key: "status",
-        label: "Status",
+        label: "Status Pembayaran",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? <PaymentStatusBadge status={row.status} /> : "",
       },
       {
         key: "totalWeightAllItems",
-        label: "Total Berat",
+        label: "Total Berat Keseluruhan",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? formatWeight(row.totalWeightAllItems, 1) : "",
       },
       {
         key: "totalPaid",
-        label: "Dibayar",
+        label: "Total Di Bayar",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? formatRp(row.totalPaid) : "",
       },
       {
         key: "remaining",
-        label: "Sisa",
+        label: "Sisa Piutang",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.__isFirst ? formatRp(row.remaining) : "",
       },
       {
         key: "itemDetail",
-        label: "Item",
+        label: "Item Detail",
         render: (_: unknown, row: DashboardTransactionRow) =>
           row.itemDetail ?? "-",
       },
       {
         key: "quantity",
-        label: "Qty",
+        label: "Quantity",
         render: (_: unknown, row: DashboardTransactionRow) =>
           `${formatNumber(row.quantity)} pcs`,
       },
       {
         key: "totalWeight",
-        label: "Berat",
+        label: "Total Berat",
         render: (_: unknown, row: DashboardTransactionRow) =>
           formatWeight(row.totalWeight, 1),
       },
       {
         key: "unit_price",
-        label: "Harga",
+        label: "Harga/Unit",
         render: (_: unknown, row: DashboardTransactionRow) =>
           formatRp(row.unit_price),
       },
       {
         key: "discount_per_item",
-        label: "Diskon",
+        label: "Potongan Harga",
         render: (_: unknown, row: DashboardTransactionRow) =>
           formatRp(row.discount_per_item),
       },
       {
         key: "total_price",
-        label: "Total",
+        label: "Total Harga",
         render: (_: unknown, row: DashboardTransactionRow) =>
           formatRp(row.total_price),
       },
@@ -175,15 +176,12 @@ export default function DashboardTransactionHistory() {
       <h2 className="text-lg font-semibold mb-2">Semua Transaksi Penjualan</h2>
 
       <div className="flex justify-between">
-        <div className="flex gap-6">
-          <div className="border rounded-md p-3 text-right shadow-sm">
-            <p className="text-sm text-gray-600">Grand Total</p>
-            <p className="font-semibold">{formatRp(grandTotal)}</p>
-          </div>
-          <div className="border rounded-md p-3 text-right shadow-sm">
-            <p className="text-sm text-gray-600">Grand Total Berat</p>
-            <p className="font-semibold">{formatWeight(grandTotalWeight, 1)}</p>
-          </div>
+        <div className="flex gap-2">
+          <SummaryCard title="Grand Total harga" value={formatRp(grandTotal)} />
+          <SummaryCard
+            title="Grand Total Berat"
+            value={formatWeight(grandTotalWeight, 1)}
+          />
         </div>
 
         <div className="flex gap-2 mb-3">
