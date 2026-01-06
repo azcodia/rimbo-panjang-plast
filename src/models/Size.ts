@@ -1,6 +1,5 @@
 import { Schema, Document, models, model } from "mongoose";
-import { IColor } from "./Color";
-
+import { IColor } from "@/models/Color";
 export interface ISize extends Document {
   color_id: IColor["_id"];
   size: number;

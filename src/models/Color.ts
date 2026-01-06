@@ -1,4 +1,4 @@
-import { Schema, Document, models, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface IColor extends Document {
   color: string;
@@ -17,6 +17,11 @@ const ColorSchema: Schema<IColor> = new Schema(
 
 ColorSchema.index({ color: 1 }, { unique: true });
 
-const ColorModel = models.Color || model<IColor>("Color", ColorSchema);
+let ColorModel;
+try {
+  ColorModel = model<IColor>("Color");
+} catch {
+  ColorModel = model<IColor>("Color", ColorSchema);
+}
 
 export default ColorModel;

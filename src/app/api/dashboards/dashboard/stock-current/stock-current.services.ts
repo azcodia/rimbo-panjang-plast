@@ -1,3 +1,7 @@
+import dbConnect from "@/lib/mongodb";
+import "@/models/Color";
+import "@/models/Size";
+import "@/models/Heavy";
 import Stock from "@/models/Stock";
 
 export const getCurrentStock = async (
@@ -5,6 +9,7 @@ export const getCurrentStock = async (
   skip: number,
   limit: number
 ) => {
+  await dbConnect();
   const total = await Stock.countDocuments(query);
 
   const data = await Stock.find(query)
