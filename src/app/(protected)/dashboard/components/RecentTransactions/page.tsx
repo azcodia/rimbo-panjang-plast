@@ -12,6 +12,7 @@ import { Eye } from "lucide-react";
 import { useDashboardTransactions } from "../../detail-customer/hooks/useDashboardTransactions";
 import { DashboardTransactionItem } from "../../services/recentTransactionService";
 import SummaryCard from "@/components/cards/summaryCard";
+import AddPaidModal from "@/app/(protected)/transactions/delivery/ui/AddPaidModal";
 
 export default function DashboardTransactionHistory() {
   const [page, setPage] = useState(1);
@@ -222,6 +223,15 @@ export default function DashboardTransactionHistory() {
           isPagination={false}
         />
       </div>
+      {selectedDelivery && (
+        <AddPaidModal
+          size="xxl"
+          isOpen={isModalPaidOpen}
+          deliveryCode={selectedDelivery}
+          onClose={() => setIsModalPaidOpen(false)}
+          justShow={true}
+        />
+      )}
     </div>
   );
 }
