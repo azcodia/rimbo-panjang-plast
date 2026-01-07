@@ -40,6 +40,7 @@ export const ColorContent = () => {
         onActionClick={handleActionClick}
         visibleActions={["edit", "delete"]}
         buttons={[{ text: "Tambah Data", onClick: () => setIsModalOpen(true) }]}
+        heightTable="h-[21.1rem]"
       />
       <AddColorModal
         isOpen={isModalOpen}

@@ -37,6 +37,7 @@ interface TableWithControlsProps<T extends Record<string, any>> {
   selectOptions?: SelectOption[];
   selectedValue?: string | number;
   onSelectChange?: (value: string | number) => void;
+  heightTable?: string;
 }
 
 export default function TableWithControls<T extends Record<string, any>>({
@@ -56,6 +57,7 @@ export default function TableWithControls<T extends Record<string, any>>({
   selectOptions = [],
   selectedValue,
   onSelectChange,
+  heightTable = "h-[25.2rem]",
 }: TableWithControlsProps<T>) {
   return (
     <div className="flex flex-col gap-4 bg-white rounded-md p-4">
@@ -105,18 +107,20 @@ export default function TableWithControls<T extends Record<string, any>>({
           )}
         </div>
       </div>
-      <Table
-        columns={columns as any}
-        totalDataCount={total}
-        data={data as any}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-        onActionClick={onActionClick as any}
-        filterValue={filterValue}
-        loading={loading}
-        visibleActions={visibleActions}
-      />
+      <div className={`${heightTable} overflow-y-auto scrollbar-auto-hide`}>
+        <Table
+          columns={columns as any}
+          totalDataCount={total}
+          data={data as any}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          onActionClick={onActionClick as any}
+          filterValue={filterValue}
+          loading={loading}
+          visibleActions={visibleActions}
+        />
+      </div>
     </div>
   );
 }

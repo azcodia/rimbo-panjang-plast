@@ -62,6 +62,7 @@ export default function StockPage() {
             onClick: () => setIsAddModalOpen(true),
           },
         ]}
+        heightTable="h-[25.8rem]"
       />
 
       <AddStockModal

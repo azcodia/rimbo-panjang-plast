@@ -40,6 +40,7 @@ export const HeavyContent = () => {
         onActionClick={handleActionClick}
         visibleActions={["edit", "delete"]}
         buttons={[{ text: "Tambah Data", onClick: () => setIsModalOpen(true) }]}
+        heightTable="h-[21rem]"
       />
       <AddHeavyModal
         isOpen={isModalOpen}

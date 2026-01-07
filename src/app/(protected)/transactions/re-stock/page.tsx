@@ -40,6 +40,7 @@ export default function ReStockPage() {
         buttons={[
           { text: "Tambah Re-Stock", onClick: () => setIsModalOpen(true) },
         ]}
+        heightTable="h-[25.8rem]"
       />
       <AddReStockModal
         isOpen={isModalOpen}

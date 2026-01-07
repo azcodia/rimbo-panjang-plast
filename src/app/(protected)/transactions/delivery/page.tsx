@@ -47,6 +47,7 @@ export default function DeliveryPage() {
         buttons={[
           { text: "Tambah Penjualan", onClick: () => setIsModalOpen(true) },
         ]}
+        heightTable="h-[25.8rem]"
       />
       <AddDeliveryModal
         isOpen={isModalOpen}

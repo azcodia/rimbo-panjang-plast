@@ -64,6 +64,7 @@ export function SizeContent() {
           },
         ]}
         visibleActions={["edit", "delete"]}
+        heightTable="h-[21.6rem]"
       />
 
       <AddSizeModal
