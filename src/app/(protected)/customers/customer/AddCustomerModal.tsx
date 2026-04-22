@@ -44,7 +44,7 @@ export default function AddCustomerModal({
 
   const handleSubmit = async (
     values: CustomerFormValues,
-    { setSubmitting, resetForm }: FormikHelpers<CustomerFormValues>
+    { setSubmitting, resetForm }: FormikHelpers<CustomerFormValues>,
   ) => {
     try {
       await addCustomer(values);
